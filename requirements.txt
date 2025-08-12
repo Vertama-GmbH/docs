@@ -1,0 +1,4 @@
+mkdocs-material
+mkdocs-pdf-export-plugin
+mkdocs-with-pdf
+mkdocs-mermaid2-plugin

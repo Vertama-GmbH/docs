@@ -1,0 +1,18 @@
+notes.md
+
+# Virtual environment
+.venv/
+
+# MkDocs build output
+site/
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Log files
+*.log
+
+# macOS specific files
+.DS_Store
+
