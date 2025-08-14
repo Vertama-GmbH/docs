@@ -65,7 +65,11 @@ nav:
      - DIGT: []
      - DIVI: []
      - DUBA: []
-     - ELIM: []
+     - ELIM:
+       - Produktbeschreibung:
+         - "Products/ELIM/Produktbeschreibung/OnePager (PNG).md"
+         - "Products/ELIM/Produktbeschreibung/OnePager (HTML).md"
+         - "Products/ELIM/Produktbeschreibung/OnePager.md"
   - How To: []
   - "Tutorials & Handbooks": []
   - "Background & Explanations": []
