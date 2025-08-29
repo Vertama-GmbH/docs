@@ -72,9 +72,9 @@ nav:
          - "Products/ELIM/Produktbeschreibung/OnePager (PNG).md"
          - "Products/ELIM/Produktbeschreibung/OnePager (HTML).md"
          - "Products/ELIM/Produktbeschreibung/OnePager.md"
-  - How To: []
-  - "Tutorials & Handbooks": 
-    - "Tutorials & Handbooks/folder-sync-handbuch.md"
+  - How-tos?:
+    - "how-to/folder-sync-handbuch.md"
+  - "Tutorials": []
   - "Background & Explanations": []
   - Reference: []
   - misc.misc:
