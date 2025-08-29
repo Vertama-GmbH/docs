@@ -8,7 +8,9 @@ theme:
       - yaml
   locale: en
   titles_only: false
-  collapse_navigation: true
+  collapse_navigation: false
+  features:
+    - navigation.sections
 extra_css:
   - css/extra.css
   - css/pdf-print.css
@@ -71,7 +73,8 @@ nav:
          - "Products/ELIM/Produktbeschreibung/OnePager (HTML).md"
          - "Products/ELIM/Produktbeschreibung/OnePager.md"
   - How To: []
-  - "Tutorials & Handbooks": []
+  - "Tutorials & Handbooks": 
+    - "Tutorials & Handbooks/folder-sync-handbuch.md"
   - "Background & Explanations": []
   - Reference: []
   - misc.misc:
