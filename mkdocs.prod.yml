@@ -8,7 +8,9 @@ theme:
       - yaml
   locale: en
   titles_only: false
-  collapse_navigation: true
+  collapse_navigation: false
+  features:
+    - navigation.sections
 extra_css:
   - css/extra.css
   - css/pdf-print.css
@@ -65,9 +67,14 @@ nav:
      - DIGT: []
      - DIVI: []
      - DUBA: []
-     - ELIM: []
-  - How To: []
-  - "Tutorials & Handbooks": []
+     - ELIM:
+       - One Pager:
+         - "Products/ELIM/onepager/OnePager (PNG).md"
+         - "Products/ELIM/onepager/OnePager (HTML).md"
+         - "Products/ELIM/onepager/OnePager.md"
+  - How-tos?:
+    - "how-to/folder-sync-handbuch.md"
+  - "Tutorials": []
   - "Background & Explanations": []
   - Reference: []
   - misc.misc:
