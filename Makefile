@@ -18,13 +18,18 @@ serve:
 	@echo "Starting MkDocs development server..."
 	./$(VENV_DIR)/bin/mkdocs serve
 
-preview:
+dev:
 	@echo "Starting MkDocs development server..."
-	./$(VENV_DIR)/bin/mkdocs serve --config-file mkdocs.prod.yml --dev-addr 0.0.0.0:8001
+	./$(VENV_DIR)/bin/mkdocs serve --config-file mkdocs.dev.yml
+
+#preview:
+#	@echo "Starting MkDocs development server..."
+#	./$(VENV_DIR)/bin/mkdocs serve --config-file mkdocs.prod.yml --dev-addr 0.0.0.0:8001
 
 publish:
 	@echo "Publishing MkDocs documentation to GitHub Pages..."
-	./$(VENV_DIR)/bin/mkdocs gh-deploy --config-file mkdocs.prod.yml
+	#./$(VENV_DIR)/bin/mkdocs gh-deploy --remote-name github --config-file mkdocs.prod.yml
+	./$(VENV_DIR)/bin/mkdocs gh-deploy --remote-name github
 
 clean:
 	@echo "Cleaning up build artifacts and virtual environment..."
