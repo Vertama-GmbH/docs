@@ -68,10 +68,10 @@ nav:
      - DIVI: []
      - DUBA: []
      - ELIM:
-       - Produktbeschreibung:
-         - "Products/ELIM/Produktbeschreibung/OnePager (PNG).md"
-         - "Products/ELIM/Produktbeschreibung/OnePager (HTML).md"
-         - "Products/ELIM/Produktbeschreibung/OnePager.md"
+       - One Pager:
+         - "Products/ELIM/onepager/OnePager (PNG).md"
+         - "Products/ELIM/onepager/OnePager (HTML).md"
+         - "Products/ELIM/onepager/OnePager.md"
   - How-tos?:
     - "how-to/folder-sync-handbuch.md"
   - "Tutorials": []
