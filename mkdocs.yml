@@ -61,22 +61,25 @@ plugins:
       #show_anchors: true
       #verbose: true
 nav:
-  - Intro: index.md
+  - Home: index.md
   - Products:
      - DIGG: []
      - DIGT: []
      - DIVI: []
      - DUBA: []
      - ELIM:
-       - One Pager:
-         - "Products/ELIM/onepager/OnePager (PNG).md"
-         - "Products/ELIM/onepager/OnePager (HTML).md"
-         - "Products/ELIM/onepager/OnePager.md"
-  - How-tos?:
-    - "how-to/folder-sync-handbuch.md"
+       - "Products/ELIM/onepager/OnePager (PNG).md"
+       - "Products/ELIM/onepager/OnePager (HTML).md"
+       - "Products/ELIM/onepager/OnePager.md"
+  - Guides:
+    - "Folder Sync Handbook": "how-to/folder-sync-handbuch.md"
   - "Tutorials": []
-  - "Background & Explanations": []
+  - "Background & Explanations":
+    - "Security & Encryption":
+      - "Multi-User Secret Sharing": "background-and-explanations/security-and-encryption/Multi-User Secret Sharing with Zero-Knowledge Architecture.md"
+      - "Password-Based User Secrets Encryption": "background-and-explanations/security-and-encryption/Password-Based User Secrets Encryption with Derived Keys.md"
+      - "Implementation Notes": "background-and-explanations/security-and-encryption/Implementation-Notes.md"
+      - "API Usage Guide": "background-and-explanations/security-and-encryption/API-Usage-Guide.md"
   - Reference: []
-  - misc.misc:
-    - download.md
-    - about.md
+  - Downloads: download.md
+  - About: about.md
