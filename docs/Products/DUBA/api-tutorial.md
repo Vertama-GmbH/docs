@@ -3,7 +3,7 @@
 A practical guide for integration partners using the DUBA (Digital Court Guardianship) API.
 
 **Version:** 0.1.0
-**Last Updated:** 2025-11-27
+**Last Updated:** 2025-11-28
 
 ---
 
@@ -15,10 +15,11 @@ A practical guide for integration partners using the DUBA (Digital Court Guardia
 4. [List Messages Endpoint](#list-messages-endpoint)
 5. [Understanding MessageInfo](#understanding-messageinfo)
 6. [Download Message Endpoint](#download-message-endpoint)
-7. [Complete Workflow Examples](#complete-workflow-examples)
-8. [Filtering Best Practices](#filtering-best-practices)
-9. [Error Codes](#error-codes)
-10. [Reference](#reference)
+7. [Acknowledge Messages Endpoint](#acknowledge-messages-endpoint)
+8. [Complete Workflow Examples](#complete-workflow-examples)
+9. [Filtering Best Practices](#filtering-best-practices)
+10. [Error Codes](#error-codes)
+11. [Reference](#reference)
 
 ---
 
@@ -28,6 +29,7 @@ The DUBA API provides programmatic access to court messages exchanged via EGVP (
 
 - **List available messages** with filtering by job ID, Safe-ID, or timestamp
 - **Download messages** as ZIP files containing XJustiz XML and attachments
+- **Acknowledge messages** to trigger cleanup of sensitive data (GDPR compliance)
 
 ### Prerequisites
 
@@ -313,6 +315,157 @@ curl -v -u "user:pass" \
 curl -I -u "user:pass" \
   https://elim.example.com/api/duba/v1/download/214
 ```
+
+---
+
+## Acknowledge Messages Endpoint
+
+**Endpoint:** `POST /api/duba/v1/messages/ack`
+
+**Purpose:** Acknowledge receipt of one or more messages and trigger cleanup.
+
+### What This Does
+
+When you acknowledge a message:
+
+1. **Deletes on-disk files** - Sensitive message content is removed (data protection)
+2. **Soft-deletes index entry** - Metadata is preserved for audit trail
+3. **Returns detailed status** - Know exactly what happened to each message
+
+**Use case:** After successfully downloading and processing messages, acknowledge them to trigger cleanup and comply with data protection requirements.
+
+### Request Body
+
+```json
+{
+  "messageIds": [42, 43, 44]
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `messageIds` | integer[] | Yes | Array of message index IDs to acknowledge (1-100 items) |
+
+### Response
+
+Returns status for each message ID:
+
+```json
+{
+  "results": [
+    {
+      "id": 42,
+      "status": "DELETED",
+      "message": "Message acknowledged and deleted"
+    },
+    {
+      "id": 43,
+      "status": "ALREADY_DELETED",
+      "message": "Message was already deleted"
+    },
+    {
+      "id": 44,
+      "status": "FORBIDDEN",
+      "message": "User does not have access to this message"
+    }
+  ]
+}
+```
+
+#### Status Values
+
+| Status | Meaning | Is Error? |
+|--------|---------|-----------|
+| `DELETED` | Successfully acknowledged and cleaned up | No |
+| `ALREADY_DELETED` | Message was already deleted (idempotent) | No |
+| `NOT_FOUND` | Message index entry does not exist | Yes |
+| `FORBIDDEN` | User does not have access to this message | Yes |
+| `ERROR` | An error occurred during processing | Yes |
+
+**Important:** Partial success is allowed. Some messages may succeed while others fail. Always check the status for each ID.
+
+### Examples
+
+#### Acknowledge single message
+
+```bash
+curl -X POST \
+  -u "user:pass" \
+  -H "Content-Type: application/json" \
+  -d '{"messageIds": [214]}' \
+  https://elim.example.com/api/duba/v1/messages/ack
+```
+
+#### Acknowledge multiple messages
+
+```bash
+curl -X POST \
+  -u "user:pass" \
+  -H "Content-Type: application/json" \
+  -d '{"messageIds": [214, 215, 216]}' \
+  https://elim.example.com/api/duba/v1/messages/ack
+```
+
+#### Parse response with jq
+
+```bash
+curl -X POST \
+  -u "user:pass" \
+  -H "Content-Type: application/json" \
+  -d '{"messageIds": [214, 215, 216]}' \
+  https://elim.example.com/api/duba/v1/messages/ack | jq .
+```
+
+#### Count successful deletions
+
+```bash
+curl -X POST \
+  -u "user:pass" \
+  -H "Content-Type: application/json" \
+  -d '{"messageIds": [214, 215, 216]}' \
+  https://elim.example.com/api/duba/v1/messages/ack | \
+  jq '[.results[] | select(.status == "DELETED")] | length'
+```
+
+#### Download and acknowledge workflow
+
+```bash
+#!/bin/bash
+# List messages, download each, then acknowledge all at once
+MESSAGE_IDS=$(curl -u "user:pass" \
+  "https://elim.example.com/api/duba/v1/messages?jobId=job-123" | \
+  jq -r '.[].id')
+
+# Download each message
+for id in $MESSAGE_IDS; do
+  echo "Downloading message $id..."
+  curl -u "user:pass" \
+    "https://elim.example.com/api/duba/v1/download/$id" \
+    -o "message-$id.zip"
+done
+
+# Acknowledge all messages at once (bulk operation)
+curl -X POST \
+  -u "user:pass" \
+  -H "Content-Type: application/json" \
+  -d "{\"messageIds\": [$(echo $MESSAGE_IDS | tr '\n' ',' | sed 's/,$//' )]}" \
+  https://elim.example.com/api/duba/v1/messages/ack
+```
+
+### Data Protection Notes
+
+Acknowledging messages is one of three cleanup triggers in the system:
+
+1. **ACK endpoint (this)** - Client-driven, explicit confirmation
+2. **Sync-based cleanup** - Automatic when message confirmed gone from server
+3. **Retention policy** - Time-based backstop (e.g., 30 days)
+
+**Best practice:** Acknowledge messages as soon as you've successfully downloaded and processed them. This ensures:
+- Sensitive data is deleted promptly (GDPR compliance)
+- Your message list stays clean
+- Audit trail is preserved for compliance
+
+**Idempotent operation:** Safe to acknowledge the same message multiple times. Already-deleted messages return `ALREADY_DELETED` status (not an error).
 
 ---
 
