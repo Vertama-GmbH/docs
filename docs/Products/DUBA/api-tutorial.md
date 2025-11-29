@@ -2,7 +2,7 @@
 
 A practical guide for integration partners using the DUBA (Digital Court Guardianship) API.
 
-**Version:** 0.1.0
+**Version:** 0.2.0
 **Last Updated:** 2025-11-28
 
 ---
@@ -735,6 +735,6 @@ For technical support or questions about the DUBA API:
 
 ---
 
-**Document Version:** 0.1.0
+**Document Version:** 0.2.0
 **Last Updated:** 2025-11-27
 **API Version:** v1
