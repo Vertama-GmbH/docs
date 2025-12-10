@@ -68,6 +68,7 @@ nav:
      - DIVI: []
      - DUBA:
        - "API Tutorial": "Products/DUBA/api-tutorial.md"
+       - "api.yml (OpenAPI)": Products/DUBA/api.yml
      - ELIM:
        - "Products/ELIM/onepager/OnePager (PNG).md"
        - "Products/ELIM/onepager/OnePager (HTML).md"
