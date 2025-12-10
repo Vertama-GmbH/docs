@@ -1,0 +1,508 @@
+openapi: 3.0.3
+info:
+  title: Duba API
+  version: "0.1.0" # Version of the spec document
+servers:
+  - url: /api/duba/v1
+    description: Duba API Version 1
+paths:
+    /messages:
+        get:
+            summary: retrieve list of messages available for download.
+            tags:
+                - DUBA
+            security:
+                - basicAuth: []
+            operationId: getMessages
+            parameters:
+                - name: jobId
+                  in: query
+                  required: false
+                  description: |-
+                      List of job IDs to filter messages for. If not provided, messages from all jobs will be
+                      returned. Can be specified multiple times: ?jobId=job1&jobId=job2
+                  schema:
+                      type: array
+                      items:
+                          type: string
+                      nullable: true
+                      default: []
+                  style: form
+                  explode: true
+                - name: safeId
+                  in: query
+                  required: false
+                  description: |-
+                    List of Safe-IDs to filter messages for. For apiusers with access to multiple Safe-IDs,
+                    specify which ones to include. If not provided, uses all accessible Safe-IDs.
+                    Can be specified multiple times: ?safeId=safe1&safeId=safe2
+                  schema:
+                      type: array
+                      items:
+                          type: string
+                      nullable: true
+                      default: []
+                  style: form
+                  explode: true
+                - name: since
+                  in: query
+                  required: false
+                  description: Only messages received after this timestamp
+                  schema:
+                      type: string
+                      format: date-time
+                      nullable: true
+            responses:
+                '200':
+                    description: A list of available messages with metadata and state information.
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/MessageInfo'
+    /download/{id}:
+        get:
+            summary: Download a specific message document as a ZIP file
+            tags:
+                - DUBA
+            security:
+                - basicAuth: []
+            operationId: downloadMessage
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: The message index ID (from MessageHandle.id) uniquely identifying which message to download
+                  schema:
+                      type: integer
+                      format: int64
+                      example: 42
+            responses:
+                '200':
+                    description: The message document as a ZIP file
+                    content:
+                        application/zip:
+                            schema:
+                                type: string
+                                format: binary
+                '401':
+                    description: Unauthorized - invalid or missing authentication
+                '403':
+                    description: Forbidden - user not authorized to access this message
+                '404':
+                    description: Not Found - message does not exist
+    /messages/ack:
+        post:
+            summary: Acknowledge receipt of multiple messages and trigger cleanup
+            description: |-
+                Tell the system you have successfully downloaded and processed these messages.
+                The messages will be soft-deleted and on-disk files will be removed.
+
+                Use this after successful download to keep your message list clean and comply
+                with data protection requirements. Soft-deleted messages are retained in the
+                audit trail but will no longer appear in future message listings.
+
+                Bulk Operation:
+                - Processes all message IDs in the request
+                - Partial success allowed (some IDs may succeed, others fail)
+                - Returns detailed status for each message ID
+                - Idempotent: acknowledging already-deleted messages is not an error
+
+                Data Protection:
+                - On-disk files (sensitive content) are deleted immediately
+                - Index metadata is soft-deleted but preserved for audit trail
+
+                This is one of three cleanup triggers in the system:
+                1. ACK endpoint (this) - client-driven, explicit confirmation
+                2. Server-side deletion - automatic during sync when message gone from Vibilia
+                3. Retention policy - time-based backstop (configurable, e.g., 30 days)
+            tags:
+                - DUBA
+            security:
+                - basicAuth: []
+            operationId: acknowledgeMessages
+            requestBody:
+                required: true
+                description: List of message index IDs to acknowledge
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AckRequest'
+            responses:
+                '200':
+                    description: |-
+                        Acknowledgment processed. Response contains status for each message ID.
+                        Partial success is possible - check individual message results.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AckResponse'
+                '400':
+                    description: Bad Request - invalid request body (e.g., empty list, invalid format)
+                '401':
+                    description: Unauthorized - invalid or missing authentication
+    /memento:
+        post:
+            summary: Create encrypted memento string from form data
+            description: |-
+                Accepts DUBA form data as JSON and returns an encrypted memento string.
+                The memento can be used to pre-fill HTML forms via URL parameter.
+
+                Use Case:
+                External systems (e.g., KIS) submit form data → receive encrypted string →
+                construct URL with memento parameter → user opens pre-filled form.
+
+                This endpoint validates the submitted data against the FormData schema
+                before encryption. The memento string is URL-safe and tamper-proof.
+
+                Note: This endpoint does NOT submit the form to the court system.
+                It only creates a pre-fill token for the interactive HTML form.
+            tags:
+                - DUBA
+            security:
+                - basicAuth: []
+            operationId: createMemento
+            requestBody:
+                required: true
+                description: DUBA form data to encrypt into memento string
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/FormData'
+            responses:
+                '200':
+                    description: Memento successfully created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/MementoResponse'
+                            example:
+                                memento: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                '400':
+                    description: Bad Request - invalid form data (validation errors)
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ValidationErrorResponse'
+                            example:
+                                errors: ["jobId must not be null"]
+                '401':
+                    description: |-
+                        Unauthorized - invalid or missing authentication.
+                        Returns 401 status with WWW-Authenticate header.
+                        Response body is empty.
+components:
+  schemas:
+    AckRequest:
+      type: object
+      required:
+        - messageIds
+      properties:
+        messageIds:
+          type: array
+          description: List of message index IDs to acknowledge
+          minItems: 1
+          maxItems: 100
+          items:
+            type: integer
+            format: int64
+          example: [42, 43, 44]
+    AckResponse:
+      type: object
+      required:
+        - results
+      properties:
+        results:
+          type: array
+          description: Status for each message ID in the request
+          items:
+            $ref: '#/components/schemas/AckResult'
+    AckResult:
+      type: object
+      required:
+        - id
+        - status
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The message index ID that was processed
+          example: 42
+        status:
+          type: string
+          enum: [DELETED, ALREADY_DELETED, NOT_FOUND, FORBIDDEN, ERROR]
+          description: |-
+            Result status:
+            - DELETED: Message successfully acknowledged and deleted
+            - ALREADY_DELETED: Message was already deleted (idempotent - not an error)
+            - NOT_FOUND: Message index ID does not exist
+            - FORBIDDEN: User does not have access to this message
+            - ERROR: An error occurred during deletion
+          example: "DELETED"
+        message:
+          type: string
+          nullable: true
+          description: Optional human-readable message (e.g., error details)
+          example: "Message successfully deleted"
+    MessageInfo:
+      type: object
+      required:
+        - id
+        - messageId
+        - direction
+        - createdAt
+        - url
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Message index ID - use this for download requests
+          example: 42
+        messageId:
+          type: string
+          description: EGVP/Vibilia message ID (note - same messageId can appear multiple times with different ids)
+          example: "msg-67890"
+        jobId:
+          type: string
+          nullable: true
+          description: |-
+            DUBA job identifier if message was sent via this API.
+            Null for external messages or messages from other systems.
+          example: "job-12345"
+        aktenzeichen:
+          type: string
+          nullable: true
+          description: |-
+            XJustiz case reference number (German legal case number).
+            Only present for hydrated messages (requires full download and XJustiz parsing).
+            Null for non-hydrated messages that are still being indexed.
+          example: "AZ-12345-2024"
+        direction:
+          type: string
+          enum: [INCOMING, OUTGOING]
+          description: |-
+            Message direction:
+            - INCOMING: Received from external court or system
+            - OUTGOING: Sent by us to external recipient
+          example: "INCOMING"
+        createdAt:
+          type: string
+          format: date-time
+          description: |-
+            When message arrived at the EGVP server (tspCreation from ProcessCard).
+            This is the authoritative creation timestamp from the EGVP system.
+          example: "2024-11-26T14:30:00Z"
+        receivedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: |-
+            When message was first retrieved (tspReception from ProcessCard).
+            For INCOMING: when we or another system downloaded it.
+            For OUTGOING: when the recipient downloaded it.
+            Null if not yet retrieved by anyone.
+          example: "2024-11-26T15:45:00Z"
+        hydratedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: |-
+            When we fully processed this message (downloaded and parsed XJustiz content).
+            Null if not yet hydrated - message is indexed but aktenzeichen not yet extracted.
+          example: "2024-11-26T15:46:00Z"
+        url:
+          type: string
+          format: uri
+          description: Download URL for this message
+          example: "/api/duba/v1/download/42"
+    MementoResponse:
+      type: object
+      required:
+        - memento
+      properties:
+        memento:
+          type: string
+          description: |-
+            Encrypted, URL-safe memento string containing the form data.
+            Use as query parameter to pre-fill forms: ?memento=<string>
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    FormData:
+      type: object
+      required:
+        - jobId
+      properties:
+        jobId:
+          type: string
+          description: |-
+            Unique job identifier for tracking this form submission.
+            Used to correlate form data with backend processing and EGVP messages.
+          example: "job-12345-2024"
+        meldeZeitpunkt:
+          type: string
+          format: date-time
+          nullable: true
+          description: Timestamp when the report was created
+          example: "2024-12-08T14:30:00Z"
+        absender:
+          $ref: '#/components/schemas/Absender'
+        empfaenger:
+          $ref: '#/components/schemas/Empfaenger'
+        betroffener:
+          $ref: '#/components/schemas/Betroffener'
+    Absender:
+      type: object
+      description: Sender information (hospital/healthcare facility submitting the form)
+      properties:
+        name:
+          type: string
+          nullable: true
+          description: Name of the sender (healthcare facility)
+          example: "Universitätsklinikum Musterstadt"
+        aktenzeichen:
+          type: string
+          nullable: true
+          description: Internal case reference number of the submitter
+          example: "KH-2024-00123"
+        egvp_account_id:
+          type: integer
+          format: int64
+          nullable: true
+          description: |-
+            EGVP account ID (beBPo account) used for electronic submission.
+            References the configured EGVP account for this user.
+          example: 42
+    Empfaenger:
+      type: object
+      description: Recipient information (court or authority receiving the form)
+      properties:
+        name:
+          type: string
+          nullable: true
+          description: Name of the recipient court or authority
+          example: "Amtsgericht Musterstadt"
+        type:
+          $ref: '#/components/schemas/EmpfaengerType'
+        safeId:
+          type: string
+          nullable: true
+          description: |-
+            SAFE-ID for electronic delivery via EGVP.
+            Unique identifier for the recipient's electronic mailbox.
+          example: "de.justiz.bund.egvp.bea.12345"
+        aktenzeichen:
+          type: string
+          nullable: true
+          description: Court case reference number (if known)
+          example: "12 XVII 456/24"
+        sachgebiet:
+          type: string
+          nullable: true
+          description: Department or subject area at the court
+          example: "Betreuungssachen"
+        prioritaet:
+          type: string
+          nullable: true
+          description: Priority level for message delivery
+          example: "normal"
+        adresse:
+          $ref: '#/components/schemas/Adresse'
+    Betroffener:
+      type: object
+      description: Information about the affected person (subject of the guardianship/care proceedings)
+      properties:
+        name:
+          $ref: '#/components/schemas/Name'
+        geburtsdatum:
+          type: string
+          format: date
+          nullable: true
+          description: Date of birth
+          example: "1980-05-15"
+        familienstand:
+          $ref: '#/components/schemas/Familienstand'
+        anschrift:
+          $ref: '#/components/schemas/Adresse'
+        anschriftTelefon:
+          type: string
+          nullable: true
+          description: Phone number at primary address
+          example: "+49 123 456789"
+        derzeitigerWohnort:
+          $ref: '#/components/schemas/Adresse'
+        derzeitigerWohnortTelefon:
+          type: string
+          nullable: true
+          description: Phone number at current residence
+          example: "+49 987 654321"
+    Name:
+      type: object
+      description: Person name
+      properties:
+        vorname:
+          type: string
+          nullable: true
+          description: First name
+          example: "Max"
+        nachname:
+          type: string
+          nullable: true
+          description: Last name
+          example: "Mustermann"
+    Adresse:
+      type: object
+      description: Address information
+      properties:
+        strasse:
+          type: string
+          nullable: true
+          description: Street name and number
+          example: "Musterstraße 123"
+        plz:
+          type: string
+          nullable: true
+          description: Postal code
+          example: "12345"
+        stadt:
+          type: string
+          nullable: true
+          description: City name
+          example: "Musterstadt"
+    Familienstand:
+      type: string
+      nullable: true
+      description: Marital status
+      enum:
+        - Ledig
+        - Verheiratet
+        - Geschieden
+        - Verwitwet
+      example: "Ledig"
+    EmpfaengerType:
+      type: string
+      nullable: true
+      description: Type of recipient
+      enum:
+        - Gericht
+        - Sonstige
+      default: Sonstige
+      example: "Gericht"
+    ValidationErrorResponse:
+      type: object
+      required:
+        - errors
+      description: |-
+        Validation error response returned by Spring's ControllerAdvice.
+        Contains a list of validation error messages.
+      properties:
+        errors:
+          type: array
+          description: List of validation error messages
+          items:
+            type: string
+          example: ["jobId must not be null", "geburtsdatum must be a valid date"]
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+

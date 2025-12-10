@@ -3,7 +3,7 @@
 A practical guide for integration partners using the DUBA (Digital Court Guardianship) API.
 
 **Version:** 0.2.0
-**Last Updated:** 2025-11-28
+**Last Updated:** 2025-12-10
 
 ---
 
@@ -16,10 +16,11 @@ A practical guide for integration partners using the DUBA (Digital Court Guardia
 5. [Understanding MessageInfo](#understanding-messageinfo)
 6. [Download Message Endpoint](#download-message-endpoint)
 7. [Acknowledge Messages Endpoint](#acknowledge-messages-endpoint)
-8. [Complete Workflow Examples](#complete-workflow-examples)
-9. [Filtering Best Practices](#filtering-best-practices)
-10. [Error Codes](#error-codes)
-11. [Reference](#reference)
+8. [Form Pre-fill with Memento Endpoint](#form-pre-fill-with-memento-endpoint)
+9. [Complete Workflow Examples](#complete-workflow-examples)
+10. [Filtering Best Practices](#filtering-best-practices)
+11. [Error Codes](#error-codes)
+12. [Reference](#reference)
 
 ---
 
@@ -30,6 +31,7 @@ The DUBA API provides programmatic access to court messages exchanged via EGVP (
 - **List available messages** with filtering by job ID, Safe-ID, or timestamp
 - **Download messages** as ZIP files containing XJustiz XML and attachments
 - **Acknowledge messages** to trigger cleanup of sensitive data (GDPR compliance)
+- **Create form mementos** to generate pre-filled form URLs from your system data
 
 ### Prerequisites
 
@@ -327,7 +329,6 @@ curl -I -u "user:pass" \
 ### What This Does
 
 When you acknowledge a message:
-
 1. **Deletes on-disk files** - Sensitive message content is removed (data protection)
 2. **Soft-deletes index entry** - Metadata is preserved for audit trail
 3. **Returns detailed status** - Know exactly what happened to each message
@@ -466,6 +467,425 @@ Acknowledging messages is one of three cleanup triggers in the system:
 - Audit trail is preserved for compliance
 
 **Idempotent operation:** Safe to acknowledge the same message multiple times. Already-deleted messages return `ALREADY_DELETED` status (not an error).
+
+---
+
+## Form Pre-fill with Memento Endpoint
+
+**Endpoint:** `POST /api/duba/v1/memento`
+
+**Purpose:** Create encrypted memento strings to pre-fill DUBA web forms with data from your system.
+
+### What This Does
+
+The memento endpoint solves a common integration pattern:
+
+1. **Your system (e.g., KIS)** has complete case data but wants users to review/approve before submission
+2. **You call this endpoint** with the form data as JSON
+3. **You receive back** an encrypted, URL-safe string (the "memento")
+4. **You construct a URL** with the memento parameter
+5. **Users open the URL** and see a pre-filled form ready to review and submit
+
+**Benefits:**
+- No direct submission required - users maintain control
+- Form validation happens in the browser (immediate feedback)
+- Users can correct or supplement data before sending
+- Encrypted mementos are tamper-proof
+
+### Use Case Example
+
+```
+Hospital KIS → Knows patient details for court guardianship request
+           → Calls /memento with patient/case data as JSON
+           → Receives encrypted memento string
+           → Constructs URL: /duba/BetreuungAnregung?m={memento}
+           → Emails/displays URL to authorized user
+User       → Clicks URL
+           → Sees pre-filled form with all case details
+           → Reviews, corrects if needed, submits to court
+```
+
+### Request Body
+
+The endpoint accepts DUBA form data as JSON. All fields except `jobId` are optional.
+
+**Required Fields:**
+- `jobId` - Your internal tracking ID (string)
+- `absender.egvp_account_id` - EGVP/beBPo account ID for submission (integer)
+
+**Common Structure:**
+
+```json
+{
+  "jobId": "job-2024-12345",
+  "meldeZeitpunkt": "2025-12-10T14:30:00+01:00",
+  "absender": {
+    "name": "Klinikum Musterstadt",
+    "aktenzeichen": "KH-2024-001",
+    "egvp_account_id": 42
+  },
+  "empfaenger": {
+    "name": "Amtsgericht Musterstadt",
+    "type": "Gericht",
+    "safeId": "gov2test",
+    "aktenzeichen": "AZ-2024-67890",
+    "adresse": {
+      "strasse": "Gerichtsplatz 1",
+      "plz": "12345",
+      "stadt": "Musterstadt"
+    }
+  },
+  "betroffener": {
+    "name": {
+      "vorname": "Max",
+      "nachname": "Mustermann"
+    },
+    "geburtsdatum": "1950-01-15",
+    "familienstand": "Verheiratet",
+    "anschrift": {
+      "strasse": "Musterstraße 42",
+      "plz": "12345",
+      "stadt": "Musterstadt"
+    },
+    "anschriftTelefon": "+49 123 456789",
+    "derzeitigerWohnort": {
+      "strasse": "Klinikstraße 1",
+      "plz": "12345",
+      "stadt": "Musterstadt"
+    },
+    "derzeitigerWohnortTelefon": "+49 123 999888"
+  }
+}
+```
+
+### Field Reference
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `jobId` | string | Yes | Your internal job/case tracking ID |
+| `meldeZeitpunkt` | datetime (ISO 8601) | No | Timestamp of report/registration |
+| `absender.name` | string | No | Sender organization name |
+| `absender.aktenzeichen` | string | No | Your internal case reference |
+| `absender.egvp_account_id` | integer | Yes* | EGVP beBPo account ID for submission |
+| `empfaenger.name` | string | No | Recipient organization name |
+| `empfaenger.type` | enum | No | `Gericht` or `Sonstige` |
+| `empfaenger.safeId` | string | No | EGVP Safe-ID for recipient |
+| `empfaenger.aktenzeichen` | string | No | Court case reference number |
+| `empfaenger.adresse.*` | object | No | Recipient address (strasse, plz, stadt) |
+| `betroffener.name.*` | object | No | Affected person's name (vorname, nachname) |
+| `betroffener.geburtsdatum` | date (YYYY-MM-DD) | No | Date of birth |
+| `betroffener.familienstand` | enum | No | `Ledig`, `Verheiratet`, `Geschieden`, `Verwitwet` |
+| `betroffener.anschrift.*` | object | No | Home address |
+| `betroffener.anschriftTelefon` | string | No | Home phone number |
+| `betroffener.derzeitigerWohnort.*` | object | No | Current location (e.g., hospital) |
+| `betroffener.derzeitigerWohnortTelefon` | string | No | Current location phone |
+
+\* Required for actual form submission, but optional for memento creation
+
+### Response
+
+Returns a JSON object containing the encrypted memento string:
+
+```json
+{
+  "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..DGG5lQvJC8OpYrCt.Xm8YR..."
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `memento` | string | Encrypted, URL-safe string containing your form data |
+
+**Note:** Memento strings are typically 500-2000 characters depending on data size. They are encrypted with AES-256-GCM and safe to pass via URL parameters.
+
+### Examples
+
+#### Minimal example (jobId only)
+
+```bash
+curl -X POST \
+  -u "user:pass" \
+  -H "Content-Type: application/json" \
+  -d '{"jobId":"job-2024-001","absender":{"egvp_account_id":42}}' \
+  https://elim.example.com/api/duba/v1/memento
+```
+
+Response:
+```json
+{
+  "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..abc123..."
+}
+```
+
+#### Complete guardianship request example
+
+```bash
+curl -X POST \
+  -u "user:pass" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jobId": "job-2024-12345",
+    "meldeZeitpunkt": "2025-12-10T14:30:00+01:00",
+    "absender": {
+      "name": "Klinikum Musterstadt",
+      "aktenzeichen": "KH-2024-001",
+      "egvp_account_id": 42
+    },
+    "empfaenger": {
+      "name": "Amtsgericht Musterstadt",
+      "type": "Gericht",
+      "safeId": "gov2test",
+      "aktenzeichen": "AZ-2024-67890"
+    },
+    "betroffener": {
+      "name": {
+        "vorname": "Max",
+        "nachname": "Mustermann"
+      },
+      "geburtsdatum": "1950-01-15",
+      "familienstand": "Verheiratet",
+      "anschrift": {
+        "strasse": "Musterstraße 42",
+        "plz": "12345",
+        "stadt": "Musterstadt"
+      },
+      "anschriftTelefon": "+49 123 456789",
+      "derzeitigerWohnort": {
+        "strasse": "Klinikstraße 1",
+        "plz": "12345",
+        "stadt": "Musterstadt"
+      }
+    }
+  }' \
+  https://elim.example.com/api/duba/v1/memento
+```
+
+#### Extract memento with jq
+
+```bash
+MEMENTO=$(curl -s -X POST \
+  -u "user:pass" \
+  -H "Content-Type: application/json" \
+  -d '{"jobId":"job-123","absender":{"egvp_account_id":42}}' \
+  https://elim.example.com/api/duba/v1/memento | jq -r '.memento')
+
+echo "Memento: $MEMENTO"
+```
+
+### Constructing Form URLs
+
+Once you have a memento, construct a URL to pre-fill a DUBA form:
+
+**URL Pattern:**
+```
+https://your-instance/duba/{FormName}?m={memento}
+```
+
+**Available Form Types:**
+
+| Form Name | Purpose |
+|-----------|---------|
+| `BetreuungAnregung` | Guardianship suggestion/request |
+| `UnterbringungAntrag` | Involuntary commitment application |
+| `FreiheitsentzugAntrag` | Deprivation of liberty application |
+
+**Example URLs:**
+
+```bash
+# Guardianship form
+https://elim.example.com/duba/BetreuungAnregung?m=eyJhbGciOiJkaXIi...
+
+# Commitment form
+https://elim.example.com/duba/UnterbringungAntrag?m=eyJhbGciOiJkaXIi...
+```
+
+### Complete End-to-End Example
+
+```bash
+#!/bin/bash
+# Complete workflow: Create memento and construct form URL
+
+BASE_URL="https://elim.example.com"
+USER="your-username"
+PASS="your-password"
+FORM_TYPE="BetreuungAnregung"
+
+# Step 1: Prepare form data
+FORM_DATA='{
+  "jobId": "job-2024-12345",
+  "meldeZeitpunkt": "2025-12-10T14:30:00+01:00",
+  "absender": {
+    "name": "Klinikum Musterstadt",
+    "aktenzeichen": "KH-2024-001",
+    "egvp_account_id": 42
+  },
+  "betroffener": {
+    "name": {"vorname": "Max", "nachname": "Mustermann"},
+    "geburtsdatum": "1950-01-15",
+    "anschrift": {
+      "strasse": "Musterstraße 42",
+      "plz": "12345",
+      "stadt": "Musterstadt"
+    }
+  }
+}'
+
+# Step 2: Create memento
+echo "Creating memento..."
+RESPONSE=$(curl -s -X POST \
+  -u "$USER:$PASS" \
+  -H "Content-Type: application/json" \
+  -d "$FORM_DATA" \
+  "$BASE_URL/api/duba/v1/memento")
+
+# Step 3: Extract memento from response
+MEMENTO=$(echo "$RESPONSE" | jq -r '.memento')
+
+if [ -z "$MEMENTO" ] || [ "$MEMENTO" = "null" ]; then
+  echo "Error: Failed to create memento"
+  echo "$RESPONSE" | jq .
+  exit 1
+fi
+
+# Step 4: Construct form URL
+FORM_URL="$BASE_URL/duba/$FORM_TYPE?m=$MEMENTO"
+
+echo "Success! Form URL:"
+echo "$FORM_URL"
+echo ""
+echo "Send this URL to the authorized user to open the pre-filled form."
+```
+
+### Integration Patterns
+
+#### Pattern 1: Email with pre-filled form link
+
+```bash
+# Create memento and email link to user
+MEMENTO=$(curl -s -X POST -u "$USER:$PASS" \
+  -H "Content-Type: application/json" \
+  -d "$FORM_DATA" \
+  "$BASE_URL/api/duba/v1/memento" | jq -r '.memento')
+
+FORM_URL="$BASE_URL/duba/BetreuungAnregung?m=$MEMENTO"
+
+# Email the link (example using mail command)
+echo "Please review and submit the guardianship form: $FORM_URL" | \
+  mail -s "Court Form Ready for Review" user@hospital.example.com
+```
+
+#### Pattern 2: Generate QR code for mobile access
+
+```bash
+# Create memento
+MEMENTO=$(curl -s -X POST -u "$USER:$PASS" \
+  -H "Content-Type: application/json" \
+  -d "$FORM_DATA" \
+  "$BASE_URL/api/duba/v1/memento" | jq -r '.memento')
+
+FORM_URL="$BASE_URL/duba/BetreuungAnregung?m=$MEMENTO"
+
+# Generate QR code (requires qrencode tool)
+echo "$FORM_URL" | qrencode -o form-qr.png
+echo "QR code saved to form-qr.png"
+```
+
+#### Pattern 3: Batch form generation
+
+```bash
+# Generate multiple pre-filled forms from case list
+while IFS=, read -r case_id patient_name dob; do
+  FORM_DATA=$(jq -n \
+    --arg jobId "$case_id" \
+    --arg vorname "$(echo $patient_name | cut -d' ' -f1)" \
+    --arg nachname "$(echo $patient_name | cut -d' ' -f2)" \
+    --arg dob "$dob" \
+    '{
+      jobId: $jobId,
+      absender: {egvp_account_id: 42},
+      betroffener: {
+        name: {vorname: $vorname, nachname: $nachname},
+        geburtsdatum: $dob
+      }
+    }')
+
+  MEMENTO=$(curl -s -X POST -u "$USER:$PASS" \
+    -H "Content-Type: application/json" \
+    -d "$FORM_DATA" \
+    "$BASE_URL/api/duba/v1/memento" | jq -r '.memento')
+
+  echo "$case_id,$BASE_URL/duba/BetreuungAnregung?m=$MEMENTO"
+done < cases.csv > form_urls.csv
+
+echo "Generated form URLs saved to form_urls.csv"
+```
+
+### Error Handling
+
+#### Validation Errors
+
+If the request data is invalid, you'll receive a 400 Bad Request with details:
+
+```bash
+curl -X POST -u "user:pass" \
+  -H "Content-Type: application/json" \
+  -d '{"invalid":"data"}' \
+  https://elim.example.com/api/duba/v1/memento
+```
+
+Response:
+```json
+{
+  "error": "Validation failed",
+  "errors": [
+    "Field 'jobId' is required"
+  ]
+}
+```
+
+#### Handle Errors in Scripts
+
+```bash
+RESPONSE=$(curl -s -X POST -u "$USER:$PASS" \
+  -H "Content-Type: application/json" \
+  -d "$FORM_DATA" \
+  "$BASE_URL/api/duba/v1/memento")
+
+# Check for error field
+if echo "$RESPONSE" | jq -e '.error' > /dev/null; then
+  echo "Error creating memento:"
+  echo "$RESPONSE" | jq -r '.error'
+  if echo "$RESPONSE" | jq -e '.errors' > /dev/null; then
+    echo "Details:"
+    echo "$RESPONSE" | jq -r '.errors[]'
+  fi
+  exit 1
+fi
+
+# Extract memento
+MEMENTO=$(echo "$RESPONSE" | jq -r '.memento')
+echo "Success: $MEMENTO"
+```
+
+### Security Notes
+
+**Memento Encryption:**
+- Mementos are encrypted with AES-256-GCM using your API user's KEK (Key Encryption Key)
+- Each memento is unique even for identical data (includes random IV)
+- Mementos cannot be decrypted without the correct API user credentials
+- Tampering is detected and rejected
+
+**Best Practices:**
+- ✓ Mementos are safe to pass via URL parameters
+- ✓ Mementos can be safely logged or stored
+- ✓ Mementos expire after a reasonable time (check instance configuration)
+- ✗ Don't expose mementos to unauthorized users (they contain sensitive patient data)
+- ✗ Don't reuse mementos across different forms or cases
+
+**Data Minimization:**
+- Only include data that's actually needed for the form
+- Empty/null fields don't bloat the memento (they're omitted)
+- Minimal mementos result in shorter, more manageable URLs
 
 ---
 
@@ -711,6 +1131,8 @@ fi
 |--------|----------|-------------|
 | GET | `/api/duba/v1/messages` | List available messages |
 | GET | `/api/duba/v1/download/{id}` | Download message as ZIP |
+| POST | `/api/duba/v1/messages/ack` | Acknowledge messages (trigger cleanup) |
+| POST | `/api/duba/v1/memento` | Create encrypted memento for form pre-fill |
 
 ### OpenAPI Specification
 
@@ -736,5 +1158,5 @@ For technical support or questions about the DUBA API:
 ---
 
 **Document Version:** 0.2.0
-**Last Updated:** 2025-11-27
+**Last Updated:** 2025-12-10
 **API Version:** v1
