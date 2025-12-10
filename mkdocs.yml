@@ -69,6 +69,7 @@ nav:
      - DUBA:
        - "API Tutorial": "Products/DUBA/api-tutorial.md"
        - "api.yml (OpenAPI)": Products/DUBA/api.yml
+       - "Swagger API Viewer": "https://editor.swagger.io/#/?import=https://vertama-gmbh.github.io/docs/Products/DUBA/api.yml"
      - ELIM:
        - "Products/ELIM/onepager/OnePager (PNG).md"
        - "Products/ELIM/onepager/OnePager (HTML).md"
