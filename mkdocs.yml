@@ -83,6 +83,7 @@ nav:
       - "Password-Based User Secrets Encryption": "background-and-explanations/security-and-encryption/Password-Based User Secrets Encryption with Derived Keys.md"
       - "Implementation Notes": "background-and-explanations/security-and-encryption/Implementation-Notes.md"
       - "API Usage Guide": "background-and-explanations/security-and-encryption/API-Usage-Guide.md"
-  - Reference: []
+  - Reference:
+    - "Systemanforderungen": "Reference/system-requirements.md"
   - Downloads: download.md
   - About: about.md
