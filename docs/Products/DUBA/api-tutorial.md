@@ -548,12 +548,7 @@ The endpoint accepts DUBA form data as JSON. All fields except `jobId` are optio
       "stadt": "Musterstadt"
     },
     "anschriftTelefon": "+49 123 456789",
-    "derzeitigerWohnort": {
-      "strasse": "Klinikstraße 1",
-      "plz": "12345",
-      "stadt": "Musterstadt"
-    },
-    "derzeitigerWohnortTelefon": "+49 123 999888"
+    "gegenwaertigerAufenthalt": "Klinik XY, Station 3, Zimmer 12"
   }
 }
 ```
@@ -577,8 +572,7 @@ The endpoint accepts DUBA form data as JSON. All fields except `jobId` are optio
 | `betroffener.familienstand` | enum | No | `Ledig`, `Verheiratet`, `Geschieden`, `Verwitwet` |
 | `betroffener.anschrift.*` | object | No | Home address |
 | `betroffener.anschriftTelefon` | string | No | Home phone number |
-| `betroffener.derzeitigerWohnort.*` | object | No | Current location (e.g., hospital) |
-| `betroffener.derzeitigerWohnortTelefon` | string | No | Current location phone |
+| `betroffener.gegenwaertigerAufenthalt` | string | No | Current location (e.g., hospital, ward, room) |
 
 \* Required for actual form submission, but optional for memento creation
 
@@ -650,11 +644,7 @@ curl -X POST \
         "stadt": "Musterstadt"
       },
       "anschriftTelefon": "+49 123 456789",
-      "derzeitigerWohnort": {
-        "strasse": "Klinikstraße 1",
-        "plz": "12345",
-        "stadt": "Musterstadt"
-      }
+      "gegenwaertigerAufenthalt": "Klinik XY, Station 3, Zimmer 12"
     }
   }' \
   https://elim.example.com/api/duba/v1/memento
