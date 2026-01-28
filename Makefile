@@ -3,32 +3,25 @@
 
 VENV_DIR := .venv
 
-.PHONY: setup build publish clean
-
 setup:
 	@echo "Setting up virtual environment and installing dependencies..."
-	python3 -m venv $(VENV_DIR)
-	./$(VENV_DIR)/bin/pip install -r requirements.txt
+	uv sync
 
 build:
 	@echo "Building MkDocs documentation..."
-	./$(VENV_DIR)/bin/mkdocs build
+	uv run mkdocs build
 
-pdf:
-	@echo "Generating PDF documentation..."
-	@ENABLE_PDF_EXPORT=1 ./$(VENV_DIR)/bin/mkdocs build --quiet
-	@mkdir -p docs/pdf
-	@cp site/pdf/document.pdf docs/pdf/document.pdf
-	@echo "PDF generated and copied to docs/pdf/document.pdf"
-	@echo "Now run 'make dev' or 'make serve' to view it locally"
+# PDF generation disabled - mkdocs PDF plugin ecosystem is unreliable
+# pdf:
+# 	@echo "PDF generation not supported"
 
 serve:
 	@echo "Starting MkDocs development server..."
-	./$(VENV_DIR)/bin/mkdocs serve
+	uv run mkdocs serve
 
 dev:
 	@echo "Starting MkDocs development server..."
-	./$(VENV_DIR)/bin/mkdocs serve --config-file mkdocs.dev.yml
+	uv run mkdocs serve --config-file mkdocs.dev.yml
 
 #preview:
 #	@echo "Starting MkDocs development server..."
@@ -36,8 +29,7 @@ dev:
 
 publish:
 	@echo "Publishing MkDocs documentation to GitHub Pages..."
-	#./$(VENV_DIR)/bin/mkdocs gh-deploy --remote-name github --config-file mkdocs.prod.yml
-	./$(VENV_DIR)/bin/mkdocs gh-deploy --remote-name github
+	uv run mkdocs gh-deploy --remote-name github
 
 clean:
 	@echo "Cleaning up build artifacts and virtual environment..."
