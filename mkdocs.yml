@@ -23,6 +23,8 @@ theme:
 extra_css:
   - css/extra.css
   - css/pdf-print.css
+extra_javascript:
+  - js/external-links.js
 markdown_extensions:
   - pymdownx.highlight
   - pymdownx.inlinehilite
