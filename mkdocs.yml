@@ -32,7 +32,8 @@ nav:
      - DUBA:
        - "API Tutorial": "Products/DUBA/api-tutorial.md"
        - "api.yml (OpenAPI)": Products/DUBA/api.yml
-       - "Swagger API Viewer": "https://editor.swagger.io/#/?import=https://vertama-gmbh.github.io/docs/Products/DUBA/api.yml"
+       #- "Swagger API Viewer": "https://editor.swagger.io/#/?import=https://vertama-gmbh.github.io/docs/Products/DUBA/api.yml"
+       - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DUBA"
      - ELIM:
        - "Flyer":
          - "Products/ELIM/onepager/OnePager (PNG).md"
@@ -41,7 +42,9 @@ nav:
      - "ELIM+":
        - "API Tutorial": "Products/ELIMPLUS/api-tutorial.md"
        - "api.yml (OpenAPI)": Products/ELIMPLUS/api.yml
-       - "Swagger API Viewer": "https://editor.swagger.io/#/?import=https://vertama-gmbh.github.io/docs/Products/ELIMPLUS/api.yml"
+       #- "Swagger API Viewer": "https://editor.swagger.io/#/?import=https://vertama-gmbh.github.io/docs/Products/ELIMPLUS/api.yml"
+       - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=ELIM%2B"
+       
   - Guides:
     - "Folder Sync Handbook": "how-to/folder-sync-handbuch.md"
   # - "Tutorials": []
