@@ -10,7 +10,12 @@ theme:
   titles_only: false
   collapse_navigation: false
   features:
-    - navigation.sections
+    - navigation.tabs           # Horizontal top-level navigation
+    - navigation.tabs.sticky    # Tabs remain visible when scrolling
+    - navigation.sections       # Render sections in sidebar
+    - navigation.top            # Back to top button
+    - navigation.tracking       # Update URL as you scroll
+    - toc.follow                # TOC follows scroll position
 extra_css:
   - css/extra.css
   - css/pdf-print.css
