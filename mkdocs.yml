@@ -9,6 +9,10 @@ theme:
   locale: en
   titles_only: false
   collapse_navigation: false
+  logo: img/Vertama-Icon.svg
+  favicon: img/favicon.png
+  palette:
+    primary: custom  # Using custom Vertama red from extra.css
   features:
     - navigation.tabs           # Horizontal top-level navigation
     - navigation.tabs.sticky    # Tabs remain visible when scrolling

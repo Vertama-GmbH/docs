@@ -21,7 +21,7 @@ serve:
 
 dev:
 	@echo "Starting MkDocs development server..."
-	uv run mkdocs serve --config-file mkdocs.dev.yml
+	uv run mkdocs serve
 
 #preview:
 #	@echo "Starting MkDocs development server..."
