@@ -85,5 +85,6 @@ nav:
       - "API Usage Guide": "background-and-explanations/security-and-encryption/API-Usage-Guide.md"
   - Reference:
     - "Systemanforderungen": "Reference/system-requirements.md"
+    - "Endpunkte & Infrastruktur": "Reference/endpoints-and-infrastructure.md"
   - Downloads: download.md
   - About: about.md
