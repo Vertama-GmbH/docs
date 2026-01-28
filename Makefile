@@ -14,6 +14,14 @@ build:
 	@echo "Building MkDocs documentation..."
 	./$(VENV_DIR)/bin/mkdocs build
 
+pdf:
+	@echo "Generating PDF documentation..."
+	@ENABLE_PDF_EXPORT=1 ./$(VENV_DIR)/bin/mkdocs build --quiet
+	@mkdir -p docs/pdf
+	@cp site/pdf/document.pdf docs/pdf/document.pdf
+	@echo "PDF generated and copied to docs/pdf/document.pdf"
+	@echo "Now run 'make dev' or 'make serve' to view it locally"
+
 serve:
 	@echo "Starting MkDocs development server..."
 	./$(VENV_DIR)/bin/mkdocs serve

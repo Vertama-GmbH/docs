@@ -23,4 +23,6 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Deploy to GitHub Pages
+        env:
+          ENABLE_PDF_EXPORT: 1
         run: mkdocs gh-deploy --force 

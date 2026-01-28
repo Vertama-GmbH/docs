@@ -72,6 +72,9 @@ nav:
          - "Products/ELIM/onepager/OnePager (PNG).md"
          - "Products/ELIM/onepager/OnePager (HTML).md"
          - "Products/ELIM/onepager/OnePager.md"
+     - "ELIM+":
+       - "Products/ELIMPLUS/api-tutorial.md"
+       - "Products/ELIMPLUS/api.yml"
   - How-tos?:
     - "how-to/folder-sync-handbuch.md"
   - "Tutorials": []

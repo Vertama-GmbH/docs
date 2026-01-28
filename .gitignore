@@ -6,6 +6,9 @@ notes.md
 # MkDocs build output
 site/
 
+# Generated PDF (built on-demand locally and in CI)
+docs/pdf/
+
 # Python cache files
 __pycache__/
 *.pyc
