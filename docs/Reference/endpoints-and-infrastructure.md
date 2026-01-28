@@ -31,9 +31,9 @@ Um eine verschlüsselte Kommunikation zu garantieren, nutzen wir aktuelle SSL/TL
 
 ### 🌐 IP-Adressen
 Falls Ihr Unternehmensnetzwerk durch eine Firewall geschützt ist, müssen die folgenden IP-Adressen und Ports für den ausgehenden Datenverkehr freigeschaltet werden:
-* 18.197.24.114
-* 63.178.126.231
-* 63.178.152.244
+- 18.197.24.114
+- 63.178.126.231
+- 63.178.152.244
 
 ---
 
