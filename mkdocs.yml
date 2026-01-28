@@ -74,6 +74,10 @@ nav:
        - "Products/ELIM/onepager/OnePager (PNG).md"
        - "Products/ELIM/onepager/OnePager (HTML).md"
        - "Products/ELIM/onepager/OnePager.md"
+     - "ELIM+":
+       - "API Tutorial": "Products/ELIMPLUS/api-tutorial.md"
+       - "api.yml (OpenAPI)": Products/ELIMPLUS/api.yml
+       - "Swagger API Viewer": "https://editor.swagger.io/#/?import=https://vertama-gmbh.github.io/docs/Products/ELIMPLUS/api.yml"
   - Guides:
     - "Folder Sync Handbook": "how-to/folder-sync-handbuch.md"
   - "Tutorials": []
