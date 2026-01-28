@@ -26,24 +26,25 @@ plugins:
 nav:
   - Home: index.md
   - Products:
-     - DIGG: []
-     - DIGT: []
-     - DIVI: []
+     # - DIGG: []
+     # - DIGT: []
+     # - DIVI: []
      - DUBA:
        - "API Tutorial": "Products/DUBA/api-tutorial.md"
        - "api.yml (OpenAPI)": Products/DUBA/api.yml
        - "Swagger API Viewer": "https://editor.swagger.io/#/?import=https://vertama-gmbh.github.io/docs/Products/DUBA/api.yml"
      - ELIM:
-       - "Products/ELIM/onepager/OnePager (PNG).md"
-       - "Products/ELIM/onepager/OnePager (HTML).md"
-       - "Products/ELIM/onepager/OnePager.md"
+       - "Flyer":
+         - "Products/ELIM/onepager/OnePager (PNG).md"
+         - "Products/ELIM/onepager/OnePager (HTML).md"
+         - "Products/ELIM/onepager/OnePager.md"
      - "ELIM+":
        - "API Tutorial": "Products/ELIMPLUS/api-tutorial.md"
        - "api.yml (OpenAPI)": Products/ELIMPLUS/api.yml
        - "Swagger API Viewer": "https://editor.swagger.io/#/?import=https://vertama-gmbh.github.io/docs/Products/ELIMPLUS/api.yml"
   - Guides:
     - "Folder Sync Handbook": "how-to/folder-sync-handbuch.md"
-  - "Tutorials": []
+  # - "Tutorials": []
   - "Background & Explanations":
     - "Security & Encryption":
       - "Multi-User Secret Sharing": "background-and-explanations/security-and-encryption/Multi-User Secret Sharing with Zero-Knowledge Architecture.md"
