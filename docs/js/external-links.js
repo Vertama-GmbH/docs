@@ -2,8 +2,8 @@
 document.addEventListener('DOMContentLoaded', function() {
   // Find all navigation links
   document.querySelectorAll('.md-nav__link').forEach(function(link) {
-    // If it's an external link (has http/https and not our domain)
-    if (link.href && (link.href.startsWith('http://') || link.href.startsWith('https://'))) {
+    // Check if it's truly an external link (different hostname)
+    if (link.href && link.hostname && link.hostname !== window.location.hostname) {
       link.setAttribute('target', '_blank');
       link.setAttribute('rel', 'noopener noreferrer');
     }
