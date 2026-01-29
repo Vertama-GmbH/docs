@@ -107,6 +107,13 @@ components:
           example: "J09"
         Krankheit:
           $ref: '#/components/schemas/Krankheit'
+        MeldungsVerweisId:
+          type: string
+          nullable: true
+          description: |-
+            Reference ID for linking corrections or follow-up reports.
+            Used to reference a previous report that is being corrected or updated.
+          example: "MELD-REF-2024-00001"
         Patient:
           $ref: '#/components/schemas/Patient'
         MeldendeEinrichtung:
@@ -145,7 +152,31 @@ components:
           description: SARS-CoV-2-specific data
     Patient:
       type: object
-      description: Patient information (all fields optional for memento)
+      description: |-
+        Patient information - supports both standard and anonymous patients.
+
+        Validation semantics (enforced at form/backend level):
+        - When IsAnonym=true: Anonym object should be populated, Standard should be null
+        - When IsAnonym=false: Standard object should be populated, Anonym should be null
+        - When IsAnonym=null: Both Standard and Anonym can be null
+        - Both Standard and Anonym populated simultaneously is an error
+
+        All fields are optional for lenient memento creation.
+      properties:
+        IsAnonym:
+          type: boolean
+          nullable: true
+          description: |-
+            Indicates patient type: true for anonymous, false for standard, null for unspecified.
+            Anonymous patients have limited data for privacy protection.
+          example: false
+        Standard:
+          $ref: '#/components/schemas/PatientStandard'
+        Anonym:
+          $ref: '#/components/schemas/PatientAnonym'
+    PatientStandard:
+      type: object
+      description: Standard patient with full identification
       properties:
         Name:
           $ref: '#/components/schemas/Name'
@@ -155,12 +186,49 @@ components:
           type: string
           format: date
           nullable: true
-          description: Date of birth
+          description: Full birth date (YYYY-MM-DD)
           example: "1980-05-15"
         Adresse:
           $ref: '#/components/schemas/Adresse'
         Kontakt:
           $ref: '#/components/schemas/Kontakt'
+    PatientAnonym:
+      type: object
+      description: |-
+        Anonymous patient with limited data for privacy protection.
+
+        Differences from standard patient:
+        - No name or contact information
+        - Birth month/year only (not full date)
+        - Limited address (postal code and country only)
+      properties:
+        Geschlecht:
+          $ref: '#/components/schemas/GenderOrNoInformation'
+        GeburtsmonatJahr:
+          type: string
+          pattern: '^\d{4}-\d{2}$'
+          nullable: true
+          description: Birth month and year in YYYY-MM format (not full date for privacy)
+          example: "1980-05"
+        Adresse:
+          $ref: '#/components/schemas/AnonymAdresse'
+    AnonymAdresse:
+      type: object
+      description: |-
+        Limited address information for anonymous patients (privacy protection).
+
+        Contains only postal code and country - no street name, city, or other identifiable details.
+      properties:
+        PLZ:
+          type: string
+          nullable: true
+          description: Postal code
+          example: "12345"
+        Land:
+          type: string
+          nullable: true
+          description: Country
+          example: "Deutschland"
     Name:
       type: object
       description: Person name

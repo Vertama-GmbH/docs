@@ -3,7 +3,7 @@
 A practical guide for integration partners using the ELIM+ (Laboratory Reporting) API.
 
 **Version:** 0.1.0
-**Last Updated:** 2026-01-28
+**Last Updated:** 2026-01-29
 
 ---
 
@@ -102,12 +102,13 @@ curl -H "Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=" \
 
 The main data structure for notifiable disease reporting. Contains:
 - **reportId** (required): Unique laboratory report identifier
-- **Patient**: Name, gender, birthdate, address, contact
+- **Patient**: Patient information (standard with full identification, or anonymous with limited data for privacy)
 - **MeldendeEinrichtung**: Reporting facility (laboratory)
 - **MeldendePerson**: Reporting person
 - **EinsendendeEinrichtung**: Sending facility (e.g., hospital that ordered the test)
 - **Krankheit**: Disease-specific data (Influenza, RSV, Norovirus, or SARS-CoV-2)
 - **MeldungsDatum**: Report date
+- **MeldungsVerweisId**: Reference ID for linking corrections or follow-up reports
 
 ### Memento Pattern
 
@@ -117,6 +118,26 @@ A **memento** is an encrypted, URL-safe string that contains form data:
 - Tamper-proof and URL-safe
 - Typical size: 500-2000 characters
 - Used as query parameter: `?m={memento}`
+
+### Patient Types
+
+ELIM+ supports two patient types for privacy protection:
+
+**Standard Patient** (`IsAnonym: false`):
+- Full identification with name, complete birthdate, full address, and contact information
+- Used for typical laboratory reporting where patient identity is available
+- Structure: `Patient.Standard` contains Name, Geschlecht, Geburtsdatum (YYYY-MM-DD), Adresse, Kontakt
+
+**Anonymous Patient** (`IsAnonym: true`):
+- Limited data to protect patient privacy
+- No name or contact information
+- Birth month/year only (not full date): `GeburtsmonatJahr` in YYYY-MM format
+- Limited address with only postal code and country (no street, city, or identifying details)
+- Structure: `Patient.Anonym` contains Geschlecht, GeburtsmonatJahr, Adresse (PLZ and Land only)
+
+**When to use:**
+- Use **Standard** for normal reporting when patient identity is available
+- Use **Anonymous** when patient wishes to remain anonymous or local regulations require privacy protection
 
 ### Disease Types
 
@@ -163,6 +184,7 @@ The endpoint accepts laboratory report data as JSON. Only `reportId` is required
   "reportId": "LAB-2024-00123",
   "KrankheitsCode": "J09",
   "MeldungsDatum": "2024-12-08",
+  "MeldungsVerweisId": "MELD-REF-2024-00001",
   "Krankheit": {
     "Influenza": {},
     "Rsv": null,
@@ -170,20 +192,23 @@ The endpoint accepts laboratory report data as JSON. Only `reportId` is required
     "Sarscov2": null
   },
   "Patient": {
-    "Name": {
-      "Vorname": "Max",
-      "Nachname": "Mustermann"
-    },
-    "Geschlecht": "MAENNLICH",
-    "Geburtsdatum": "1980-05-15",
-    "Adresse": {
-      "Strasse": "Musterstraße 123",
-      "PLZ": "12345",
-      "Stadt": "Musterstadt"
-    },
-    "Kontakt": {
-      "Telefon": "+49 123 456789",
-      "Email": "max.mustermann@example.com"
+    "IsAnonym": false,
+    "Standard": {
+      "Name": {
+        "Vorname": "Max",
+        "Nachname": "Mustermann"
+      },
+      "Geschlecht": "MAENNLICH",
+      "Geburtsdatum": "1980-05-15",
+      "Adresse": {
+        "Strasse": "Musterstraße 123",
+        "PLZ": "12345",
+        "Stadt": "Musterstadt"
+      },
+      "Kontakt": {
+        "Telefon": "+49 123 456789",
+        "Email": "max.mustermann@example.com"
+      }
     }
   },
   "MeldendeEinrichtung": {
@@ -231,12 +256,20 @@ The endpoint accepts laboratory report data as JSON. Only `reportId` is required
 | `reportId` | string | **Yes** | Unique laboratory report identifier |
 | `KrankheitsCode` | string | No | Disease code (e.g., ICD-10) |
 | `MeldungsDatum` | date (YYYY-MM-DD) | No | Report date |
+| `MeldungsVerweisId` | string | No | Reference ID for linking corrections or follow-up reports |
 | `Krankheit.*` | object | No | Disease-specific data (only one should be populated) |
-| `Patient.Name.*` | object | No | Patient name (Vorname, Nachname) |
-| `Patient.Geschlecht` | enum | No | Gender: NASK, ASKU, MAENNLICH, WEIBLICH, DIVERS, UNBESTIMMT |
-| `Patient.Geburtsdatum` | date (YYYY-MM-DD) | No | Date of birth |
-| `Patient.Adresse.*` | object | No | Patient address (Strasse, PLZ, Stadt) |
-| `Patient.Kontakt.*` | object | No | Patient contact (Telefon, Email, Fax) |
+| `Patient.IsAnonym` | boolean | No | Patient type: false = standard (default), true = anonymous |
+| `Patient.Standard.*` | object | No | Standard patient with full identification (use when IsAnonym=false) |
+| `Patient.Standard.Name.*` | object | No | Patient name (Vorname, Nachname) |
+| `Patient.Standard.Geschlecht` | enum | No | Gender (see enum values below) |
+| `Patient.Standard.Geburtsdatum` | date (YYYY-MM-DD) | No | Full date of birth |
+| `Patient.Standard.Adresse.*` | object | No | Full address (Strasse, PLZ, Stadt, Land) |
+| `Patient.Standard.Kontakt.*` | object | No | Contact information (Telefon, Email, Fax) |
+| `Patient.Anonym.*` | object | No | Anonymous patient with limited data (use when IsAnonym=true) |
+| `Patient.Anonym.Geschlecht` | enum | No | Gender (see enum values below) |
+| `Patient.Anonym.GeburtsmonatJahr` | string (YYYY-MM) | No | Birth month/year only (not full date for privacy) |
+| `Patient.Anonym.Adresse.PLZ` | string | No | Postal code only |
+| `Patient.Anonym.Adresse.Land` | string | No | Country only |
 | `MeldendeEinrichtung.*` | object | No | Reporting facility (laboratory) |
 | `MeldendePerson.*` | object | No | Reporting person |
 | `EinsendendeEinrichtung.*` | object | No | Sending facility |
@@ -292,24 +325,28 @@ curl -X POST \
     "reportId": "LAB-2024-00123",
     "KrankheitsCode": "J09",
     "MeldungsDatum": "2024-12-08",
+    "MeldungsVerweisId": "MELD-REF-2024-00001",
     "Krankheit": {
       "Influenza": {}
     },
     "Patient": {
-      "Name": {
-        "Vorname": "Max",
-        "Nachname": "Mustermann"
-      },
-      "Geschlecht": "MAENNLICH",
-      "Geburtsdatum": "1980-05-15",
-      "Adresse": {
-        "Strasse": "Musterstraße 123",
-        "PLZ": "12345",
-        "Stadt": "Musterstadt"
-      },
-      "Kontakt": {
-        "Telefon": "+49 123 456789",
-        "Email": "max.mustermann@example.com"
+      "IsAnonym": false,
+      "Standard": {
+        "Name": {
+          "Vorname": "Max",
+          "Nachname": "Mustermann"
+        },
+        "Geschlecht": "MAENNLICH",
+        "Geburtsdatum": "1980-05-15",
+        "Adresse": {
+          "Strasse": "Musterstraße 123",
+          "PLZ": "12345",
+          "Stadt": "Musterstadt"
+        },
+        "Kontakt": {
+          "Telefon": "+49 123 456789",
+          "Email": "max.mustermann@example.com"
+        }
       }
     },
     "MeldendeEinrichtung": {
@@ -332,45 +369,202 @@ MEMENTO=$(curl -s -X POST \
 echo "Memento: $MEMENTO"
 ```
 
-### Constructing Form URLs
+### Constructing URLs for End Users
 
-Once you have a memento, construct a URL to pre-fill a laboratory reporting form:
+Once you have a memento, construct a URL for end users to access pre-filled forms.
+
+#### Recommended: Basic Auth Login (BAL) Pattern
+
+For external integrations, use the BAL endpoint for single-click authenticated access:
 
 **URL Pattern:**
 ```
-https://your-instance/elim/r/{Disease}/?m={memento}
+https://username:password@your-instance/bal/elimplus/?m={memento}
 ```
 
-**Disease Routes:**
+**Components:**
+- `username:password` - End user's credentials (not API credentials)
+- `/bal/` - Basic Auth Login endpoint (converts credentials to session)
+- `/elimplus/` - ELIM+ product index page
+- `?m={memento}` - Pre-fill data parameter
+
+**Example:**
+```bash
+https://lab-tech:secret@elim.example.com/bal/elimplus/?m=eyJhbGciOiJkaXIi...
+```
+
+**User Flow:**
+1. User clicks link
+2. BAL authenticates with provided credentials
+3. Creates secure session (no more credentials needed)
+4. Redirects to `/elimplus/?m={memento}`
+5. User sees ELIM+ index with pre-filled data
+6. User selects disease form and submits
+
+**Benefits:**
+- ✅ Single-click access (no login page)
+- ✅ Proper session with logout support
+- ✅ Credentials only sent once
+
+See [Basic Auth Login Guide](../authentication/basic-auth-login.md) for details.
+
+#### Alternative: Manual Login
+
+If users prefer manual login, construct a simple URL without credentials:
+
+**URL Pattern:**
+```
+https://your-instance/elimplus/?m={memento}
+```
+
+Users must login manually before accessing the form.
+
+#### Legacy: Direct Disease Form URLs
+
+Disease-specific forms can be accessed directly (requires login):
 
 | Disease | Route |
 |---------|-------|
-| Influenza | `/elim/r/Influenza/` |
-| RSV | `/elim/r/Rsv/` |
-| Norovirus | `/elim/r/Norovirus/` |
-| SARS-CoV-2 | `/elim/r/Sarscov2/` |
+| Influenza | `/elim/r/Influenza/?m={memento}` |
+| RSV | `/elim/r/Rsv/?m={memento}` |
+| Norovirus | `/elim/r/Norovirus/?m={memento}` |
+| SARS-CoV-2 | `/elim/r/Sarscov2/?m={memento}` |
 
-**Example URLs:**
-
-```bash
-# Influenza form
-https://elim.example.com/elim/r/Influenza/?m=eyJhbGciOiJkaXIi...
-
-# RSV form
-https://elim.example.com/elim/r/Rsv/?m=eyJhbGciOiJkaXIi...
-
-# Norovirus form
-https://elim.example.com/elim/r/Norovirus/?m=eyJhbGciOiJkaXIi...
-
-# SARS-CoV-2 form
-https://elim.example.com/elim/r/Sarscov2/?m=eyJhbGciOiJkaXIi...
-```
+**Note:** The index page (`/elimplus/`) is recommended as the entry point for better user experience.
 
 ---
 
 ## Complete Workflow Examples
 
-### Workflow 1: Create memento and construct form URL
+### Overview: End-to-End External Integration
+
+For external systems integrating with ELIM+, the complete workflow involves:
+
+**1. API Step (System-to-System):**
+- Your system calls the Memento API with laboratory data
+- Receives encrypted memento string
+
+**2. User Access Step (User-Facing):**
+- Your system constructs an authenticated URL for end users
+- Users click the link to access ELIM+ with pre-filled data
+- **Recommended:** Use Basic Auth Login (BAL) for single-click authenticated access
+
+**Complete Integration Pattern: API + BAL**
+
+```
+External System (Laboratory/KIS)
+    ↓
+[1] POST /api/elimplus/v1/memento
+    with API user credentials
+    receives memento string
+    ↓
+[2] Construct authenticated URL:
+    https://enduser:password@host/bal/elimplus/?m={memento}
+    ↓
+[3] Send URL to end user
+    (via email, portal link, SMS, etc.)
+    ↓
+End User
+    ↓
+[4] Click link → BAL authenticates
+    → redirects to /elimplus/?m={memento}
+    ↓
+[5] ELIM+ index page with pre-filled data
+    → User selects disease form
+    ↓
+[6] Review pre-filled form and submit to DEMIS
+```
+
+**Key Concepts:**
+
+- **Two Sets of Credentials:**
+  - **API user:** System credentials for calling the memento API (service account)
+  - **End user:** Individual user credentials for accessing ELIM+ (their login account)
+
+- **Basic Auth Login (BAL):**
+  - Endpoint: `GET /bal/{target-path}`
+  - Converts Basic Auth credentials into secure session
+  - Users get proper session-based authentication with logout support
+  - See [Basic Auth Login Guide](../authentication/basic-auth-login.md) for details
+
+- **ELIM+ Index Page:**
+  - Entry point: `/elimplus/` or `/elimplus/index`
+  - Users select which disease form to work with
+  - Memento data is available across all forms
+
+**Why use BAL?**
+✅ Single-click access (no separate login page)
+✅ Proper session management with logout
+✅ Secure credential handling
+✅ Compatible with existing Basic Auth patterns
+
+---
+
+### Workflow 1: Complete external integration (API + BAL)
+
+```bash
+#!/bin/bash
+# Complete workflow for external laboratory system integration
+
+BASE_URL="https://elim.example.com"
+API_USER="lab-api"          # System credentials for API
+API_PASS="api-secret"
+END_USER="lab-tech"         # End user credentials for form access
+END_USER_PASS="tech-secret"
+
+# Step 1: Create memento via API (system-to-system)
+echo "Creating memento via API..."
+MEMENTO=$(curl -s -X POST \
+  -u "$API_USER:$API_PASS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "reportId": "LAB-2024-00123",
+    "KrankheitsCode": "J09",
+    "MeldungsDatum": "2024-12-08",
+    "Krankheit": {"Influenza": {}},
+    "Patient": {
+      "IsAnonym": false,
+      "Standard": {
+        "Name": {"Vorname": "Max", "Nachname": "Mustermann"},
+        "Geschlecht": "MAENNLICH",
+        "Geburtsdatum": "1980-05-15"
+      }
+    },
+    "MeldendeEinrichtung": {
+      "EinrichtungsName": "Universitätsklinikum Musterstadt",
+      "BSNR": "123456789"
+    }
+  }' \
+  "$BASE_URL/api/elimplus/v1/memento" | jq -r '.memento')
+
+echo "Memento created: ${MEMENTO:0:50}..."
+
+# Step 2: Construct BAL URL for end user (ELIM+ index page)
+FORM_URL="https://$END_USER:$END_USER_PASS@$BASE_URL/bal/elimplus/?m=$MEMENTO"
+
+# Step 3: Deliver to end user (example: email)
+echo ""
+echo "Sending link to end user..."
+echo "To: lab-tech@hospital.com"
+echo "Subject: Laboratory Report Ready for Review (LAB-2024-00123)"
+echo ""
+echo "Form URL (user clicks → auto-login → ELIM+ index):"
+echo "$FORM_URL"
+echo ""
+echo "What happens when user clicks:"
+echo "1. BAL authenticates with end user credentials"
+echo "2. Creates secure session for end user"
+echo "3. Redirects to /elimplus/?m={memento}"
+echo "4. User sees ELIM+ index page with pre-filled data"
+echo "5. User selects disease form (e.g., Influenza)"
+echo "6. Form is pre-filled, user reviews and submits"
+```
+
+**Note:** The memento parameter (`?m={memento}`) is preserved when navigating from the index page to disease-specific forms.
+
+---
+
+### Workflow 2: Direct to disease form (alternative)
 
 ```bash
 #!/bin/bash
@@ -390,13 +584,16 @@ LAB_DATA='{
     "Influenza": {}
   },
   "Patient": {
-    "Name": {"Vorname": "Max", "Nachname": "Mustermann"},
-    "Geschlecht": "MAENNLICH",
-    "Geburtsdatum": "1980-05-15",
-    "Adresse": {
-      "Strasse": "Musterstraße 123",
-      "PLZ": "12345",
-      "Stadt": "Musterstadt"
+    "IsAnonym": false,
+    "Standard": {
+      "Name": {"Vorname": "Max", "Nachname": "Mustermann"},
+      "Geschlecht": "MAENNLICH",
+      "Geburtsdatum": "1980-05-15",
+      "Adresse": {
+        "Strasse": "Musterstraße 123",
+        "PLZ": "12345",
+        "Stadt": "Musterstadt"
+      }
     }
   },
   "MeldendeEinrichtung": {
@@ -422,57 +619,66 @@ if [ -z "$MEMENTO" ] || [ "$MEMENTO" = "null" ]; then
   exit 1
 fi
 
-# Step 4: Construct form URL
-FORM_URL="$BASE_URL/elim/r/$DISEASE/?m=$MEMENTO"
+# Step 4: Construct ELIM+ index URL (without BAL - requires manual login)
+FORM_URL="$BASE_URL/elimplus/?m=$MEMENTO"
 
-echo "Success! Form URL:"
+echo "Success! ELIM+ URL:"
 echo "$FORM_URL"
 echo ""
-echo "Send this URL to the authorized user to open the pre-filled form."
+echo "Send this URL to users who will login manually."
+echo "Note: For single-click access, use Workflow 1 with BAL instead."
 ```
 
-### Workflow 2: Email with pre-filled form link
+### Workflow 3: Email with pre-filled form link (BAL)
 
 ```bash
 #!/bin/bash
 # Create memento and email link to laboratory technician
 
 BASE_URL="https://elim.example.com"
-USER="kis-api-user"
-PASS="your-password"
+API_USER="kis-api-user"
+API_PASS="api-password"
+END_USER="lab-tech"
+END_USER_PASS="tech-password"
 
-# Create memento for RSV report
-MEMENTO=$(curl -s -X POST -u "$USER:$PASS" \
+# Create memento for RSV report (using API credentials)
+MEMENTO=$(curl -s -X POST -u "$API_USER:$API_PASS" \
   -H "Content-Type: application/json" \
   -d '{
     "reportId": "LAB-2024-00456",
     "Krankheit": {"Rsv": {}},
     "Patient": {
-      "Name": {"Vorname": "Anna", "Nachname": "Schmidt"},
-      "Geburtsdatum": "1990-03-20"
+      "IsAnonym": false,
+      "Standard": {
+        "Name": {"Vorname": "Anna", "Nachname": "Schmidt"},
+        "Geburtsdatum": "1990-03-20"
+      }
     }
   }' \
   "$BASE_URL/api/elimplus/v1/memento" | jq -r '.memento')
 
-FORM_URL="$BASE_URL/elim/r/Rsv/?m=$MEMENTO"
+# Construct BAL URL for end user (ELIM+ index page)
+FORM_URL="https://$END_USER:$END_USER_PASS@$BASE_URL/bal/elimplus/?m=$MEMENTO"
 
 # Email the link (example using mail command)
-echo "Please review and submit the RSV laboratory report: $FORM_URL" | \
+echo "Please review and submit the laboratory report: $FORM_URL" | \
   mail -s "Laboratory Report Ready for Review (LAB-2024-00456)" \
     technician@hospital.example.com
 
-echo "Email sent to technician@hospital.example.com"
+echo "Email sent with single-click authenticated link"
 ```
 
-### Workflow 3: Batch form generation from CSV
+### Workflow 4: Batch form generation from CSV
 
 ```bash
 #!/bin/bash
 # Generate multiple pre-filled forms from laboratory results CSV
 
 BASE_URL="https://elim.example.com"
-USER="kis-batch-user"
-PASS="your-password"
+API_USER="kis-batch-user"
+API_PASS="api-password"
+END_USER="lab-tech"
+END_USER_PASS="tech-password"
 
 # CSV format: reportId,disease,patientFirstName,patientLastName,dob
 # Example: LAB-2024-001,Influenza,Max,Mustermann,1980-05-15
@@ -496,54 +702,112 @@ while IFS=, read -r report_id disease first_name last_name dob; do
         ($disease): {}
       },
       Patient: {
-        Name: {vorname: $vorname, nachname: $nachname},
-        Geburtsdatum: $dob
+        IsAnonym: false,
+        Standard: {
+          Name: {Vorname: $vorname, Nachname: $nachname},
+          Geburtsdatum: $dob
+        }
       }
     }')
 
-  # Create memento
-  MEMENTO=$(curl -s -X POST -u "$USER:$PASS" \
+  # Create memento (using API credentials)
+  MEMENTO=$(curl -s -X POST -u "$API_USER:$API_PASS" \
     -H "Content-Type: application/json" \
     -d "$LAB_DATA" \
     "$BASE_URL/api/elimplus/v1/memento" | jq -r '.memento')
 
-  # Output report ID and form URL
-  echo "$report_id,$BASE_URL/elim/r/$disease/?m=$MEMENTO"
+  # Output report ID and BAL URL for end user (ELIM+ index)
+  echo "$report_id,https://$END_USER:$END_USER_PASS@$BASE_URL/bal/elimplus/?m=$MEMENTO"
 done < lab_results.csv > form_urls.csv
 
 echo "Generated form URLs saved to form_urls.csv"
+echo "Each URL provides single-click authenticated access to ELIM+ index"
 ```
 
-### Workflow 4: Generate QR code for mobile access
+### Workflow 5: Generate QR code for mobile access
 
 ```bash
 #!/bin/bash
 # Create memento and generate QR code for mobile scanning
 
 BASE_URL="https://elim.example.com"
-USER="your-username"
-PASS="your-password"
+API_USER="kis-api"
+API_PASS="api-password"
+END_USER="mobile-user"
+END_USER_PASS="mobile-password"
 
-# Create memento
-MEMENTO=$(curl -s -X POST -u "$USER:$PASS" \
+# Create memento (using API credentials)
+MEMENTO=$(curl -s -X POST -u "$API_USER:$API_PASS" \
   -H "Content-Type: application/json" \
   -d '{
     "reportId": "LAB-2024-00789",
     "Krankheit": {"Sarscov2": {}},
     "Patient": {
-      "Name": {"Vorname": "Thomas", "Nachname": "Müller"},
-      "Geburtsdatum": "1975-08-12"
+      "IsAnonym": false,
+      "Standard": {
+        "Name": {"Vorname": "Thomas", "Nachname": "Müller"},
+        "Geburtsdatum": "1975-08-12"
+      }
     }
   }' \
   "$BASE_URL/api/elimplus/v1/memento" | jq -r '.memento')
 
-FORM_URL="$BASE_URL/elim/r/Sarscov2/?m=$MEMENTO"
+# Construct BAL URL for end user (ELIM+ index)
+FORM_URL="https://$END_USER:$END_USER_PASS@$BASE_URL/bal/elimplus/?m=$MEMENTO"
 
 # Generate QR code (requires qrencode tool)
 echo "$FORM_URL" | qrencode -o lab-report-qr.png
 
 echo "QR code saved to lab-report-qr.png"
-echo "Scan with mobile device to open pre-filled form"
+echo "Scan with mobile device for single-click authenticated access"
+```
+
+### Workflow 6: Anonymous patient reporting
+
+```bash
+#!/bin/bash
+# Create memento for anonymous patient (privacy protection)
+
+BASE_URL="https://elim.example.com"
+API_USER="kis-api"
+API_PASS="api-password"
+END_USER="privacy-user"
+END_USER_PASS="user-password"
+
+# Create memento with anonymous patient data (using API credentials)
+MEMENTO=$(curl -s -X POST -u "$API_USER:$API_PASS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "reportId": "LAB-2024-00999",
+    "KrankheitsCode": "J09",
+    "MeldungsDatum": "2024-12-08",
+    "Krankheit": {"Influenza": {}},
+    "Patient": {
+      "IsAnonym": true,
+      "Anonym": {
+        "Geschlecht": "MAENNLICH",
+        "GeburtsmonatJahr": "1985-06",
+        "Adresse": {
+          "PLZ": "12345",
+          "Land": "Deutschland"
+        }
+      }
+    },
+    "MeldendeEinrichtung": {
+      "EinrichtungsName": "Universitätsklinikum Musterstadt",
+      "BSNR": "123456789"
+    }
+  }' \
+  "$BASE_URL/api/elimplus/v1/memento" | jq -r '.memento')
+
+# Construct BAL URL for end user (ELIM+ index)
+FORM_URL="https://$END_USER:$END_USER_PASS@$BASE_URL/bal/elimplus/?m=$MEMENTO"
+
+echo "Anonymous patient URL (single-click authenticated access):"
+echo "$FORM_URL"
+echo ""
+echo "Note: Form contains no name, contact info, or full address"
+echo "Only birth month/year, postal code, and country are included"
 ```
 
 ---
