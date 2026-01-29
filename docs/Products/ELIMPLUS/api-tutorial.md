@@ -406,7 +406,7 @@ https://lab-tech:secret@elim.example.com/bal/elimplus/?m=eyJhbGciOiJkaXIi...
 - ✅ Proper session with logout support
 - ✅ Credentials only sent once
 
-See [Basic Auth Login Guide](../authentication/basic-auth-login.md) for details.
+See [Basic Auth Login Guide](../../Authentication/basic-auth-login.md) for details.
 
 #### Alternative: Manual Login
 
@@ -485,7 +485,7 @@ End User
   - Endpoint: `GET /bal/{target-path}`
   - Converts Basic Auth credentials into secure session
   - Users get proper session-based authentication with logout support
-  - See [Basic Auth Login Guide](../authentication/basic-auth-login.md) for details
+  - See [Basic Auth Login Guide](../../Authentication/basic-auth-login.md) for details
 
 - **ELIM+ Index Page:**
   - Entry point: `/elimplus/` or `/elimplus/index`

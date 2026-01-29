@@ -19,14 +19,6 @@ serve:
 	@echo "Starting MkDocs development server..."
 	uv run mkdocs serve
 
-dev:
-	@echo "Starting MkDocs development server..."
-	uv run mkdocs serve
-
-#preview:
-#	@echo "Starting MkDocs development server..."
-#	./$(VENV_DIR)/bin/mkdocs serve --config-file mkdocs.prod.yml --dev-addr 0.0.0.0:8001
-
 publish:
 	@echo "Publishing MkDocs documentation to GitHub Pages..."
 	uv run mkdocs gh-deploy --remote-name github

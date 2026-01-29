@@ -13,21 +13,21 @@ Um eine verschlüsselte Kommunikation zu garantieren, nutzen wir aktuelle SSL/TL
 * **Gültig bis:** 17.02.2026
 
 **Downloads der aktuellen Zertifikate:**
-> [elim.vertamob.de.ca-bundle](certs/2025/elim.vertamob.de.ca-bundle)
+> [elim.vertamob.de.ca-bundle](endpoints-and-infrastructure/certs/2025/elim.vertamob.de.ca-bundle)
 
-> [elim.vertamob.de.crt](certs/2025/elim.vertamob.de.crt)
+> [elim.vertamob.de.crt](endpoints-and-infrastructure/certs/2025/elim.vertamob.de.crt)
 
-> [elim.vertamob.de.p7b](certs/2025/elim.vertamob.de.p7b)
+> [elim.vertamob.de.p7b](endpoints-and-infrastructure/certs/2025/elim.vertamob.de.p7b)
 
 ### Zukünftiges Zertifikat
 * **Gültig bis:** 25.02.2027
 
 **Downloads der zukünftigen Zertifikate:**
-> [elim.vertamob.de.ca-bundle](certs/2026/elim.vertamob.de.ca-bundle)
+> [elim.vertamob.de.ca-bundle](endpoints-and-infrastructure/certs/2026/elim.vertamob.de.ca-bundle)
 
-> [elim.vertamob.de.crt](certs/2026/elim.vertamob.de.crt)
+> [elim.vertamob.de.crt](endpoints-and-infrastructure/certs/2026/elim.vertamob.de.crt)
 
-> [elim.vertamob.de.p7b](certs/2026/elim.vertamob.de.p7b)
+> [elim.vertamob.de.p7b](endpoints-and-infrastructure/certs/2026/elim.vertamob.de.p7b)
 
 ### 🌐 IP-Adressen
 Falls Ihr Unternehmensnetzwerk durch eine Firewall geschützt ist, müssen die folgenden IP-Adressen und Ports für den ausgehenden Datenverkehr freigeschaltet werden:
