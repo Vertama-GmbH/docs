@@ -2,7 +2,7 @@
 
 ## Unterstützte Browser
 
-Die Vertama-Anwendungen (ELIM, DUBA, DIVI, etc.) sind webbasiert und erfordern einen modernen Browser mit Unterstützung für aktuelle Web-Standards.
+Die Vertama-Anwendungen ELIM, BELIM, DUBA, DIVI, DIGG, sind webbasiert und erfordern einen aktuellen Browser mit Unterstützung für aktuelle Web-Standards.
 
 ### Mindestanforderungen
 
