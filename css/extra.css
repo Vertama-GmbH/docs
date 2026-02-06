@@ -1,0 +1,32 @@
+
+/* Vertama brand colors (blue from logo) */
+:root {
+    --x--md-primary-fg-color: #008AB5;         /* Primary Vertama blue */
+    --md-primary-fg-color: #222329;         /* pretty dark, for better contrast with text and logo */
+    --md-primary-fg-color--light: #5CB8D6;  /* Light blue for hover states */
+    --md-primary-fg-color--dark: #005E7B;   /* Dark blue for active states */
+}
+
+code, .rst-content tt, .rst-content code {
+  white-space: pre;
+}
+
+code.hljs {
+    display: block;
+    white-space: pre-wrap
+}
+
+/* Make links visible in article content */
+.md-content a {
+    color: #008AB5;  /* Vertama blue */
+    text-decoration: underline;
+}
+
+.md-content a:hover {
+    color: #005E7B;  /* Darker blue on hover */
+    text-decoration: underline;
+}
+
+.md-content a:visited {
+    color: #5CB8D6;  /* Light blue for visited links */
+}
