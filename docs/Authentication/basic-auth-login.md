@@ -2,8 +2,8 @@
 
 A universal authentication pattern that converts Basic Authentication credentials into secure session-based authentication with automatic redirect.
 
-**Version:** 1.0.0
-**Last Updated:** 2026-01-29
+**Version:** 1.1.0
+**Last Updated:** 2026-02-19
 
 ---
 
@@ -397,6 +397,12 @@ Click bookmark → instant authenticated access to RSV form
 
 ## FAQ
 
+**Q: When should I prefer Magic Token Links (MTL) over BAL?**
+A: For new integrations, prefer MTL. API endpoints (e.g., `POST /api/duba/v1/memento`) return a
+ready-to-use `magicLink` field — no manual URL construction needed, no end-user credentials in the
+URL, and tokens self-expire after one hour. See [Magic Token Link (MTL)](magic-token-link.md) for
+details. BAL remains supported for existing integrations.
+
 **Q: Is BAL secure for production use?**
 A: Yes, when used with HTTPS. Credentials are only sent in the initial request and then converted to secure session-based authentication.
 
@@ -419,6 +425,7 @@ A: The target path is extracted from the URL structure. To customize further, co
 
 ## Related Documentation
 
+- [Magic Token Link (MTL)](magic-token-link.md) - Recommended alternative: server-issued tokens, no credentials in URL
 - [ELIM+ API Integration Guide](../Products/ELIMPLUS/api-tutorial.md) - Complete API workflow including BAL usage
 - [ELIM+ OpenAPI Specification](../Products/ELIMPLUS/api.yml) - API endpoint details
 

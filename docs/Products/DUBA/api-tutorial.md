@@ -2,8 +2,8 @@
 
 A practical guide for integration partners using the DUBA (Digital Court Guardianship) API.
 
-**Version:** 0.2.0
-**Last Updated:** 2025-12-10
+**Version:** 0.2.1
+**Last Updated:** 2026-02-19
 
 ---
 
@@ -17,6 +17,8 @@ A practical guide for integration partners using the DUBA (Digital Court Guardia
 6. [Download Message Endpoint](#download-message-endpoint)
 7. [Acknowledge Messages Endpoint](#acknowledge-messages-endpoint)
 8. [Form Pre-fill with Memento Endpoint](#form-pre-fill-with-memento-endpoint)
+    - [Using the Magic Link (Recommended)](#using-the-magic-link-recommended)
+    - [Alternative: Manual Form URL](#alternative-manual-form-url)
 9. [Complete Workflow Examples](#complete-workflow-examples)
 10. [Filtering Best Practices](#filtering-best-practices)
 11. [Error Codes](#error-codes)
@@ -482,25 +484,27 @@ The memento endpoint solves a common integration pattern:
 
 1. **Your system (e.g., KIS)** has complete case data but wants users to review/approve before submission
 2. **You call this endpoint** with the form data as JSON
-3. **You receive back** an encrypted, URL-safe string (the "memento")
-4. **You construct a URL** with the memento parameter
-5. **Users open the URL** and see a pre-filled form ready to review and submit
+3. **You receive back** an encrypted memento string **and a ready-to-use `magicLink` URL**
+4. **You send the `magicLink`** to the end user (email, portal link, etc.)
+5. **Users click the link** → authenticate automatically → see the pre-filled form
 
 **Benefits:**
-- No direct submission required - users maintain control
+- No direct submission required — users maintain control
 - Form validation happens in the browser (immediate feedback)
 - Users can correct or supplement data before sending
 - Encrypted mementos are tamper-proof
+- `magicLink` handles authentication automatically — no credentials in the URL
 
 ### Use Case Example
 
 ```
 Hospital KIS → Knows patient details for court guardianship request
            → Calls /memento with patient/case data as JSON
-           → Receives encrypted memento string
-           → Constructs URL: /duba/BetreuungAnregung?m={memento}
-           → Emails/displays URL to authorized user
-User       → Clicks URL
+           → Receives { "memento": "...", "magicLink": "/mtl/.../duba/form?m=..." }
+           → Prepends host: https://elim.example.com + magicLink
+           → Emails absolute URL to authorized user
+User       → Clicks link (no login required)
+           → Automatically authenticated
            → Sees pre-filled form with all case details
            → Reviews, corrects if needed, submits to court
 ```
@@ -578,19 +582,21 @@ The endpoint accepts DUBA form data as JSON. All fields except `jobId` are optio
 
 ### Response
 
-Returns a JSON object containing the encrypted memento string:
+Returns a JSON object containing the encrypted memento string and a ready-to-use magic link:
 
 ```json
 {
-  "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..DGG5lQvJC8OpYrCt.Xm8YR..."
+  "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..DGG5lQvJC8OpYrCt.Xm8YR...",
+  "magicLink": "/mtl/eyJ...token.../duba/?m=eyJ...memento..."
 }
 ```
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `memento` | string | Encrypted, URL-safe string containing your form data |
+| Field | Type | Nullable | Description |
+|-------|------|----------|-------------|
+| `memento` | string | No | Encrypted, URL-safe string containing your form data |
+| `magicLink` | string | Yes | Relative URL that authenticates and opens the pre-filled form in one click. Prepend your host: `https://your-instance + magicLink` |
 
-**Note:** Memento strings are typically 500-2000 characters depending on data size. They are encrypted with AES-256-GCM and safe to pass via URL parameters.
+**Note:** Memento strings are typically 500-2000 characters depending on data size. They are encrypted with AES-256-GCM and safe to pass via URL parameters. The `magicLink` token expires after 1 hour by default.
 
 ### Examples
 
@@ -607,7 +613,8 @@ curl -X POST \
 Response:
 ```json
 {
-  "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..abc123..."
+  "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..abc123...",
+  "magicLink": "/mtl/eyJ...token.../duba/?m=eyJ...memento..."
 }
 ```
 
@@ -650,21 +657,56 @@ curl -X POST \
   https://elim.example.com/api/duba/v1/memento
 ```
 
-#### Extract memento with jq
+#### Extract memento and magic link with jq
 
 ```bash
-MEMENTO=$(curl -s -X POST \
+RESPONSE=$(curl -s -X POST \
   -u "user:pass" \
   -H "Content-Type: application/json" \
   -d '{"jobId":"job-123","absender":{"egvp_account_id":42}}' \
-  https://elim.example.com/api/duba/v1/memento | jq -r '.memento')
+  https://elim.example.com/api/duba/v1/memento)
+
+MEMENTO=$(echo "$RESPONSE" | jq -r '.memento')
+MAGIC_LINK=$(echo "$RESPONSE" | jq -r '.magicLink')
 
 echo "Memento: $MEMENTO"
+echo "Magic link (relative): $MAGIC_LINK"
+echo "Full URL: https://elim.example.com$MAGIC_LINK"
 ```
 
-### Constructing Form URLs
+### Using the Magic Link (Recommended)
 
-Once you have a memento, construct a URL to pre-fill a DUBA form:
+The API response includes a `magicLink` field — a relative URL that handles both authentication
+and form pre-fill in a single click. This is the recommended approach for giving end users access
+to pre-filled forms.
+
+**The `magicLink` is a relative path.** Prepend your instance host to make it absolute:
+
+```bash
+RESPONSE=$(curl -s -X POST -u "user:pass" \
+  -H "Content-Type: application/json" \
+  -d "$FORM_DATA" \
+  "https://elim.example.com/api/duba/v1/memento")
+
+MAGIC_LINK=$(echo "$RESPONSE" | jq -r '.magicLink')
+FULL_URL="https://elim.example.com$MAGIC_LINK"
+
+# Send FULL_URL to the end user
+echo "$FULL_URL"
+```
+
+When the end user opens this URL:
+1. The server decrypts the embedded token
+2. The user is authenticated automatically (no login page)
+3. They land directly on the pre-filled form
+
+**Token expiry:** Magic links expire after 1 hour by default. Generate a fresh link close to the
+time you send it to the user.
+
+### Alternative: Manual Form URL
+
+If the end user already has an active ELIM session (e.g., they are already logged in), you can
+construct a bare form URL using the `memento` field:
 
 **URL Pattern:**
 ```
@@ -679,35 +721,40 @@ https://your-instance/duba/{FormName}?m={memento}
 | `UnterbringungAntrag` | Involuntary commitment application |
 | `FreiheitsentzugAntrag` | Deprivation of liberty application |
 
-**Example URLs:**
+**Example:**
 
 ```bash
-# Guardianship form
-https://elim.example.com/duba/BetreuungAnregung?m=eyJhbGciOiJkaXIi...
-
-# Commitment form
-https://elim.example.com/duba/UnterbringungAntrag?m=eyJhbGciOiJkaXIi...
+MEMENTO=$(echo "$RESPONSE" | jq -r '.memento')
+FORM_URL="https://elim.example.com/duba/BetreuungAnregung?m=$MEMENTO"
+# Use this only if the user already has an active session
 ```
+
+**Note:** Bare form URLs require the user to be logged in. If the user is not authenticated, the
+server will redirect to `/login`. Use the `magicLink` approach if you cannot guarantee the user
+has an active session.
 
 ### Complete End-to-End Example
 
 ```bash
 #!/bin/bash
-# Complete workflow: Create memento and construct form URL
+# Complete workflow: Create memento and send magic link to end user
 
 BASE_URL="https://elim.example.com"
 USER="your-username"
 PASS="your-password"
-FORM_TYPE="BetreuungAnregung"
 
 # Step 1: Prepare form data
 FORM_DATA='{
-  "jobId": "job-2024-12345",
-  "meldeZeitpunkt": "2025-12-10T14:30:00+01:00",
+  "jobId": "job-2026-12345",
+  "meldeZeitpunkt": "2026-02-19T14:30:00+01:00",
   "absender": {
-    "name": "Klinikum Musterstadt",
     "aktenzeichen": "KH-2024-001",
     "egvp_account_id": 42
+  },
+  "empfaenger": {
+    "name": "Amtsgericht Musterstadt",
+    "type": "Gericht",
+    "safeId": "de.justiz.bund.egvp.bea.12345"
   },
   "betroffener": {
     "name": {"vorname": "Max", "nachname": "Mustermann"},
@@ -720,7 +767,7 @@ FORM_DATA='{
   }
 }'
 
-# Step 2: Create memento
+# Step 2: Call memento API
 echo "Creating memento..."
 RESPONSE=$(curl -s -X POST \
   -u "$USER:$PASS" \
@@ -728,62 +775,69 @@ RESPONSE=$(curl -s -X POST \
   -d "$FORM_DATA" \
   "$BASE_URL/api/duba/v1/memento")
 
-# Step 3: Extract memento from response
-MEMENTO=$(echo "$RESPONSE" | jq -r '.memento')
+# Step 3: Extract magic link from response
+MAGIC_LINK=$(echo "$RESPONSE" | jq -r '.magicLink')
 
-if [ -z "$MEMENTO" ] || [ "$MEMENTO" = "null" ]; then
+if [ -z "$MAGIC_LINK" ] || [ "$MAGIC_LINK" = "null" ]; then
   echo "Error: Failed to create memento"
   echo "$RESPONSE" | jq .
   exit 1
 fi
 
-# Step 4: Construct form URL
-FORM_URL="$BASE_URL/duba/$FORM_TYPE?m=$MEMENTO"
+# Step 4: Construct absolute URL (magicLink is relative)
+FULL_URL="$BASE_URL$MAGIC_LINK"
 
-echo "Success! Form URL:"
-echo "$FORM_URL"
+echo "Success! Send this URL to the authorized user:"
+echo "$FULL_URL"
 echo ""
-echo "Send this URL to the authorized user to open the pre-filled form."
+echo "The link authenticates automatically and opens the pre-filled form."
+echo "Note: This link expires in 1 hour."
 ```
 
 ### Integration Patterns
 
-#### Pattern 1: Email with pre-filled form link
+#### Pattern 1: Email with magic link (Recommended)
 
 ```bash
-# Create memento and email link to user
-MEMENTO=$(curl -s -X POST -u "$USER:$PASS" \
+# Create memento and email the magic link to user
+RESPONSE=$(curl -s -X POST -u "$USER:$PASS" \
   -H "Content-Type: application/json" \
   -d "$FORM_DATA" \
-  "$BASE_URL/api/duba/v1/memento" | jq -r '.memento')
+  "$BASE_URL/api/duba/v1/memento")
 
-FORM_URL="$BASE_URL/duba/BetreuungAnregung?m=$MEMENTO"
+MAGIC_LINK=$(echo "$RESPONSE" | jq -r '.magicLink')
+FULL_URL="$BASE_URL$MAGIC_LINK"
 
-# Email the link (example using mail command)
-echo "Please review and submit the guardianship form: $FORM_URL" | \
-  mail -s "Court Form Ready for Review" user@hospital.example.com
+# Email the magic link (example using mail command)
+mail -s "Court Form Ready for Review" user@hospital.example.com <<EOF
+Please review and submit the guardianship form:
+$FULL_URL
+
+Click the link to open the pre-filled form directly. No login required.
+Note: This link expires in 1 hour.
+EOF
 ```
 
 #### Pattern 2: Generate QR code for mobile access
 
 ```bash
-# Create memento
-MEMENTO=$(curl -s -X POST -u "$USER:$PASS" \
+# Create memento and generate QR code from magic link
+MAGIC_LINK=$(curl -s -X POST -u "$USER:$PASS" \
   -H "Content-Type: application/json" \
   -d "$FORM_DATA" \
-  "$BASE_URL/api/duba/v1/memento" | jq -r '.memento')
+  "$BASE_URL/api/duba/v1/memento" | jq -r '.magicLink')
 
-FORM_URL="$BASE_URL/duba/BetreuungAnregung?m=$MEMENTO"
+FULL_URL="$BASE_URL$MAGIC_LINK"
 
 # Generate QR code (requires qrencode tool)
-echo "$FORM_URL" | qrencode -o form-qr.png
+echo "$FULL_URL" | qrencode -o form-qr.png
 echo "QR code saved to form-qr.png"
 ```
 
 #### Pattern 3: Batch form generation
 
 ```bash
-# Generate multiple pre-filled forms from case list
+# Generate magic links for multiple cases from CSV
 while IFS=, read -r case_id patient_name dob; do
   FORM_DATA=$(jq -n \
     --arg jobId "$case_id" \
@@ -799,15 +853,16 @@ while IFS=, read -r case_id patient_name dob; do
       }
     }')
 
-  MEMENTO=$(curl -s -X POST -u "$USER:$PASS" \
+  MAGIC_LINK=$(curl -s -X POST -u "$USER:$PASS" \
     -H "Content-Type: application/json" \
     -d "$FORM_DATA" \
-    "$BASE_URL/api/duba/v1/memento" | jq -r '.memento')
+    "$BASE_URL/api/duba/v1/memento" | jq -r '.magicLink')
 
-  echo "$case_id,$BASE_URL/duba/BetreuungAnregung?m=$MEMENTO"
-done < cases.csv > form_urls.csv
+  echo "$case_id,$BASE_URL$MAGIC_LINK"
+done < cases.csv > form_links.csv
 
-echo "Generated form URLs saved to form_urls.csv"
+echo "Generated form links saved to form_links.csv"
+# Note: links expire after 1 hour — generate close to the time of sending
 ```
 
 ### Error Handling
@@ -1139,6 +1194,11 @@ YYYY-MM-DDTHH:MM:SSZ
 Example: 2025-11-26T15:34:10Z
 ```
 
+### Related Documentation
+
+- [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) — How `/mtl/` authentication tokens work
+- [Basic Auth Login (BAL)](../../Authentication/basic-auth-login.md) — Legacy credential-in-URL session pattern
+
 ### Support
 
 For technical support or questions about the DUBA API:
@@ -1147,6 +1207,6 @@ For technical support or questions about the DUBA API:
 
 ---
 
-**Document Version:** 0.2.0
-**Last Updated:** 2025-12-10
+**Document Version:** 0.2.1
+**Last Updated:** 2026-02-19
 **API Version:** v1

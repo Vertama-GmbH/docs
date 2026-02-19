@@ -68,4 +68,7 @@ nav:
   - Reference:
     - "Systemanforderungen": "Reference/system-requirements.md"
     - "Endpunkte & Infrastruktur": "Reference/endpoints-and-infrastructure.md"
+  - Authentication:
+    - "Basic Auth Login (BAL)": "Authentication/basic-auth-login.md"
+    - "Magic Token Link (MTL)": "Authentication/magic-token-link.md"
   - About: about.md

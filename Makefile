@@ -3,19 +3,24 @@
 
 VENV_DIR := .venv
 
-setup:
-	@echo "Setting up virtual environment and installing dependencies..."
+setup: uv-sync
+
+uv-sync:
 	uv sync
 
-build:
+build: uv-sync
 	@echo "Building MkDocs documentation..."
-	uv run mkdocs build
+	.venv/bin/mkdocs build
 
 # PDF generation disabled - mkdocs PDF plugin ecosystem is unreliable
 # pdf:
 # 	@echo "PDF generation not supported"
 
-serve:
+serve: uv-sync
+	@echo "Starting MkDocs development server..."
+	uv run mkdocs serve
+
+dev: uv-sync
 	@echo "Starting MkDocs development server..."
 	uv run mkdocs serve
 
