@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Duba API
-  version: "0.2.0" # Updated 2026-01-17: Changed betroffener.derzeitigerWohnort to gegenwaertigerAufenthalt
+  version: "0.2.1" # Updated 2026-02-19: Added magicLink field to MementoResponse
 servers:
   - url: /api/duba/v1
     description: Duba API Version 1
@@ -327,6 +327,17 @@ components:
             Encrypted, URL-safe memento string containing the form data.
             Use as query parameter to pre-fill forms: ?memento=<string>
           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        magicLink:
+          type: string
+          nullable: true
+          description: |-
+            Ready-to-use Magic Token Link URL (relative path).
+            Combines authentication and form pre-fill in a single click:
+            the authenticated API user can forward this URL to a browser
+            session that has no existing login — it will authenticate and
+            open the pre-filled form directly.
+            Prepend your host to make it absolute: https://host + magicLink
+          example: "/mtl/eyJ...token.../duba/?m=eyJ...memento..."
     FormData:
       type: object
       required:
