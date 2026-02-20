@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: ELIM+ API
-  version: "0.1.1" # Updated 2026-02-19: Added magicLink field to MementoResponse
+  version: "0.1.2" # Updated 2026-02-20: Added report retrieval endpoints (GET /reports, GET /reports/{reportId})
   description: API for ELIM+ laboratory reporting (Labormeldung) - DEMIS integration
 servers:
   - url: /api/elimplus/v1
@@ -58,6 +58,109 @@ paths:
             Unauthorized - invalid or missing authentication.
             Returns 401 status with WWW-Authenticate header.
             Response body is empty.
+  /reports:
+    get:
+      summary: List pending report IDs for the authenticated API user
+      description: |-
+        Returns the list of report IDs that have been submitted by the authenticated
+        API user but not yet retrieved (unpolled). These are reports waiting for
+        the caller to fetch the full result.
+
+        Use GET /reports/{reportId} to retrieve the full result for each ID.
+
+        The list contains only unpolled report IDs — once a report has been
+        retrieved without ?peek=true it will no longer appear here.
+      tags:
+        - ELIMPLUS
+      security:
+        - basicAuth: []
+      operationId: listPendingReports
+      responses:
+        '200':
+          description: List of pending report IDs (may be empty)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example:
+                - "LAB-2024-00123"
+                - "LAB-2024-00124"
+        '401':
+          description: |-
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
+  /reports/{reportId}:
+    get:
+      summary: Retrieve a single report result by report ID
+      description: |-
+        Returns the full result for a submitted laboratory report.
+
+        By default this is a destructive read: once retrieved, the report is marked
+        as polled and will no longer appear in GET /reports. Use ?peek=true for
+        a non-destructive read that leaves the report in the pending list.
+
+        The report ID is the `reportId` field from the original Labormeldung
+        submitted to POST /memento (and used in the form submission).
+
+        Status semantics:
+        - SUCCESS: Report was successfully submitted to DEMIS. receiptPdf contains
+          the RKI-issued receipt PDF encoded as base64.
+        - FAILURE: Submission failed. failureReason describes the error.
+      tags:
+        - ELIMPLUS
+      security:
+        - basicAuth: []
+      operationId: getReport
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          description: The report ID from the original Labormeldung
+          schema:
+            type: string
+          example: "LAB-2024-00123"
+        - name: peek
+          in: query
+          required: false
+          description: |-
+            If true, retrieve the result without marking it as polled.
+            The report remains in the GET /reports pending list.
+            Default: false (destructive read).
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Report result found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportResult'
+              example:
+                reportId: "LAB-2024-00123"
+                status: "SUCCESS"
+                module: "ELIMPLUS"
+                diseaseCode: "Influenza"
+                description: "Labormeldung Influenza"
+                submittedAt: "2024-12-08T14:32:00Z"
+                receiptPdf: "JVBERi0xLjQK..."
+                failureReason: null
+        '401':
+          description: |-
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
+        '404':
+          description: |-
+            Report not found. No report with this ID exists for the
+            authenticated API user.
+        '410':
+          description: |-
+            Gone. The report was previously retrieved (polled) and is no longer
+            available. Use ?peek=true on future requests to avoid consuming reports.
 components:
   schemas:
     MementoResponse:
@@ -119,6 +222,13 @@ components:
           example: "J09"
         Krankheit:
           $ref: '#/components/schemas/Krankheit'
+        MeldungsVerweisId:
+          type: string
+          nullable: true
+          description: |-
+            Reference ID for linking corrections or follow-up reports.
+            Used to reference a previous report that is being corrected or updated.
+          example: "MELD-REF-2024-00001"
         Patient:
           $ref: '#/components/schemas/Patient'
         MeldendeEinrichtung:
@@ -157,7 +267,31 @@ components:
           description: SARS-CoV-2-specific data
     Patient:
       type: object
-      description: Patient information (all fields optional for memento)
+      description: |-
+        Patient information - supports both standard and anonymous patients.
+
+        Validation semantics (enforced at form/backend level):
+        - When IsAnonym=true: Anonym object should be populated, Standard should be null
+        - When IsAnonym=false: Standard object should be populated, Anonym should be null
+        - When IsAnonym=null: Both Standard and Anonym can be null
+        - Both Standard and Anonym populated simultaneously is an error
+
+        All fields are optional for lenient memento creation.
+      properties:
+        IsAnonym:
+          type: boolean
+          nullable: true
+          description: |-
+            Indicates patient type: true for anonymous, false for standard, null for unspecified.
+            Anonymous patients have limited data for privacy protection.
+          example: false
+        Standard:
+          $ref: '#/components/schemas/PatientStandard'
+        Anonym:
+          $ref: '#/components/schemas/PatientAnonym'
+    PatientStandard:
+      type: object
+      description: Standard patient with full identification
       properties:
         Name:
           $ref: '#/components/schemas/Name'
@@ -167,12 +301,49 @@ components:
           type: string
           format: date
           nullable: true
-          description: Date of birth
+          description: Full birth date (YYYY-MM-DD)
           example: "1980-05-15"
         Adresse:
           $ref: '#/components/schemas/Adresse'
         Kontakt:
           $ref: '#/components/schemas/Kontakt'
+    PatientAnonym:
+      type: object
+      description: |-
+        Anonymous patient with limited data for privacy protection.
+
+        Differences from standard patient:
+        - No name or contact information
+        - Birth month/year only (not full date)
+        - Limited address (postal code and country only)
+      properties:
+        Geschlecht:
+          $ref: '#/components/schemas/GenderOrNoInformation'
+        GeburtsmonatJahr:
+          type: string
+          pattern: '^\d{4}-\d{2}$'
+          nullable: true
+          description: Birth month and year in YYYY-MM format (not full date for privacy)
+          example: "1980-05"
+        Adresse:
+          $ref: '#/components/schemas/AnonymAdresse'
+    AnonymAdresse:
+      type: object
+      description: |-
+        Limited address information for anonymous patients (privacy protection).
+
+        Contains only postal code and country - no street name, city, or other identifiable details.
+      properties:
+        PLZ:
+          type: string
+          nullable: true
+          description: Postal code
+          example: "12345"
+        Land:
+          type: string
+          nullable: true
+          description: Country
+          example: "Deutschland"
     Name:
       type: object
       description: Person name
@@ -716,6 +887,67 @@ components:
           $ref: '#/components/schemas/Adresse'
         Kontakt:
           $ref: '#/components/schemas/Kontakt'
+    ReportResult:
+      type: object
+      required:
+        - reportId
+        - status
+        - module
+        - submittedAt
+      description: |-
+        Result of a laboratory report submission to DEMIS.
+        Returned by GET /reports/{reportId}.
+      properties:
+        reportId:
+          type: string
+          description: The report ID from the original Labormeldung submission
+          example: "LAB-2024-00123"
+        status:
+          type: string
+          enum:
+            - SUCCESS
+            - FAILURE
+          description: |-
+            Submission outcome.
+            - SUCCESS: Report accepted by DEMIS. receiptPdf is populated.
+            - FAILURE: Submission rejected or error occurred. failureReason is populated.
+          example: "SUCCESS"
+        module:
+          type: string
+          description: Module that produced this report
+          example: "ELIMPLUS"
+        diseaseCode:
+          type: string
+          nullable: true
+          description: |-
+            Disease code identifying the type of report (e.g. Influenza, Rsv, Norovirus, Sarscov2).
+            Null if not available.
+          example: "Influenza"
+        description:
+          type: string
+          nullable: true
+          description: |-
+            Human-readable description of the report (e.g. "Labormeldung Influenza").
+            Null if not available.
+          example: "Labormeldung Influenza"
+        submittedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the report was submitted to DEMIS (ISO 8601)
+          example: "2024-12-08T14:32:00Z"
+        receiptPdf:
+          type: string
+          nullable: true
+          description: |-
+            Base64-encoded RKI receipt PDF. Populated on SUCCESS, null on FAILURE.
+          example: "JVBERi0xLjQK..."
+        failureReason:
+          type: string
+          nullable: true
+          description: |-
+            Human-readable error message describing why the submission failed.
+            Populated on FAILURE, null on SUCCESS.
+          example: null
   securitySchemes:
     basicAuth:
       type: http

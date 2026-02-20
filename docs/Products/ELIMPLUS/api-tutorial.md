@@ -2,7 +2,7 @@
 
 A practical guide for integration partners using the ELIM+ (Laboratory Reporting) API.
 
-**Version:** 0.1.1
+**Version:** 0.1.2
 **Last Updated:** 2026-02-20
 
 ---
@@ -13,9 +13,10 @@ A practical guide for integration partners using the ELIM+ (Laboratory Reporting
 2. [Authentication](#authentication)
 3. [Core Concepts](#core-concepts)
 4. [Memento Endpoint](#memento-endpoint)
-5. [Complete Workflow Examples](#complete-workflow-examples)
-6. [Error Handling](#error-handling)
-7. [Reference](#reference)
+5. [Report Retrieval Endpoints](#report-retrieval-endpoints)
+6. [Complete Workflow Examples](#complete-workflow-examples)
+7. [Error Handling](#error-handling)
+8. [Reference](#reference)
 
 ---
 
@@ -24,6 +25,7 @@ A practical guide for integration partners using the ELIM+ (Laboratory Reporting
 The ELIM+ API enables laboratory information systems (KIS) to pre-fill laboratory reporting forms for notifiable diseases in Germany (DEMIS integration). This API allows integration partners to:
 
 - **Create form mementos** to generate pre-filled form URLs from laboratory data
+- **Retrieve report results** after end users submit forms to DEMIS
 - **Support 4 disease types**: Influenza, RSV, Norovirus, SARS-CoV-2
 - **Enable user review** before submission to public health authorities
 
@@ -55,6 +57,11 @@ End User
     → lands on /elimplus/?m={memento}
     ↓
 [6] Selects disease form → reviews pre-filled data → submits to DEMIS
+    ↓
+KIS / Laboratory System (asynchronous)
+    ↓
+[7] GET /api/elimplus/v1/reports  → list of pending reportIds
+[8] GET /api/elimplus/v1/reports/{reportId}  → full result + receipt PDF
 ```
 
 **Benefits:**
@@ -182,15 +189,23 @@ ELIM+ supports 4 notifiable diseases:
 | Norovirus | `Norovirus` | Norovirus RNA detection |
 | SARS-CoV-2 | `Sarscov2` | COVID-19 laboratory detection |
 
+### Report ID
+
+The `reportId` field in the Labormeldung serves a dual purpose:
+
+1. **Form pre-fill**: It's embedded in the memento and displayed in the pre-filled form for the end user to review
+2. **Report retrieval key**: After the end user submits to DEMIS, the same `reportId` is used to retrieve the submission result via `GET /reports/{reportId}`
+
+**Important:** Use a stable, unique ID per laboratory report. The `reportId` must be unique per API user — submitting a second report with the same `reportId` will be rejected.
+
 ### Form Workflow
 
 1. User opens the magic link → lands on ELIM+ index: `/elimplus/`
-2. User selects a disease form
-3. System routes to disease-specific form: `/elim/r/{Disease}/`
-4. Form is pre-filled via memento parameter: `/elim/r/{Disease}/?m={memento}`
+2. User selects a disease form (Influenza, RSV, Norovirus, SARS-CoV-2)
+3. System routes to disease-specific form: `/elimplus/{Disease}/`
+4. Form is pre-filled via memento parameter: `/elimplus/{Disease}/?m={memento}`
 5. User reviews, corrects if needed, submits to DEMIS
-
-**Note:** Form controllers currently use legacy `/elim/r/` routes during transition to `/elimplus/` structure. The entry point is always `/elimplus/`.
+6. After successful submission, the result is available via `GET /reports/{reportId}`
 
 ---
 
@@ -349,6 +364,157 @@ MAGIC_LINK=$(echo "$RESPONSE" | jq -r '.magicLink')
 # Construct absolute URL
 FORM_URL="https://elim.example.com$MAGIC_LINK"
 echo "Send to user: $FORM_URL"
+```
+
+---
+
+## Report Retrieval Endpoints
+
+After an end user submits a laboratory report via the ELIM+ form, the submission result is stored and made available for retrieval by the API user that created the original memento.
+
+### GET /reports — List pending report IDs
+
+**Endpoint:** `GET /api/elimplus/v1/reports`
+
+Returns an array of `reportId` strings for reports that have been submitted to DEMIS but not yet retrieved (unpolled). Reports disappear from this list once retrieved without `?peek=true`.
+
+**Request:**
+```bash
+curl -u "api-user:api-pass" \
+  https://elim.example.com/api/elimplus/v1/reports
+```
+
+**Response (200):**
+```json
+["LAB-2026-00123", "LAB-2026-00124"]
+```
+
+An empty array `[]` means no submissions are pending retrieval.
+
+---
+
+### GET /reports/{reportId} — Retrieve report result
+
+**Endpoint:** `GET /api/elimplus/v1/reports/{reportId}`
+
+Returns the full result for a submitted report, including the RKI receipt PDF for successful submissions.
+
+**Parameters:**
+
+| Parameter | In | Required | Description |
+|-----------|-----|----------|-------------|
+| `reportId` | path | Yes | The report ID from the original Labormeldung |
+| `peek` | query | No | `true` = non-destructive read (report remains pending). Default: `false` |
+
+**Default (destructive) read:**
+```bash
+curl -u "api-user:api-pass" \
+  https://elim.example.com/api/elimplus/v1/reports/LAB-2026-00123
+```
+
+**Non-destructive peek:**
+```bash
+curl -u "api-user:api-pass" \
+  "https://elim.example.com/api/elimplus/v1/reports/LAB-2026-00123?peek=true"
+```
+
+**Response (200 — SUCCESS):**
+```json
+{
+  "reportId": "LAB-2026-00123",
+  "status": "SUCCESS",
+  "module": "ELIMPLUS",
+  "diseaseCode": "Influenza",
+  "description": "Labormeldung Influenza",
+  "submittedAt": "2026-02-20T14:32:00Z",
+  "receiptPdf": "JVBERi0xLjQK...",
+  "failureReason": null
+}
+```
+
+**Response (200 — FAILURE):**
+```json
+{
+  "reportId": "LAB-2026-00456",
+  "status": "FAILURE",
+  "module": "ELIMPLUS",
+  "diseaseCode": "Rsv",
+  "description": "Labormeldung Rsv",
+  "submittedAt": "2026-02-20T15:10:00Z",
+  "receiptPdf": null,
+  "failureReason": "RKI Response Code: 422"
+}
+```
+
+**ReportResult fields:**
+
+| Field | Type | Nullable | Description |
+|-------|------|----------|-------------|
+| `reportId` | string | No | The original report ID |
+| `status` | enum | No | `SUCCESS` or `FAILURE` |
+| `module` | string | No | Always `"ELIMPLUS"` |
+| `diseaseCode` | string | Yes | Disease identifier (e.g., `"Influenza"`, `"Rsv"`) |
+| `description` | string | Yes | Human-readable description (e.g., `"Labormeldung Influenza"`) |
+| `submittedAt` | date-time | No | ISO 8601 timestamp of DEMIS submission |
+| `receiptPdf` | string | Yes | Base64-encoded RKI receipt PDF (SUCCESS only) |
+| `failureReason` | string | Yes | Error message (FAILURE only) |
+
+**Status codes:**
+
+| Code | Meaning |
+|------|---------|
+| 200 | Report found and returned |
+| 401 | Unauthorized — check credentials |
+| 404 | Report not found or belongs to a different user |
+| 410 | Gone — report was already retrieved (use `?peek=true` to avoid) |
+
+### Extracting the receipt PDF
+
+The `receiptPdf` field is a base64-encoded PDF. To save it:
+
+```bash
+RESPONSE=$(curl -s -u "api-user:api-pass" \
+  "https://elim.example.com/api/elimplus/v1/reports/LAB-2026-00123?peek=true")
+
+# Check status first
+STATUS=$(echo "$RESPONSE" | jq -r '.status')
+
+if [ "$STATUS" = "SUCCESS" ]; then
+  echo "$RESPONSE" | jq -r '.receiptPdf' | base64 --decode > receipt-LAB-2026-00123.pdf
+  echo "Receipt saved"
+else
+  echo "Submission failed: $(echo "$RESPONSE" | jq -r '.failureReason')"
+fi
+```
+
+Or use the provided script:
+```bash
+./scripts/elimplus-get-report.sh LAB-2026-00123 --save-pdf receipt.pdf
+```
+
+### Polling pattern
+
+Reports become available asynchronously — the end user must complete and submit the form first. Poll periodically:
+
+```bash
+# Poll for new reports every 60 seconds
+while true; do
+  IDS=$(curl -s -u "api-user:api-pass" \
+    "https://elim.example.com/api/elimplus/v1/reports" | jq -r '.[]')
+
+  for ID in $IDS; do
+    RESULT=$(curl -s -u "api-user:api-pass" \
+      "https://elim.example.com/api/elimplus/v1/reports/$ID")
+    STATUS=$(echo "$RESULT" | jq -r '.status')
+    echo "$ID: $STATUS"
+
+    if [ "$STATUS" = "SUCCESS" ]; then
+      echo "$RESULT" | jq -r '.receiptPdf' | base64 --decode > "${ID}.pdf"
+    fi
+  done
+
+  sleep 60
+done
 ```
 
 ---
@@ -599,9 +765,11 @@ echo "Only birth month/year, postal code, and country are included"
 
 | Code | Status | Meaning |
 |------|--------|---------|
-| 200 | OK | Memento and magic link created successfully |
-| 400 | Bad Request | Invalid JSON or validation error |
+| 200 | OK | Request successful |
+| 400 | Bad Request | Invalid JSON or validation error (memento endpoint) |
 | 401 | Unauthorized | Missing or invalid API credentials |
+| 404 | Not Found | Report ID does not exist or belongs to a different user |
+| 410 | Gone | Report was already retrieved (use `?peek=true` to avoid) |
 | 500 | Internal Server Error | Server error (contact support) |
 
 ### Validation Errors
@@ -681,6 +849,8 @@ fi
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | POST | `/api/elimplus/v1/memento` | Create encrypted memento and magic link for form pre-fill |
+| GET | `/api/elimplus/v1/reports` | List pending (unpolled) report IDs |
+| GET | `/api/elimplus/v1/reports/{reportId}` | Retrieve full report result (status, receipt PDF) |
 
 ### OpenAPI Specification
 
@@ -693,10 +863,10 @@ https://your-instance/api/docs/swagger-ui/index.html?urls.primaryName=ELIM+
 
 | Disease | API Code | Form Route |
 |---------|----------|------------|
-| Influenza | `Influenza` | `/elim/r/Influenza/` |
-| RSV | `Rsv` | `/elim/r/Rsv/` |
-| Norovirus | `Norovirus` | `/elim/r/Norovirus/` |
-| SARS-CoV-2 | `Sarscov2` | `/elim/r/Sarscov2/` |
+| Influenza | `Influenza` | `/elimplus/Influenza/` |
+| RSV | `Rsv` | `/elimplus/Rsv/` |
+| Norovirus | `Norovirus` | `/elimplus/Norovirus/` |
+| SARS-CoV-2 | `Sarscov2` | `/elimplus/Sarscov2/` |
 
 **Entry point:** Always use `/elimplus/` — the index page where users select their disease form.
 
@@ -756,6 +926,6 @@ For technical support or questions about the ELIM+ API:
 
 ---
 
-**Document Version:** 0.1.1
+**Document Version:** 0.1.2
 **Last Updated:** 2026-02-20
 **API Version:** v1
