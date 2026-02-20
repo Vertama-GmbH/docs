@@ -2,8 +2,8 @@
 
 A practical guide for integration partners using the ELIM+ (Laboratory Reporting) API.
 
-**Version:** 0.1.0
-**Last Updated:** 2026-01-29
+**Version:** 0.1.1
+**Last Updated:** 2026-02-20
 
 ---
 
@@ -33,12 +33,33 @@ ELIM+ solves a common integration pattern:
 
 1. **Laboratory system (KIS)** has complete test results but wants users to review before DEMIS submission
 2. **System calls API** with laboratory report data as JSON
-3. **API returns** encrypted, URL-safe string (the "memento")
-4. **System constructs URL** with memento parameter
-5. **Users open URL** and see pre-filled form ready to review and submit
+3. **API returns** an encrypted memento string **and a ready-to-use `magicLink` URL**
+4. **System sends the `magicLink`** to the end user (email, portal, etc.)
+5. **User clicks the link** — authenticated, lands on ELIM+ index with pre-filled data
+6. **User selects disease form, reviews, and submits** to DEMIS
+
+```
+KIS / Laboratory System
+    ↓
+[1] POST /api/elimplus/v1/memento  (API user credentials)
+    ↓
+[2] Receives { "memento": "...", "magicLink": "/mtl/.../?m=..." }
+    ↓
+[3] Constructs absolute URL: https://your-instance + magicLink
+    ↓
+[4] Delivers URL to end user (email, portal link, SMS, etc.)
+    ↓
+End User
+    ↓
+[5] Clicks link → authenticated via MTL token
+    → lands on /elimplus/?m={memento}
+    ↓
+[6] Selects disease form → reviews pre-filled data → submits to DEMIS
+```
 
 **Benefits:**
-- No direct submission required - users maintain control
+- No direct submission required — users maintain control
+- No separate end-user login credentials needed — `magicLink` handles authentication
 - Form validation happens in browser (immediate feedback)
 - Users can correct or supplement data before sending
 - Encrypted mementos are tamper-proof
@@ -48,7 +69,8 @@ ELIM+ solves a common integration pattern:
 Before using the API, you need:
 - **API User Credentials**: Username and password provided by your administrator
 - **Base URL**: Your ELIM instance URL (e.g., `https://elim.example.com`)
-- **Disease type**: One of Influenza, RSV, Norovirus, SARS-CoV-2
+
+That's it. End users do **not** need separate credentials — the `magicLink` in the API response handles their authentication automatically.
 
 ### API Versioning
 
@@ -65,34 +87,27 @@ https://your-instance/api/docs/swagger-ui/index.html?urls.primaryName=ELIM+
 
 ## Authentication
 
-The API uses **HTTP Basic Authentication** with your API user credentials.
+The API uses **HTTP Basic Authentication** with your API user credentials (the service account provided by your administrator). End users do not need separate credentials.
 
 ### How It Works
 
 1. Your administrator creates an API user account with username and password
 2. For each API request, provide credentials in the `Authorization` header
-3. Internally, the system derives a KEK (Key Encryption Key) from your password for cryptographic operations
+3. The API returns a `magicLink` in the response — a server-issued token that grants end users one-time authenticated access to the pre-filled form
 
 ### Example
 
 ```bash
-curl -u "username:password" \
-  https://elim.example.com/api/elimplus/v1/memento
-```
-
-Or explicitly with Authorization header:
-
-```bash
-# Encode credentials (username:password in base64)
-echo -n "username:password" | base64
-# Result: dXNlcm5hbWU6cGFzc3dvcmQ=
-
-curl -H "Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=" \
+curl -u "api-username:api-password" \
   -X POST \
   -H "Content-Type: application/json" \
-  -d '{"reportId":"LAB-2024-001"}' \
+  -d '{"reportId":"LAB-2026-001"}' \
   https://elim.example.com/api/elimplus/v1/memento
 ```
+
+The response contains both the encrypted memento and a ready-to-use `magicLink` — no further credentials are needed for the end user.
+
+See [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) for details on how the server-issued token works.
 
 ---
 
@@ -112,12 +127,29 @@ The main data structure for notifiable disease reporting. Contains:
 
 ### Memento Pattern
 
-A **memento** is an encrypted, URL-safe string that contains form data:
+A **memento** is an encrypted, URL-safe string that contains form pre-fill data:
 - Generated from JSON laboratory report data
 - Encrypted with AES-256-GCM using your API user's KEK
 - Tamper-proof and URL-safe
-- Typical size: 500-2000 characters
+- Typical size: 500–2000 characters
 - Used as query parameter: `?m={memento}`
+
+**Important:** The memento contains generic pre-fill data (patient info, dates, report IDs) — not disease-specific data. The user selects the disease on the ELIM+ index page. The same memento applies to all disease forms.
+
+### Magic Token Link (MTL)
+
+The `magicLink` field in the API response is a server-issued, time-limited URL that:
+- Authenticates the end user automatically (no login page)
+- Redirects to `/elimplus/?m={memento}` on success
+- Is a **relative path** — prepend your instance host to make it absolute
+
+```
+magicLink: "/mtl/eyJ...token.../elimplus/?m=eyJ...memento..."
+
+Full URL: https://elim.example.com/mtl/eyJ...token.../elimplus/?m=eyJ...memento..."
+```
+
+See [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) for security details and token lifetime.
 
 ### Patient Types
 
@@ -152,12 +184,13 @@ ELIM+ supports 4 notifiable diseases:
 
 ### Form Workflow
 
-1. User selects disease from index page: `/elimplus/index`
-2. System routes to disease-specific form: `/elim/r/{Disease}/`
-3. Form can be pre-filled via memento parameter: `/elim/r/{Disease}/?m={memento}`
-4. User reviews, corrects if needed, submits to DEMIS
+1. User opens the magic link → lands on ELIM+ index: `/elimplus/`
+2. User selects a disease form
+3. System routes to disease-specific form: `/elim/r/{Disease}/`
+4. Form is pre-filled via memento parameter: `/elim/r/{Disease}/?m={memento}`
+5. User reviews, corrects if needed, submits to DEMIS
 
-**Note:** Form controllers currently use legacy `/elim/r/` routes during transition to `/elimplus/` structure.
+**Note:** Form controllers currently use legacy `/elim/r/` routes during transition to `/elimplus/` structure. The entry point is always `/elimplus/`.
 
 ---
 
@@ -165,7 +198,7 @@ ELIM+ supports 4 notifiable diseases:
 
 **Endpoint:** `POST /api/elimplus/v1/memento`
 
-**Purpose:** Create encrypted memento string to pre-fill laboratory reporting forms.
+**Purpose:** Create encrypted memento string and magic link to pre-fill laboratory reporting forms.
 
 ### Request Body
 
@@ -174,17 +207,17 @@ The endpoint accepts laboratory report data as JSON. Only `reportId` is required
 **Minimal Example:**
 ```json
 {
-  "reportId": "LAB-2024-00001"
+  "reportId": "LAB-2026-00001"
 }
 ```
 
 **Complete Example:**
 ```json
 {
-  "reportId": "LAB-2024-00123",
+  "reportId": "LAB-2026-00123",
   "KrankheitsCode": "J09",
-  "MeldungsDatum": "2024-12-08",
-  "MeldungsVerweisId": "MELD-REF-2024-00001",
+  "MeldungsDatum": "2026-02-20",
+  "MeldungsVerweisId": "MELD-REF-2026-00001",
   "Krankheit": {
     "Influenza": {},
     "Rsv": null,
@@ -275,253 +308,72 @@ The endpoint accepts laboratory report data as JSON. Only `reportId` is required
 | `EinsendendeEinrichtung.*` | object | No | Sending facility |
 
 **Note:** `Geschlecht` enum values:
-- `NASK` - Not asked (nicht gefragt)
-- `ASKU` - Asked but unknown (gefragt, aber unbekannt)
-- `MAENNLICH` - Male
-- `WEIBLICH` - Female
-- `DIVERS` - Diverse
-- `UNBESTIMMT` - Unspecified
+- `NASK` — Not asked (nicht gefragt)
+- `ASKU` — Asked but unknown (gefragt, aber unbekannt)
+- `MAENNLICH` — Male
+- `WEIBLICH` — Female
+- `DIVERS` — Diverse
+- `UNBESTIMMT` — Unspecified
 
 ### Response
 
-Returns a JSON object containing the encrypted memento string:
+Returns a JSON object containing the encrypted memento and a ready-to-use magic link:
 
 ```json
 {
-  "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..DGG5lQvJC8OpYrCt.Xm8YR..."
+  "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..DGG5lQvJC8OpYrCt.Xm8YR...",
+  "magicLink": "/mtl/eyJ...token.../elimplus/?m=eyJ...memento..."
 }
 ```
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `memento` | string | Encrypted, URL-safe string containing laboratory report data |
+| Field | Type | Nullable | Description |
+|-------|------|----------|-------------|
+| `memento` | string | No | Encrypted, URL-safe string containing laboratory report data. Use as `?m={memento}` query parameter. |
+| `magicLink` | string | Yes | Relative URL for authenticated single-click access. Prepend your instance host: `https://your-instance + magicLink` |
 
-### Examples
+**Note:** `magicLink` is `null` if the API user has no authentication configuration that supports token generation. In practice this should not occur for properly configured API users.
 
-#### Minimal request (reportId only)
+### Quick Reference
+
+**Get the magic link and construct the full URL:**
 
 ```bash
-curl -X POST \
-  -u "user:pass" \
+RESPONSE=$(curl -s -X POST \
+  -u "api-user:api-pass" \
   -H "Content-Type: application/json" \
-  -d '{"reportId":"LAB-2024-001"}' \
-  https://elim.example.com/api/elimplus/v1/memento
+  -d '{"reportId":"LAB-2026-001"}' \
+  https://elim.example.com/api/elimplus/v1/memento)
+
+MAGIC_LINK=$(echo "$RESPONSE" | jq -r '.magicLink')
+
+# Construct absolute URL
+FORM_URL="https://elim.example.com$MAGIC_LINK"
+echo "Send to user: $FORM_URL"
 ```
-
-Response:
-```json
-{
-  "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..abc123..."
-}
-```
-
-#### Complete laboratory report
-
-```bash
-curl -X POST \
-  -u "user:pass" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "reportId": "LAB-2024-00123",
-    "KrankheitsCode": "J09",
-    "MeldungsDatum": "2024-12-08",
-    "MeldungsVerweisId": "MELD-REF-2024-00001",
-    "Krankheit": {
-      "Influenza": {}
-    },
-    "Patient": {
-      "IsAnonym": false,
-      "Standard": {
-        "Name": {
-          "Vorname": "Max",
-          "Nachname": "Mustermann"
-        },
-        "Geschlecht": "MAENNLICH",
-        "Geburtsdatum": "1980-05-15",
-        "Adresse": {
-          "Strasse": "Musterstraße 123",
-          "PLZ": "12345",
-          "Stadt": "Musterstadt"
-        },
-        "Kontakt": {
-          "Telefon": "+49 123 456789",
-          "Email": "max.mustermann@example.com"
-        }
-      }
-    },
-    "MeldendeEinrichtung": {
-      "EinrichtungsName": "Universitätsklinikum Musterstadt",
-      "BSNR": "123456789"
-    }
-  }' \
-  https://elim.example.com/api/elimplus/v1/memento
-```
-
-#### Extract memento with jq
-
-```bash
-MEMENTO=$(curl -s -X POST \
-  -u "user:pass" \
-  -H "Content-Type: application/json" \
-  -d '{"reportId":"LAB-2024-001"}' \
-  https://elim.example.com/api/elimplus/v1/memento | jq -r '.memento')
-
-echo "Memento: $MEMENTO"
-```
-
-### Constructing URLs for End Users
-
-Once you have a memento, construct a URL for end users to access pre-filled forms.
-
-#### Recommended: Basic Auth Login (BAL) Pattern
-
-For external integrations, use the BAL endpoint for single-click authenticated access:
-
-**URL Pattern:**
-```
-https://username:password@your-instance/bal/elimplus/?m={memento}
-```
-
-**Components:**
-- `username:password` - End user's credentials (not API credentials)
-- `/bal/` - Basic Auth Login endpoint (converts credentials to session)
-- `/elimplus/` - ELIM+ product index page
-- `?m={memento}` - Pre-fill data parameter
-
-**Example:**
-```bash
-https://lab-tech:secret@elim.example.com/bal/elimplus/?m=eyJhbGciOiJkaXIi...
-```
-
-**User Flow:**
-1. User clicks link
-2. BAL authenticates with provided credentials
-3. Creates secure session (no more credentials needed)
-4. Redirects to `/elimplus/?m={memento}`
-5. User sees ELIM+ index with pre-filled data
-6. User selects disease form and submits
-
-**Benefits:**
-- ✅ Single-click access (no login page)
-- ✅ Proper session with logout support
-- ✅ Credentials only sent once
-
-See [Basic Auth Login Guide](../../Authentication/basic-auth-login.md) for details.
-
-#### Alternative: Manual Login
-
-If users prefer manual login, construct a simple URL without credentials:
-
-**URL Pattern:**
-```
-https://your-instance/elimplus/?m={memento}
-```
-
-Users must login manually before accessing the form.
-
-#### Legacy: Direct Disease Form URLs
-
-Disease-specific forms can be accessed directly (requires login):
-
-| Disease | Route |
-|---------|-------|
-| Influenza | `/elim/r/Influenza/?m={memento}` |
-| RSV | `/elim/r/Rsv/?m={memento}` |
-| Norovirus | `/elim/r/Norovirus/?m={memento}` |
-| SARS-CoV-2 | `/elim/r/Sarscov2/?m={memento}` |
-
-**Note:** The index page (`/elimplus/`) is recommended as the entry point for better user experience.
 
 ---
 
 ## Complete Workflow Examples
 
-### Overview: End-to-End External Integration
-
-For external systems integrating with ELIM+, the complete workflow involves:
-
-**1. API Step (System-to-System):**
-- Your system calls the Memento API with laboratory data
-- Receives encrypted memento string
-
-**2. User Access Step (User-Facing):**
-- Your system constructs an authenticated URL for end users
-- Users click the link to access ELIM+ with pre-filled data
-- **Recommended:** Use Basic Auth Login (BAL) for single-click authenticated access
-
-**Complete Integration Pattern: API + BAL**
-
-```
-External System (Laboratory/KIS)
-    ↓
-[1] POST /api/elimplus/v1/memento
-    with API user credentials
-    receives memento string
-    ↓
-[2] Construct authenticated URL:
-    https://enduser:password@host/bal/elimplus/?m={memento}
-    ↓
-[3] Send URL to end user
-    (via email, portal link, SMS, etc.)
-    ↓
-End User
-    ↓
-[4] Click link → BAL authenticates
-    → redirects to /elimplus/?m={memento}
-    ↓
-[5] ELIM+ index page with pre-filled data
-    → User selects disease form
-    ↓
-[6] Review pre-filled form and submit to DEMIS
-```
-
-**Key Concepts:**
-
-- **Two Sets of Credentials:**
-  - **API user:** System credentials for calling the memento API (service account)
-  - **End user:** Individual user credentials for accessing ELIM+ (their login account)
-
-- **Basic Auth Login (BAL):**
-  - Endpoint: `GET /bal/{target-path}`
-  - Converts Basic Auth credentials into secure session
-  - Users get proper session-based authentication with logout support
-  - See [Basic Auth Login Guide](../../Authentication/basic-auth-login.md) for details
-
-- **ELIM+ Index Page:**
-  - Entry point: `/elimplus/` or `/elimplus/index`
-  - Users select which disease form to work with
-  - Memento data is available across all forms
-
-**Why use BAL?**
-✅ Single-click access (no separate login page)
-✅ Proper session management with logout
-✅ Secure credential handling
-✅ Compatible with existing Basic Auth patterns
-
----
-
-### Workflow 1: Complete external integration (API + BAL)
+### Workflow 1: Complete external integration
 
 ```bash
 #!/bin/bash
-# Complete workflow for external laboratory system integration
+# Complete workflow for KIS/laboratory system integration with ELIM+
 
 BASE_URL="https://elim.example.com"
-API_USER="lab-api"          # System credentials for API
+API_USER="lab-api"
 API_PASS="api-secret"
-END_USER="lab-tech"         # End user credentials for form access
-END_USER_PASS="tech-secret"
 
-# Step 1: Create memento via API (system-to-system)
+# Step 1: Create memento and get magic link
 echo "Creating memento via API..."
-MEMENTO=$(curl -s -X POST \
+RESPONSE=$(curl -s -X POST \
   -u "$API_USER:$API_PASS" \
   -H "Content-Type: application/json" \
   -d '{
-    "reportId": "LAB-2024-00123",
+    "reportId": "LAB-2026-00123",
     "KrankheitsCode": "J09",
-    "MeldungsDatum": "2024-12-08",
-    "Krankheit": {"Influenza": {}},
+    "MeldungsDatum": "2026-02-20",
     "Patient": {
       "IsAnonym": false,
       "Standard": {
@@ -535,117 +387,48 @@ MEMENTO=$(curl -s -X POST \
       "BSNR": "123456789"
     }
   }' \
-  "$BASE_URL/api/elimplus/v1/memento" | jq -r '.memento')
-
-echo "Memento created: ${MEMENTO:0:50}..."
-
-# Step 2: Construct BAL URL for end user (ELIM+ index page)
-FORM_URL="https://$END_USER:$END_USER_PASS@$BASE_URL/bal/elimplus/?m=$MEMENTO"
-
-# Step 3: Deliver to end user (example: email)
-echo ""
-echo "Sending link to end user..."
-echo "To: lab-tech@hospital.com"
-echo "Subject: Laboratory Report Ready for Review (LAB-2024-00123)"
-echo ""
-echo "Form URL (user clicks → auto-login → ELIM+ index):"
-echo "$FORM_URL"
-echo ""
-echo "What happens when user clicks:"
-echo "1. BAL authenticates with end user credentials"
-echo "2. Creates secure session for end user"
-echo "3. Redirects to /elimplus/?m={memento}"
-echo "4. User sees ELIM+ index page with pre-filled data"
-echo "5. User selects disease form (e.g., Influenza)"
-echo "6. Form is pre-filled, user reviews and submits"
-```
-
-**Note:** The memento parameter (`?m={memento}`) is preserved when navigating from the index page to disease-specific forms.
-
----
-
-### Workflow 2: Direct to disease form (alternative)
-
-```bash
-#!/bin/bash
-# Complete workflow: Create memento for Influenza report
-
-BASE_URL="https://elim.example.com"
-USER="your-username"
-PASS="your-password"
-DISEASE="Influenza"
-
-# Step 1: Prepare laboratory report data
-LAB_DATA='{
-  "reportId": "LAB-2024-00123",
-  "KrankheitsCode": "J09",
-  "MeldungsDatum": "2024-12-08",
-  "Krankheit": {
-    "Influenza": {}
-  },
-  "Patient": {
-    "IsAnonym": false,
-    "Standard": {
-      "Name": {"Vorname": "Max", "Nachname": "Mustermann"},
-      "Geschlecht": "MAENNLICH",
-      "Geburtsdatum": "1980-05-15",
-      "Adresse": {
-        "Strasse": "Musterstraße 123",
-        "PLZ": "12345",
-        "Stadt": "Musterstadt"
-      }
-    }
-  },
-  "MeldendeEinrichtung": {
-    "EinrichtungsName": "Universitätsklinikum Musterstadt",
-    "BSNR": "123456789"
-  }
-}'
-
-# Step 2: Create memento
-echo "Creating memento..."
-RESPONSE=$(curl -s -X POST \
-  -u "$USER:$PASS" \
-  -H "Content-Type: application/json" \
-  -d "$LAB_DATA" \
   "$BASE_URL/api/elimplus/v1/memento")
 
-# Step 3: Extract memento from response
-MEMENTO=$(echo "$RESPONSE" | jq -r '.memento')
+MAGIC_LINK=$(echo "$RESPONSE" | jq -r '.magicLink')
 
-if [ -z "$MEMENTO" ] || [ "$MEMENTO" = "null" ]; then
-  echo "Error: Failed to create memento"
+if [ -z "$MAGIC_LINK" ] || [ "$MAGIC_LINK" = "null" ]; then
+  echo "Error: No magic link in response"
   echo "$RESPONSE" | jq .
   exit 1
 fi
 
-# Step 4: Construct ELIM+ index URL (without BAL - requires manual login)
-FORM_URL="$BASE_URL/elimplus/?m=$MEMENTO"
+# Step 2: Construct absolute URL
+FORM_URL="$BASE_URL$MAGIC_LINK"
 
-echo "Success! ELIM+ URL:"
+# Step 3: Deliver to end user
+echo ""
+echo "Form URL for end user (single-click, no login required):"
 echo "$FORM_URL"
 echo ""
-echo "Send this URL to users who will login manually."
-echo "Note: For single-click access, use Workflow 1 with BAL instead."
+echo "What happens when user clicks:"
+echo "1. MTL token authenticates the user automatically"
+echo "2. Redirects to /elimplus/?m={memento}"
+echo "3. User selects disease form (e.g., Influenza)"
+echo "4. Form is pre-filled, user reviews and submits to DEMIS"
 ```
 
-### Workflow 3: Email with pre-filled form link (BAL)
+---
+
+### Workflow 2: Email with pre-filled form link
 
 ```bash
 #!/bin/bash
-# Create memento and email link to laboratory technician
+# Create memento and email magic link to laboratory technician
 
 BASE_URL="https://elim.example.com"
 API_USER="kis-api-user"
 API_PASS="api-password"
-END_USER="lab-tech"
-END_USER_PASS="tech-password"
 
-# Create memento for RSV report (using API credentials)
-MEMENTO=$(curl -s -X POST -u "$API_USER:$API_PASS" \
+# Create memento for RSV report
+MAGIC_LINK=$(curl -s -X POST -u "$API_USER:$API_PASS" \
   -H "Content-Type: application/json" \
   -d '{
-    "reportId": "LAB-2024-00456",
+    "reportId": "LAB-2026-00456",
     "Krankheit": {"Rsv": {}},
     "Patient": {
       "IsAnonym": false,
@@ -655,33 +438,34 @@ MEMENTO=$(curl -s -X POST -u "$API_USER:$API_PASS" \
       }
     }
   }' \
-  "$BASE_URL/api/elimplus/v1/memento" | jq -r '.memento')
+  "$BASE_URL/api/elimplus/v1/memento" | jq -r '.magicLink')
 
-# Construct BAL URL for end user (ELIM+ index page)
-FORM_URL="https://$END_USER:$END_USER_PASS@$BASE_URL/bal/elimplus/?m=$MEMENTO"
+# Construct absolute URL
+FORM_URL="$BASE_URL$MAGIC_LINK"
 
 # Email the link (example using mail command)
 echo "Please review and submit the laboratory report: $FORM_URL" | \
-  mail -s "Laboratory Report Ready for Review (LAB-2024-00456)" \
+  mail -s "Laboratory Report Ready for Review (LAB-2026-00456)" \
     technician@hospital.example.com
 
 echo "Email sent with single-click authenticated link"
+echo "Note: The link expires — generate close to the time of sending"
 ```
 
-### Workflow 4: Batch form generation from CSV
+---
+
+### Workflow 3: Batch form generation from CSV
 
 ```bash
 #!/bin/bash
-# Generate multiple pre-filled forms from laboratory results CSV
+# Generate multiple pre-filled form links from laboratory results CSV
 
 BASE_URL="https://elim.example.com"
 API_USER="kis-batch-user"
 API_PASS="api-password"
-END_USER="lab-tech"
-END_USER_PASS="tech-password"
 
 # CSV format: reportId,disease,patientFirstName,patientLastName,dob
-# Example: LAB-2024-001,Influenza,Max,Mustermann,1980-05-15
+# Example: LAB-2026-001,Influenza,Max,Mustermann,1980-05-15
 
 while IFS=, read -r report_id disease first_name last_name dob; do
   # Skip header line
@@ -698,9 +482,7 @@ while IFS=, read -r report_id disease first_name last_name dob; do
     --arg dob "$dob" \
     '{
       reportId: $reportId,
-      Krankheit: {
-        ($disease): {}
-      },
+      Krankheit: {($disease): {}},
       Patient: {
         IsAnonym: false,
         Standard: {
@@ -710,21 +492,23 @@ while IFS=, read -r report_id disease first_name last_name dob; do
       }
     }')
 
-  # Create memento (using API credentials)
-  MEMENTO=$(curl -s -X POST -u "$API_USER:$API_PASS" \
+  # Create memento and get magic link
+  MAGIC_LINK=$(curl -s -X POST -u "$API_USER:$API_PASS" \
     -H "Content-Type: application/json" \
     -d "$LAB_DATA" \
-    "$BASE_URL/api/elimplus/v1/memento" | jq -r '.memento')
+    "$BASE_URL/api/elimplus/v1/memento" | jq -r '.magicLink')
 
-  # Output report ID and BAL URL for end user (ELIM+ index)
-  echo "$report_id,https://$END_USER:$END_USER_PASS@$BASE_URL/bal/elimplus/?m=$MEMENTO"
+  # Output report ID and absolute URL
+  echo "$report_id,$BASE_URL$MAGIC_LINK"
 done < lab_results.csv > form_urls.csv
 
 echo "Generated form URLs saved to form_urls.csv"
 echo "Each URL provides single-click authenticated access to ELIM+ index"
 ```
 
-### Workflow 5: Generate QR code for mobile access
+---
+
+### Workflow 4: QR code for mobile access
 
 ```bash
 #!/bin/bash
@@ -733,14 +517,12 @@ echo "Each URL provides single-click authenticated access to ELIM+ index"
 BASE_URL="https://elim.example.com"
 API_USER="kis-api"
 API_PASS="api-password"
-END_USER="mobile-user"
-END_USER_PASS="mobile-password"
 
-# Create memento (using API credentials)
-MEMENTO=$(curl -s -X POST -u "$API_USER:$API_PASS" \
+# Create memento and get magic link
+MAGIC_LINK=$(curl -s -X POST -u "$API_USER:$API_PASS" \
   -H "Content-Type: application/json" \
   -d '{
-    "reportId": "LAB-2024-00789",
+    "reportId": "LAB-2026-00789",
     "Krankheit": {"Sarscov2": {}},
     "Patient": {
       "IsAnonym": false,
@@ -750,10 +532,10 @@ MEMENTO=$(curl -s -X POST -u "$API_USER:$API_PASS" \
       }
     }
   }' \
-  "$BASE_URL/api/elimplus/v1/memento" | jq -r '.memento')
+  "$BASE_URL/api/elimplus/v1/memento" | jq -r '.magicLink')
 
-# Construct BAL URL for end user (ELIM+ index)
-FORM_URL="https://$END_USER:$END_USER_PASS@$BASE_URL/bal/elimplus/?m=$MEMENTO"
+# Construct absolute URL
+FORM_URL="$BASE_URL$MAGIC_LINK"
 
 # Generate QR code (requires qrencode tool)
 echo "$FORM_URL" | qrencode -o lab-report-qr.png
@@ -762,7 +544,9 @@ echo "QR code saved to lab-report-qr.png"
 echo "Scan with mobile device for single-click authenticated access"
 ```
 
-### Workflow 6: Anonymous patient reporting
+---
+
+### Workflow 5: Anonymous patient reporting
 
 ```bash
 #!/bin/bash
@@ -771,16 +555,14 @@ echo "Scan with mobile device for single-click authenticated access"
 BASE_URL="https://elim.example.com"
 API_USER="kis-api"
 API_PASS="api-password"
-END_USER="privacy-user"
-END_USER_PASS="user-password"
 
-# Create memento with anonymous patient data (using API credentials)
-MEMENTO=$(curl -s -X POST -u "$API_USER:$API_PASS" \
+# Create memento with anonymous patient data
+MAGIC_LINK=$(curl -s -X POST -u "$API_USER:$API_PASS" \
   -H "Content-Type: application/json" \
   -d '{
-    "reportId": "LAB-2024-00999",
+    "reportId": "LAB-2026-00999",
     "KrankheitsCode": "J09",
-    "MeldungsDatum": "2024-12-08",
+    "MeldungsDatum": "2026-02-20",
     "Krankheit": {"Influenza": {}},
     "Patient": {
       "IsAnonym": true,
@@ -798,10 +580,9 @@ MEMENTO=$(curl -s -X POST -u "$API_USER:$API_PASS" \
       "BSNR": "123456789"
     }
   }' \
-  "$BASE_URL/api/elimplus/v1/memento" | jq -r '.memento')
+  "$BASE_URL/api/elimplus/v1/memento" | jq -r '.magicLink')
 
-# Construct BAL URL for end user (ELIM+ index)
-FORM_URL="https://$END_USER:$END_USER_PASS@$BASE_URL/bal/elimplus/?m=$MEMENTO"
+FORM_URL="$BASE_URL$MAGIC_LINK"
 
 echo "Anonymous patient URL (single-click authenticated access):"
 echo "$FORM_URL"
@@ -818,9 +599,9 @@ echo "Only birth month/year, postal code, and country are included"
 
 | Code | Status | Meaning |
 |------|--------|---------|
-| 200 | OK | Memento created successfully |
+| 200 | OK | Memento and magic link created successfully |
 | 400 | Bad Request | Invalid JSON or validation error |
-| 401 | Unauthorized | Missing or invalid credentials |
+| 401 | Unauthorized | Missing or invalid API credentials |
 | 500 | Internal Server Error | Server error (contact support) |
 
 ### Validation Errors
@@ -828,7 +609,7 @@ echo "Only birth month/year, postal code, and country are included"
 If the request data is invalid, you'll receive a 400 Bad Request with details:
 
 ```bash
-curl -X POST -u "user:pass" \
+curl -X POST -u "api-user:api-pass" \
   -H "Content-Type: application/json" \
   -d '{"invalid":"data"}' \
   https://elim.example.com/api/elimplus/v1/memento
@@ -847,9 +628,9 @@ Dates must be in ISO 8601 format (YYYY-MM-DD):
 
 ```bash
 # Invalid date format
-curl -X POST -u "user:pass" \
+curl -X POST -u "api-user:api-pass" \
   -H "Content-Type: application/json" \
-  -d '{"reportId":"LAB-001","MeldungsDatum":"08.12.2024"}' \
+  -d '{"reportId":"LAB-001","MeldungsDatum":"08.12.2026"}' \
   https://elim.example.com/api/elimplus/v1/memento
 ```
 
@@ -864,31 +645,29 @@ Response (400):
 
 ```bash
 #!/bin/bash
-RESPONSE=$(curl -s -X POST -u "$USER:$PASS" \
+RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+  -u "$API_USER:$API_PASS" \
   -H "Content-Type: application/json" \
   -d "$LAB_DATA" \
   "$BASE_URL/api/elimplus/v1/memento")
 
-# Check HTTP status
-HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
-  -u "$USER:$PASS" \
-  -H "Content-Type: application/json" \
-  -d "$LAB_DATA" \
-  "$BASE_URL/api/elimplus/v1/memento")
+HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+BODY=$(echo "$RESPONSE" | head -1)
 
 if [ "$HTTP_CODE" -eq 200 ]; then
-  MEMENTO=$(echo "$RESPONSE" | jq -r '.memento')
-  echo "Success: $MEMENTO"
+  MAGIC_LINK=$(echo "$BODY" | jq -r '.magicLink')
+  FORM_URL="$BASE_URL$MAGIC_LINK"
+  echo "Success: $FORM_URL"
 elif [ "$HTTP_CODE" -eq 400 ]; then
   echo "Validation error:"
-  echo "$RESPONSE" | jq -r '.errors[]'
+  echo "$BODY" | jq -r '.errors[]'
   exit 1
 elif [ "$HTTP_CODE" -eq 401 ]; then
-  echo "Authentication failed - check credentials"
+  echo "Authentication failed — check API credentials"
   exit 1
 else
   echo "Error: HTTP $HTTP_CODE"
-  echo "$RESPONSE"
+  echo "$BODY"
   exit 1
 fi
 ```
@@ -901,7 +680,7 @@ fi
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/api/elimplus/v1/memento` | Create encrypted memento for form pre-fill |
+| POST | `/api/elimplus/v1/memento` | Create encrypted memento and magic link for form pre-fill |
 
 ### OpenAPI Specification
 
@@ -919,12 +698,14 @@ https://your-instance/api/docs/swagger-ui/index.html?urls.primaryName=ELIM+
 | Norovirus | `Norovirus` | `/elim/r/Norovirus/` |
 | SARS-CoV-2 | `Sarscov2` | `/elim/r/Sarscov2/` |
 
+**Entry point:** Always use `/elimplus/` — the index page where users select their disease form.
+
 ### Date Format
 
 All dates use ISO 8601 format:
 ```
 YYYY-MM-DD
-Example: 2024-12-08
+Example: 2026-02-20
 ```
 
 ### Gender Enum Values
@@ -946,12 +727,16 @@ Example: 2024-12-08
 - Mementos cannot be decrypted without the correct API user credentials
 - Tampering is detected and rejected
 
+**Magic Link Security:**
+- Tokens are server-issued and signed — they cannot be forged
+- Each token is single-use and time-limited
+- The target URL (`/elimplus/`) is encoded inside the encrypted token
+
 **Best Practices:**
-- ✓ Mementos are safe to pass via URL parameters
-- ✓ Mementos can be safely logged or stored
-- ✓ Mementos expire after a reasonable time (check instance configuration)
-- ✗ Don't expose mementos to unauthorized users (they contain sensitive patient data)
-- ✗ Don't reuse mementos across different diseases or reports
+- ✓ Generate the magic link close to the time of sending (token is time-limited)
+- ✓ Mementos are safe to pass via URL parameters and can be logged or stored
+- ✗ Do not expose mementos or magic links to unauthorized users (they contain sensitive patient data)
+- ✗ Do not reuse magic links; generate a fresh one for each workflow run
 
 **Data Minimization:**
 - Only include data that's actually needed for the form
@@ -963,10 +748,14 @@ Example: 2024-12-08
 For technical support or questions about the ELIM+ API:
 - Contact your system administrator
 - Refer to the OpenAPI specification for detailed schema documentation
-- Check integration test examples: `src/integration-test/kotlin/de/vertama/elimplus/`
+- Check integration test examples in `src/integration-test/kotlin/de/vertama/elimplus/`
+
+### Related Documentation
+
+- [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) — How server-issued authentication tokens work
 
 ---
 
-**Document Version:** 0.1.0
-**Last Updated:** 2026-01-28
+**Document Version:** 0.1.1
+**Last Updated:** 2026-02-20
 **API Version:** v1

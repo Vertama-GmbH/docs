@@ -59,6 +59,8 @@ https://your-instance/api/docs/swagger-ui/index.html?urls.primaryName=DUBA
 
 The API uses **HTTP Basic Authentication** with your API user credentials.
 
+> **Note on end-user authentication:** The `magicLink` field returned by the memento endpoint handles end-user authentication automatically via Magic Token Link (MTL). The Basic Auth Login (BAL) pattern (credentials embedded in URLs) is deprecated since v0.2.1 and should not be used for new integrations.
+
 ### How It Works
 
 1. Your administrator creates an API user account with username and password
@@ -1197,7 +1199,7 @@ Example: 2025-11-26T15:34:10Z
 ### Related Documentation
 
 - [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) — How `/mtl/` authentication tokens work
-- [Basic Auth Login (BAL)](../../Authentication/basic-auth-login.md) — Legacy credential-in-URL session pattern
+- [Basic Auth Login (BAL)](../../Authentication/basic-auth-login.md) — **Deprecated** since v0.2.1. Replaced by Magic Token Link.
 
 ### Support
 
