@@ -1,0 +1,425 @@
+openapi: 3.0.3
+info:
+  title: DIGG API
+  version: "0.1.0"
+  description: API for DIGG birth registration reporting (Geburtsmeldung) - xPersonenstand integration
+servers:
+  - url: /api/digg/v1
+    description: DIGG API Version 1
+paths:
+  /memento:
+    post:
+      summary: Create encrypted memento string from DIGG report data
+      description: |-
+        Accepts DIGG report data (Geburtsmeldung) as JSON and returns an encrypted memento string.
+        The memento can be used to pre-fill HTML forms via URL parameter.
+
+        Use Case:
+        External systems (e.g., KIS, hospital systems) submit form data → receive encrypted string →
+        construct URL with memento parameter → user opens pre-filled form.
+
+        This endpoint validates the submitted data against the DiggMementoRequest schema
+        before encryption. The memento string is URL-safe and tamper-proof.
+
+        Note: This endpoint does NOT submit the report. It only creates a pre-fill token
+        for the interactive HTML form.
+      tags:
+        - DIGG
+      security:
+        - basicAuth: []
+      operationId: createMemento
+      requestBody:
+        required: true
+        description: DIGG report data to encrypt into memento string
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiggMementoRequest'
+      responses:
+        '200':
+          description: Memento successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MementoResponse'
+              example:
+                memento: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                magicLink: "/mtl/eyJ...token.../digg/Geburtsbescheinigung?m=eyJ...memento..."
+        '400':
+          description: Bad Request - invalid form data (validation errors)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+              example:
+                errors: ["reportId must not be null"]
+        '401':
+          description: |-
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
+  /reports/{reportId}:
+    get:
+      summary: Retrieve the status of a previously submitted DIGG report
+      description: |-
+        Returns the current status of a DIGG birth registration report identified by its reportId.
+
+        DIGG reports have asynchronous delivery via xPersonenstand/XTA2 transport.
+        The status reflects the transport state:
+        - PENDING: Report was sent but transport acknowledgement has not yet been received
+          (GOVCONNECT XTA2 status is OFFEN or GELB).
+        - SUCCESS: Report was successfully delivered to the Standesamt.
+          receiptPdf contains the signed confirmation PDF (base64).
+        - FAILURE: Transport failed (GOVCONNECT XTA2 status is ROT).
+
+        By default this is a destructive read for SUCCESS/FAILURE reports: once retrieved,
+        the report is marked as polled and will no longer appear. Use ?peek=true for
+        a non-destructive read. PENDING reports are never marked as polled.
+      tags:
+        - DIGG
+      security:
+        - basicAuth: []
+      operationId: getReport
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          description: The report ID from the original DIGG report submission
+          schema:
+            type: string
+          example: "DIGG-2024-00123"
+        - name: peek
+          in: query
+          required: false
+          description: |-
+            If true, retrieve the result without marking it as polled.
+            The report remains available for future retrieval.
+            Default: false (destructive read).
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Report status found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportResult'
+              example:
+                reportId: "DIGG-2024-00123"
+                status: "SUCCESS"
+                module: "DIGG"
+                submittedAt: "2024-12-08T14:32:00Z"
+                portal: "GOVCONNECT"
+                receiptPdf: "JVBERi0xLjQK..."
+                failureReason: null
+        '401':
+          description: |-
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
+        '404':
+          description: |-
+            Report not found. No DIGG report with this ID exists for the
+            authenticated API user.
+        '410':
+          description: |-
+            Gone. The report was previously retrieved (polled) and is no longer
+            available. Use ?peek=true on future requests to avoid consuming reports.
+components:
+  schemas:
+    MementoResponse:
+      type: object
+      required:
+        - memento
+      properties:
+        memento:
+          type: string
+          description: |-
+            Encrypted, URL-safe memento string containing the form data.
+            Use as query parameter to pre-fill forms: ?m=<string>
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    ValidationErrorResponse:
+      type: object
+      required:
+        - errors
+      description: |-
+        Validation error response returned by Spring's ControllerAdvice.
+        Contains a list of validation error messages.
+      properties:
+        errors:
+          type: array
+          description: List of validation error messages
+          items:
+            type: string
+          example: ["reportId must not be null"]
+    DiggMementoRequest:
+      type: object
+      description: |-
+        DIGG birth registration report data (Geburtsmeldung).
+
+        For memento creation, only reportId is required. All other fields are optional
+        to allow partial pre-filling. The full report structure mirrors the internal
+        Report data class used by the DIGG form.
+      required:
+        - reportId
+      properties:
+        reportId:
+          type: string
+          description: |-
+            Unique identifier for this report.
+            Required to track and correlate this report throughout the workflow.
+          example: "DIGG-2024-00123"
+        standortId:
+          type: string
+          nullable: true
+          description: StandortId of the reporting hospital, used to resolve Standesämter
+          example: "770001"
+        standesamtId:
+          type: integer
+          format: int64
+          nullable: true
+          description: ID of the target Standesamt
+        nameEinrichtung:
+          type: string
+          nullable: true
+          description: Name of the reporting institution
+          example: "Universitätsklinikum Musterstadt"
+        ansprechpartner:
+          type: string
+          nullable: true
+          description: Name of the contact person
+        geburtsangaben:
+          $ref: '#/components/schemas/Geburtsangaben'
+        totgeburt:
+          type: boolean
+          nullable: true
+          description: Whether this is a stillbirth
+        kind:
+          $ref: '#/components/schemas/Kind'
+        mutter:
+          $ref: '#/components/schemas/Mutter'
+        vertraulicheGeburt:
+          type: boolean
+          nullable: true
+          description: Whether this is a confidential birth
+        zuordnungGeburtsanzeige:
+          type: string
+          nullable: true
+          description: Reference string for matching birth registration to parental data delivery
+    Geburtsangaben:
+      type: object
+      nullable: true
+      description: Birth details
+      properties:
+        ort:
+          $ref: '#/components/schemas/Ereignisort'
+        tag:
+          type: string
+          format: date
+          nullable: true
+          description: Date of birth
+          example: "2024-12-25"
+        uhrzeit:
+          type: string
+          nullable: true
+          description: Time of birth (HH:mm format)
+          example: "14:30"
+    Ereignisort:
+      type: object
+      nullable: true
+      description: Location of the event (birth)
+      properties:
+        strasse:
+          type: string
+          nullable: true
+          description: Street name
+        hausnummer:
+          type: string
+          nullable: true
+          description: House number
+        ort:
+          type: string
+          nullable: true
+          description: City/place name
+        ortsteil:
+          type: string
+          nullable: true
+          description: District/subdivision
+        kreisbezeichnung:
+          type: string
+          nullable: true
+          description: County designation
+    Kind:
+      type: object
+      nullable: true
+      description: Information about the newborn
+      properties:
+        geschlecht:
+          type: string
+          nullable: true
+          description: Gender of the child
+          enum:
+            - MAENNLICH
+            - WEIBLICH
+            - UNBESTIMMT
+          example: "WEIBLICH"
+        name:
+          $ref: '#/components/schemas/PersonNameVeraenderung'
+    PersonNameVeraenderung:
+      type: object
+      nullable: true
+      description: Person name (for name changes / newborns)
+      properties:
+        vornamen:
+          type: string
+          nullable: true
+          description: First names
+        familienname:
+          type: string
+          nullable: true
+          description: Family name
+    Mutter:
+      type: object
+      nullable: true
+      description: Mother information
+      properties:
+        standard:
+          $ref: '#/components/schemas/MutterStandard'
+        vertraulich:
+          $ref: '#/components/schemas/MutterVertraulich'
+    MutterStandard:
+      type: object
+      nullable: true
+      description: Standard mother information (non-confidential birth)
+      properties:
+        name:
+          $ref: '#/components/schemas/PersonName'
+        geburtsdatum:
+          type: string
+          format: date
+          nullable: true
+          description: Mother's date of birth
+          example: "1990-05-15"
+        anschrift:
+          $ref: '#/components/schemas/AnschriftInland'
+        kontakt:
+          $ref: '#/components/schemas/Kontakt'
+    MutterVertraulich:
+      type: object
+      nullable: true
+      description: Pseudonymous mother data for confidential births
+      properties:
+        vornamen:
+          type: string
+          nullable: true
+          description: Pseudonym first names
+        familienname:
+          type: string
+          nullable: true
+          description: Pseudonym family name
+    PersonName:
+      type: object
+      nullable: true
+      description: Person name
+      properties:
+        vornamen:
+          type: string
+          nullable: true
+          description: First names
+        familienname:
+          type: string
+          nullable: true
+          description: Family name
+        geburtsname:
+          type: string
+          nullable: true
+          description: Birth name (maiden name)
+    AnschriftInland:
+      type: object
+      nullable: true
+      description: Domestic address
+      properties:
+        hausnummer:
+          type: string
+          nullable: true
+        postleitzahl:
+          type: string
+          nullable: true
+        strasse:
+          type: string
+          nullable: true
+        wohnort:
+          type: string
+          nullable: true
+    Kontakt:
+      type: object
+      nullable: true
+      description: Contact information
+      properties:
+        email:
+          type: string
+          nullable: true
+        telefonFestnetz:
+          type: string
+          nullable: true
+        telefonMobil:
+          type: string
+          nullable: true
+    ReportResult:
+      type: object
+      required:
+        - reportId
+        - status
+        - module
+        - submittedAt
+      description: |-
+        Result of a DIGG report submission.
+
+        Status semantics:
+        - SUCCESS: Report was successfully delivered to the Standesamt.
+        - FAILURE: Transport failed.
+        - PENDING: Report was sent but delivery has not been confirmed yet.
+      properties:
+        reportId:
+          type: string
+          description: The report identifier
+          example: "DIGG-2024-00123"
+        status:
+          type: string
+          enum:
+            - SUCCESS
+            - FAILURE
+            - PENDING
+          description: Current status of the report
+          example: "SUCCESS"
+        module:
+          type: string
+          description: Module that processed the report
+          example: "DIGG"
+        submittedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the report was submitted
+          example: "2024-12-08T14:32:00Z"
+        portal:
+          type: string
+          nullable: true
+          description: The portal used for delivery (e.g. GOVCONNECT, AKDB)
+          example: "GOVCONNECT"
+        receiptPdf:
+          type: string
+          nullable: true
+          description: |-
+            Base64-encoded PDF receipt / confirmation.
+            Available only for successful reports.
+          example: null
+        failureReason:
+          type: string
+          nullable: true
+          description: Reason for failure, null on success or pending
+          example: null
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic

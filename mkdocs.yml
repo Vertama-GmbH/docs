@@ -37,9 +37,19 @@ plugins:
 nav:
   - Home: index.md
   - Products:
-     # - DIGG: []
+     - BELIM:
+       #- "API Tutorial": "Products/BELIM/api-tutorial.md"
+       - "api.yml (OpenAPI)": Products/BELIM/api.yml
+       - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=BELIM"
+     - DIGG:
+       - "API Tutorial": "Products/DIGG/api-tutorial.md"
+       - "api.yml (OpenAPI)": Products/DIGG/api.yml
+       - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIGG"
      # - DIGT: []
-     # - DIVI: []
+     - DIVI:
+       - "API Tutorial": "Products/DIVI/api-tutorial.md"
+       - "api.yml (OpenAPI)": Products/DIVI/api.yml
+       - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIVI"
      - DUBA:
        - "API Tutorial": "Products/DUBA/api-tutorial.md"
        - "api.yml (OpenAPI)": Products/DUBA/api.yml
@@ -55,7 +65,7 @@ nav:
        - "api.yml (OpenAPI)": Products/ELIMPLUS/api.yml
        #- "Swagger API Viewer": "https://editor.swagger.io/#/?import=https://vertama-gmbh.github.io/docs/Products/ELIMPLUS/api.yml"
        - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=ELIM%2B"
-       
+
   - Guides:
     - "Folder Sync Handbook": "how-to/folder-sync-handbuch.md"
   # - "Tutorials": []
