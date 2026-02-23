@@ -58,6 +58,40 @@ paths:
             Unauthorized - invalid or missing authentication.
             Returns 401 status with WWW-Authenticate header.
             Response body is empty.
+  /reports:
+    get:
+      summary: List pending report IDs for the authenticated API user
+      description: |-
+        Returns the list of report IDs that have been submitted by the authenticated
+        API user but not yet retrieved (unpolled). These are reports waiting for
+        the caller to fetch the full result.
+        
+        Use GET /reports/{reportId} to retrieve the full result for each ID.
+        
+        The list contains only unpolled report IDs — once a report has been
+        retrieved without ?peek=true it will no longer appear here.
+      tags:
+        - DIGG
+      security:
+        -   basicAuth: [ ]
+      operationId: listPendingReports
+      responses:
+        '200':
+          description: List of pending report IDs (may be empty)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example:
+                - "LAB-2024-00123"
+                - "LAB-2024-00124"
+        '401':
+          description: |-
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
   /reports/{reportId}:
     get:
       summary: Retrieve the status of a previously submitted DIGG report
@@ -66,11 +100,10 @@ paths:
 
         DIGG reports have asynchronous delivery via xPersonenstand/XTA2 transport.
         The status reflects the transport state:
-        - PENDING: Report was sent but transport acknowledgement has not yet been received
-          (GOVCONNECT XTA2 status is OFFEN or GELB).
-        - SUCCESS: Report was successfully delivered to the Standesamt.
+        - PENDING: Report was sent but transport acknowledgement has not yet been received.
+        - SUCCESS: Report was successfully delivered.
           receiptPdf contains the signed confirmation PDF (base64).
-        - FAILURE: Transport failed (GOVCONNECT XTA2 status is ROT).
+        - FAILURE: Transport failed.
 
         By default this is a destructive read for SUCCESS/FAILURE reports: once retrieved,
         the report is marked as polled and will no longer appear. Use ?peek=true for

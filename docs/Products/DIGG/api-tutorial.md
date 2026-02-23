@@ -197,9 +197,32 @@ Only `reportId` is required; all other fields are optional to allow partial pre-
 
 ---
 
-## Report Retrieval Endpoint
+## Report Retrieval Endpoints
 
 DIGG reports are delivered asynchronously via xPersonenstand/XTA2 transport.
+
+### GET /reports — List pending report IDs
+
+**Endpoint:** `GET /api/elimplus/v1/reports`
+
+Returns an array of `reportId` strings for reports that have been submitted to DEMIS but not yet retrieved (unpolled). Reports disappear from this list once retrieved without `?peek=true`.
+
+**Request:**
+```bash
+curl -u "api-user:api-pass" \
+  https://elim.vertamob.de/api/digg/v1/reports
+```
+
+**Response (200):**
+```json
+["DIGG-2026-00123", "DIGG-2026-00124"]
+```
+
+An empty array `[]` means no submissions are pending retrieval.
+
+---
+
+### GET /reports/{reportId} — Retrieve report result
 
 **Endpoint:** `GET /api/digg/v1/reports/{reportId}`
 
