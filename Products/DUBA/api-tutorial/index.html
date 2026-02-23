@@ -1,0 +1,5637 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../DIVI/api.yml">
+      
+      
+        <link rel="next" href="../api.yml">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../img/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>API Tutorial - Vertama: The Manuals</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../css/extra.css">
+    
+      <link rel="stylesheet" href="../../../css/pdf-print.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#duba-api-integration-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Vertama: The Manuals" class="md-header__button md-logo" aria-label="Vertama: The Manuals" data-md-component="logo">
+      
+  <img src="../../../img/Vertama-Icon.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vertama: The Manuals
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API Tutorial
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../BELIM/api-tutorial/" class="md-tabs__link">
+          
+  
+  
+  Products
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../how-to/folder-sync-handbuch/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../background-and-explanations/security-and-encryption/Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/" class="md-tabs__link">
+          
+  
+  
+  Background & Explanations
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../Reference/system-requirements/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../Authentication/basic-auth-login/" class="md-tabs__link">
+          
+  
+  
+  Authentication
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../about/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  About
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Vertama: The Manuals" class="md-nav__button md-logo" aria-label="Vertama: The Manuals" data-md-component="logo">
+      
+  <img src="../../../img/Vertama-Icon.svg" alt="logo">
+
+    </a>
+    Vertama: The Manuals
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Products
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Products
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BELIM
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BELIM
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BELIM/api-tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BELIM/api.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=BELIM" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DIGG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    DIGG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DIGG/api-tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DIGG/api.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIGG" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DIVI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    DIVI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DIVI/api-tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DIVI/api.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIVI" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DUBA
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    DUBA
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introduction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Versioning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openapi-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenAPI Specification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Concepts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#message-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Message States
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#job-ids-vs-aktenzeichen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Job IDs vs Aktenzeichen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#message-direction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Message Direction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#processcard-timestamps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ProcessCard Timestamps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#list-messages-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List Messages Endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="List Messages Endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#query-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-all-available-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get all available messages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-by-single-job-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter by single job ID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-by-multiple-job-ids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter by multiple job IDs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-recent-messages-since-timestamp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get recent messages (since timestamp)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combine-multiple-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combine multiple filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtering-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-messageinfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding MessageInfo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding MessageInfo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#field-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Response
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-nullable-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Nullable Fields
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding Nullable Fields">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#jobid-null" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        jobId == null
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aktenzeichen-null" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        aktenzeichen == null
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#receivedat-null" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        receivedAt == null
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#download-message-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Download Message Endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Download Message Endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#path-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download-single-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Download single message
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#download-with-verbose-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Download with verbose output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-download-headers-without-downloading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check download headers without downloading
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acknowledge-messages-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acknowledge Messages Endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Acknowledge Messages Endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-this-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#request-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Body
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Response">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#status-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#acknowledge-single-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acknowledge single message
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acknowledge-multiple-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acknowledge multiple messages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parse-response-with-jq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parse response with jq
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#count-successful-deletions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Count successful deletions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#download-and-acknowledge-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Download and acknowledge workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-protection-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Protection Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#form-pre-fill-with-memento-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Form Pre-fill with Memento Endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Form Pre-fill with Memento Endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-this-does_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-case-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#request-body_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Body
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#field-reference_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minimal-example-jobid-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimal example (jobId only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complete-guardianship-request-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete guardianship request example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extract-memento-and-magic-link-with-jq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extract memento and magic link with jq
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-the-magic-link-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using the Magic Link (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-manual-form-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative: Manual Form URL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complete-end-to-end-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete End-to-End Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pattern-1-email-with-magic-link-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 1: Email with magic link (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-2-generate-qr-code-for-mobile-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 2: Generate QR code for mobile access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-3-batch-form-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 3: Batch form generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validation-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handle-errors-in-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handle Errors in Scripts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-workflow-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Workflow Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Complete Workflow Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workflow-1-poll-for-new-messages-and-download-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 1: Poll for new messages and download them
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-2-download-all-messages-for-a-specific-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 2: Download all messages for a specific job
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-3-check-for-incoming-court-responses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 3: Check for INCOMING court responses
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-4-incremental-polling-with-state-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 4: Incremental polling with state tracking
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filtering-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Filtering Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-jobid-filtering-for-targeted-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use jobId filtering for targeted queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-since-parameter-for-incremental-polling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use since parameter for incremental polling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combine-filters-for-precise-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combine filters for precise queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handle-nullable-fields-gracefully" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handle nullable fields gracefully
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-by-direction-in-client-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter by direction in client code
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Codes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Codes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-error-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Error Response
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handling-errors-in-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handling Errors in Scripts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-endpoints-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Endpoints Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openapi-specification_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenAPI Specification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timestamp-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timestamp Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DUBA" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ELIM
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ELIM
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_1" id="__nav_2_5_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flyer
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Flyer
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ELIM/onepager/OnePager%20%28PNG%29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    One Pager / Flyer (PNG)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ELIM/onepager/OnePager%20%28HTML%29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    One Pager / Flyer (HTML)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ELIM/onepager/OnePager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    One Pager / Flyer (TEXT/Markdown)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ELIM+
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ELIM+
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ELIMPLUS/api-tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ELIMPLUS/api.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=ELIM%2B" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/folder-sync-handbuch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Folder Sync Handbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Background & Explanations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Background & Explanations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security & Encryption
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security & Encryption
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../background-and-explanations/security-and-encryption/Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-User Secret Sharing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../background-and-explanations/security-and-encryption/Password-Based%20User%20Secrets%20Encryption%20with%20Derived%20Keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Password-Based User Secrets Encryption
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../background-and-explanations/security-and-encryption/Implementation-Notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../background-and-explanations/security-and-encryption/API-Usage-Guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Usage Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Reference/system-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systemanforderungen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Reference/endpoints-and-infrastructure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Endpunkte & Infrastruktur
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authentication
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Authentication/basic-auth-login/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic Auth Login (BAL)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Authentication/magic-token-link/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Magic Token Link (MTL)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introduction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Versioning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openapi-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenAPI Specification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Concepts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#message-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Message States
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#job-ids-vs-aktenzeichen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Job IDs vs Aktenzeichen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#message-direction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Message Direction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#processcard-timestamps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ProcessCard Timestamps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#list-messages-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List Messages Endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="List Messages Endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#query-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-all-available-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get all available messages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-by-single-job-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter by single job ID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-by-multiple-job-ids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter by multiple job IDs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-recent-messages-since-timestamp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get recent messages (since timestamp)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combine-multiple-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combine multiple filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtering-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-messageinfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding MessageInfo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding MessageInfo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#field-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Response
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-nullable-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Nullable Fields
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding Nullable Fields">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#jobid-null" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        jobId == null
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aktenzeichen-null" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        aktenzeichen == null
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#receivedat-null" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        receivedAt == null
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#download-message-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Download Message Endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Download Message Endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#path-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download-single-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Download single message
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#download-with-verbose-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Download with verbose output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-download-headers-without-downloading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check download headers without downloading
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acknowledge-messages-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acknowledge Messages Endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Acknowledge Messages Endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-this-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#request-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Body
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Response">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#status-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#acknowledge-single-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acknowledge single message
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acknowledge-multiple-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acknowledge multiple messages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parse-response-with-jq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parse response with jq
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#count-successful-deletions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Count successful deletions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#download-and-acknowledge-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Download and acknowledge workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-protection-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Protection Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#form-pre-fill-with-memento-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Form Pre-fill with Memento Endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Form Pre-fill with Memento Endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-this-does_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-case-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#request-body_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Body
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#field-reference_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minimal-example-jobid-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimal example (jobId only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complete-guardianship-request-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete guardianship request example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extract-memento-and-magic-link-with-jq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extract memento and magic link with jq
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-the-magic-link-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using the Magic Link (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-manual-form-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative: Manual Form URL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complete-end-to-end-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete End-to-End Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pattern-1-email-with-magic-link-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 1: Email with magic link (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-2-generate-qr-code-for-mobile-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 2: Generate QR code for mobile access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-3-batch-form-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 3: Batch form generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validation-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handle-errors-in-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handle Errors in Scripts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-workflow-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Workflow Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Complete Workflow Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workflow-1-poll-for-new-messages-and-download-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 1: Poll for new messages and download them
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-2-download-all-messages-for-a-specific-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 2: Download all messages for a specific job
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-3-check-for-incoming-court-responses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 3: Check for INCOMING court responses
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-4-incremental-polling-with-state-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 4: Incremental polling with state tracking
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filtering-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Filtering Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-jobid-filtering-for-targeted-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use jobId filtering for targeted queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-since-parameter-for-incremental-polling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use since parameter for incremental polling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combine-filters-for-precise-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combine filters for precise queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handle-nullable-fields-gracefully" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handle nullable fields gracefully
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-by-direction-in-client-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter by direction in client code
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Codes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Codes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-error-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Error Response
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handling-errors-in-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handling Errors in Scripts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-endpoints-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Endpoints Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openapi-specification_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenAPI Specification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timestamp-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timestamp Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="duba-api-integration-guide">DUBA API Integration Guide</h1>
+<p>A practical guide for integration partners using the DUBA (Digital Court Guardianship) API.</p>
+<p><strong>Version:</strong> 0.2.1
+<strong>Last Updated:</strong> 2026-02-19</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#authentication">Authentication</a></li>
+<li><a href="#core-concepts">Core Concepts</a></li>
+<li><a href="#list-messages-endpoint">List Messages Endpoint</a></li>
+<li><a href="#understanding-messageinfo">Understanding MessageInfo</a></li>
+<li><a href="#download-message-endpoint">Download Message Endpoint</a></li>
+<li><a href="#acknowledge-messages-endpoint">Acknowledge Messages Endpoint</a></li>
+<li><a href="#form-pre-fill-with-memento-endpoint">Form Pre-fill with Memento Endpoint</a><ul>
+<li><a href="#using-the-magic-link-recommended">Using the Magic Link (Recommended)</a></li>
+<li><a href="#alternative-manual-form-url">Alternative: Manual Form URL</a></li>
+</ul>
+</li>
+<li><a href="#complete-workflow-examples">Complete Workflow Examples</a></li>
+<li><a href="#filtering-best-practices">Filtering Best Practices</a></li>
+<li><a href="#error-codes">Error Codes</a></li>
+<li><a href="#reference">Reference</a></li>
+</ol>
+<hr />
+<h2 id="introduction">Introduction</h2>
+<p>The DUBA API provides programmatic access to court messages exchanged via EGVP (Elektronisches Gerichts- und Verwaltungspostfach). This API allows integration partners to:</p>
+<ul>
+<li><strong>List available messages</strong> with filtering by job ID, Safe-ID, or timestamp</li>
+<li><strong>Download messages</strong> as ZIP files containing XJustiz XML and attachments</li>
+<li><strong>Acknowledge messages</strong> to trigger cleanup of sensitive data (GDPR compliance)</li>
+<li><strong>Create form mementos</strong> to generate pre-filled form URLs from your system data</li>
+</ul>
+<h3 id="prerequisites">Prerequisites</h3>
+<p>Before using the API, you need:
+- <strong>API User Credentials</strong>: Username and password provided by your administrator
+- <strong>Base URL</strong>: Your DUBA instance URL (e.g., <code>https://elim.example.com</code>)
+- <strong>Safe-ID</strong>: EGVP Safe-ID(s) you have access to</p>
+<h3 id="api-versioning">API Versioning</h3>
+<p>All endpoints are versioned under <code>/api/duba/v1/</code>.</p>
+<h3 id="openapi-specification">OpenAPI Specification</h3>
+<p>The complete OpenAPI specification is available at:</p>
+<pre><code>https://your-instance/api/docs/swagger-ui/index.html?urls.primaryName=DUBA
+</code></pre>
+<hr />
+<h2 id="authentication">Authentication</h2>
+<p>The API uses <strong>HTTP Basic Authentication</strong> with your API user credentials.</p>
+<blockquote>
+<p><strong>Note on end-user authentication:</strong> The <code>magicLink</code> field returned by the memento endpoint handles end-user authentication automatically via Magic Token Link (MTL). The Basic Auth Login (BAL) pattern (credentials embedded in URLs) is deprecated since v0.2.1 and should not be used for new integrations.</p>
+</blockquote>
+<h3 id="how-it-works">How It Works</h3>
+<ol>
+<li>Your administrator creates an API user account with username and password</li>
+<li>For each API request, provide credentials in the <code>Authorization</code> header</li>
+<li>Internally, the system derives a KEK (Key Encryption Key) from your password for cryptographic operations, but you only need to provide your username and password</li>
+</ol>
+<h3 id="example">Example</h3>
+<pre><code class="language-bash">curl -u &quot;username:password&quot; \
+  https://elim.example.com/api/duba/v1/messages
+</code></pre>
+<p>Or explicitly with Authorization header:</p>
+<pre><code class="language-bash"># Encode credentials (username:password in base64)
+echo -n &quot;username:password&quot; | base64
+# Result: dXNlcm5hbWU6cGFzc3dvcmQ=
+
+curl -H &quot;Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=&quot; \
+  https://elim.example.com/api/duba/v1/messages
+</code></pre>
+<hr />
+<h2 id="core-concepts">Core Concepts</h2>
+<h3 id="message-states">Message States</h3>
+<p>Messages go through different states in the system:</p>
+<ol>
+<li><strong>Indexed</strong>: Message metadata discovered from EGVP (lightweight, fast)</li>
+<li><strong>Hydrated</strong>: Full message downloaded and XJustiz parsed (aktenzeichen extracted)</li>
+<li><strong>Available</strong>: Message can be downloaded via API</li>
+</ol>
+<p><strong>Important</strong>: Only <strong>hydrated</strong> messages have complete metadata (aktenzeichen, sender info).</p>
+<h3 id="job-ids-vs-aktenzeichen">Job IDs vs Aktenzeichen</h3>
+<p>Two different identifiers are used:</p>
+<ul>
+<li><strong>jobId</strong>: Your internal work tracking ID (e.g., <code>"job-2024-001"</code>)</li>
+<li>Arbitrary string meaningful to your system</li>
+<li>Used to correlate messages with your cases</li>
+<li>
+<p>Set when sending messages via DUBA</p>
+</li>
+<li>
+<p><strong>aktenzeichen</strong>: German legal case reference number (e.g., <code>"AZ-12345-2024"</code>)</p>
+</li>
+<li>Formal XJustiz identifier required in court communications</li>
+<li>Extracted from message content after hydration</li>
+<li>Used by courts and legal systems</li>
+</ul>
+<p><strong>Mapping</strong>: The system maintains a mapping between your jobIds and aktenzeichen values.</p>
+<h3 id="message-direction">Message Direction</h3>
+<p>Messages have a direction:</p>
+<ul>
+<li><strong>INCOMING</strong>: Received from external courts or systems</li>
+<li><strong>OUTGOING</strong>: Sent by you to external recipients</li>
+</ul>
+<h3 id="processcard-timestamps">ProcessCard Timestamps</h3>
+<p>Messages include timestamps from the EGVP ProcessCard:</p>
+<ul>
+<li><strong>createdAt</strong> (<code>tspCreation</code>): When message arrived at EGVP server (always present)</li>
+<li><strong>receivedAt</strong> (<code>tspReception</code>): When first retrieved by anyone</li>
+<li>For INCOMING: When you or another system downloaded it</li>
+<li>For OUTGOING: When the recipient downloaded it</li>
+<li><code>null</code> if not yet retrieved</li>
+<li><strong>hydratedAt</strong>: When the system fully processed the message (downloaded + parsed)</li>
+<li><code>null</code> if not yet hydrated</li>
+</ul>
+<hr />
+<h2 id="list-messages-endpoint">List Messages Endpoint</h2>
+<p><strong>Endpoint:</strong> <code>GET /api/duba/v1/messages</code></p>
+<p><strong>Purpose:</strong> Query available messages with optional filtering.</p>
+<h3 id="query-parameters">Query Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>jobId</code></td>
+<td>array[string]</td>
+<td>No</td>
+<td>Filter by your job IDs. Can specify multiple times.</td>
+</tr>
+<tr>
+<td><code>safeId</code></td>
+<td>array[string]</td>
+<td>No</td>
+<td>Filter by EGVP Safe-IDs. Can specify multiple times.</td>
+</tr>
+<tr>
+<td><code>since</code></td>
+<td>string (ISO 8601)</td>
+<td>No</td>
+<td>Only messages created after this timestamp.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="response">Response</h3>
+<p>Returns an array of <code>MessageInfo</code> objects (see <a href="#understanding-messageinfo">Understanding MessageInfo</a>).</p>
+<h3 id="examples">Examples</h3>
+<h4 id="get-all-available-messages">Get all available messages</h4>
+<pre><code class="language-bash">curl -u &quot;user:pass&quot; \
+  https://elim.example.com/api/duba/v1/messages
+</code></pre>
+<h4 id="filter-by-single-job-id">Filter by single job ID</h4>
+<pre><code class="language-bash">curl -u &quot;user:pass&quot; \
+  &quot;https://elim.example.com/api/duba/v1/messages?jobId=job-2024-001&quot;
+</code></pre>
+<h4 id="filter-by-multiple-job-ids">Filter by multiple job IDs</h4>
+<pre><code class="language-bash">curl -u &quot;user:pass&quot; \
+  &quot;https://elim.example.com/api/duba/v1/messages?jobId=job-123&amp;jobId=job-456&quot;
+</code></pre>
+<h4 id="get-recent-messages-since-timestamp">Get recent messages (since timestamp)</h4>
+<pre><code class="language-bash">curl -u &quot;user:pass&quot; \
+  &quot;https://elim.example.com/api/duba/v1/messages?since=2025-11-25T10:00:00Z&quot;
+</code></pre>
+<h4 id="combine-multiple-filters">Combine multiple filters</h4>
+<pre><code class="language-bash">curl -u &quot;user:pass&quot; \
+  &quot;https://elim.example.com/api/duba/v1/messages?jobId=job-123&amp;safeId=safe-abc&amp;since=2025-11-25T10:00:00Z&quot;
+</code></pre>
+<h3 id="filtering-behavior">Filtering Behavior</h3>
+<p><strong>Important semantic note:</strong></p>
+<ul>
+<li><strong>Without <code>jobId</code> filter</strong>: Returns ALL messages (hydrated + non-hydrated)</li>
+<li><strong>With <code>jobId</code> filter</strong>: Returns only messages for those jobs</li>
+<li>Naturally returns only <strong>hydrated</strong> messages (because jobId mapping requires aktenzeichen)</li>
+<li>Non-hydrated messages cannot be matched to jobs yet (no aktenzeichen extracted)</li>
+</ul>
+<p>This is <strong>intentional and correct</strong> behavior, not a bug.</p>
+<hr />
+<h2 id="understanding-messageinfo">Understanding MessageInfo</h2>
+<p>The API returns <code>MessageInfo</code> objects with complete message metadata.</p>
+<h3 id="field-reference">Field Reference</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Nullable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>No</td>
+<td>Message index ID - <strong>use this for download</strong></td>
+</tr>
+<tr>
+<td><code>messageId</code></td>
+<td>string</td>
+<td>No</td>
+<td>EGVP/Vibilia transport message ID</td>
+</tr>
+<tr>
+<td><code>jobId</code></td>
+<td>string</td>
+<td><strong>Yes</strong></td>
+<td>Your job ID (null for external messages)</td>
+</tr>
+<tr>
+<td><code>aktenzeichen</code></td>
+<td>string</td>
+<td><strong>Yes</strong></td>
+<td>Legal case number (null if not hydrated)</td>
+</tr>
+<tr>
+<td><code>direction</code></td>
+<td>enum</td>
+<td>No</td>
+<td><code>INCOMING</code> or <code>OUTGOING</code></td>
+</tr>
+<tr>
+<td><code>createdAt</code></td>
+<td>datetime</td>
+<td>No</td>
+<td>When message arrived at EGVP server</td>
+</tr>
+<tr>
+<td><code>receivedAt</code></td>
+<td>datetime</td>
+<td><strong>Yes</strong></td>
+<td>When first retrieved (null if not yet retrieved)</td>
+</tr>
+<tr>
+<td><code>hydratedAt</code></td>
+<td>datetime</td>
+<td><strong>Yes</strong></td>
+<td>When processed by system (null if not hydrated)</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>string (uri)</td>
+<td>No</td>
+<td>Relative URL for download endpoint</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-response">Example Response</h3>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 214,
+    &quot;messageId&quot;: &quot;gov2test_17623381049230a53d2f5-5015-4d9b-9afb-e86b1d0b6872&quot;,
+    &quot;jobId&quot;: &quot;job-2024-001&quot;,
+    &quot;aktenzeichen&quot;: &quot;AZ-12345-2024&quot;,
+    &quot;direction&quot;: &quot;INCOMING&quot;,
+    &quot;createdAt&quot;: &quot;2025-11-26T14:30:00Z&quot;,
+    &quot;receivedAt&quot;: &quot;2025-11-26T15:00:00Z&quot;,
+    &quot;hydratedAt&quot;: &quot;2025-11-26T15:01:00Z&quot;,
+    &quot;url&quot;: &quot;/api/duba/v1/download/214&quot;
+  },
+  {
+    &quot;id&quot;: 215,
+    &quot;messageId&quot;: &quot;msg-def-456&quot;,
+    &quot;jobId&quot;: null,
+    &quot;aktenzeichen&quot;: &quot;AZ-67890-2024&quot;,
+    &quot;direction&quot;: &quot;INCOMING&quot;,
+    &quot;createdAt&quot;: &quot;2025-11-26T14:35:00Z&quot;,
+    &quot;receivedAt&quot;: &quot;2025-11-26T14:40:00Z&quot;,
+    &quot;hydratedAt&quot;: &quot;2025-11-26T14:41:00Z&quot;,
+    &quot;url&quot;: &quot;/api/duba/v1/download/215&quot;
+  }
+]
+</code></pre>
+<h3 id="understanding-nullable-fields">Understanding Nullable Fields</h3>
+<h4 id="jobid-null"><code>jobId == null</code></h4>
+<p>The message was not sent via your DUBA API integration. Possible reasons:
+- External court sent you an unsolicited message
+- Another system sharing your EGVP account sent the message
+- Message predates your API integration</p>
+<h4 id="aktenzeichen-null"><code>aktenzeichen == null</code></h4>
+<p>The message is <strong>not yet hydrated</strong> (still processing). This means:
+- Metadata is available (indexed)
+- Full content not yet downloaded/parsed
+- Cannot be matched to jobs yet
+- Wait for <code>hydratedAt != null</code> before relying on aktenzeichen</p>
+<h4 id="receivedat-null"><code>receivedAt == null</code></h4>
+<p>The message has not been retrieved yet:
+- <strong>For INCOMING messages</strong>: Neither you nor any other system has downloaded it yet
+- <strong>For OUTGOING messages</strong>: The recipient hasn't downloaded it yet</p>
+<hr />
+<h2 id="download-message-endpoint">Download Message Endpoint</h2>
+<p><strong>Endpoint:</strong> <code>GET /api/duba/v1/download/{id}</code></p>
+<p><strong>Purpose:</strong> Download a specific message as a ZIP file.</p>
+<h3 id="path-parameters">Path Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>Message index ID from <code>MessageInfo.id</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="response_1">Response</h3>
+<p>Returns a ZIP file containing:
+- XJustiz XML message file
+- Any attachments included with the message
+- Metadata files</p>
+<p><strong>Content-Type:</strong> <code>application/zip</code></p>
+<h3 id="examples_1">Examples</h3>
+<h4 id="download-single-message">Download single message</h4>
+<pre><code class="language-bash">curl -u &quot;user:pass&quot; \
+  https://elim.example.com/api/duba/v1/download/214 \
+  -o message-214.zip
+</code></pre>
+<h4 id="download-with-verbose-output">Download with verbose output</h4>
+<pre><code class="language-bash">curl -v -u &quot;user:pass&quot; \
+  https://elim.example.com/api/duba/v1/download/214 \
+  -o message-214.zip
+</code></pre>
+<h4 id="check-download-headers-without-downloading">Check download headers without downloading</h4>
+<pre><code class="language-bash">curl -I -u &quot;user:pass&quot; \
+  https://elim.example.com/api/duba/v1/download/214
+</code></pre>
+<hr />
+<h2 id="acknowledge-messages-endpoint">Acknowledge Messages Endpoint</h2>
+<p><strong>Endpoint:</strong> <code>POST /api/duba/v1/messages/ack</code></p>
+<p><strong>Purpose:</strong> Acknowledge receipt of one or more messages and trigger cleanup.</p>
+<h3 id="what-this-does">What This Does</h3>
+<p>When you acknowledge a message:
+1. <strong>Deletes on-disk files</strong> - Sensitive message content is removed (data protection)
+2. <strong>Soft-deletes index entry</strong> - Metadata is preserved for audit trail
+3. <strong>Returns detailed status</strong> - Know exactly what happened to each message</p>
+<p><strong>Use case:</strong> After successfully downloading and processing messages, acknowledge them to trigger cleanup and comply with data protection requirements.</p>
+<h3 id="request-body">Request Body</h3>
+<pre><code class="language-json">{
+  &quot;messageIds&quot;: [42, 43, 44]
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>messageIds</code></td>
+<td>integer[]</td>
+<td>Yes</td>
+<td>Array of message index IDs to acknowledge (1-100 items)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="response_2">Response</h3>
+<p>Returns status for each message ID:</p>
+<pre><code class="language-json">{
+  &quot;results&quot;: [
+    {
+      &quot;id&quot;: 42,
+      &quot;status&quot;: &quot;DELETED&quot;,
+      &quot;message&quot;: &quot;Message acknowledged and deleted&quot;
+    },
+    {
+      &quot;id&quot;: 43,
+      &quot;status&quot;: &quot;ALREADY_DELETED&quot;,
+      &quot;message&quot;: &quot;Message was already deleted&quot;
+    },
+    {
+      &quot;id&quot;: 44,
+      &quot;status&quot;: &quot;FORBIDDEN&quot;,
+      &quot;message&quot;: &quot;User does not have access to this message&quot;
+    }
+  ]
+}
+</code></pre>
+<h4 id="status-values">Status Values</h4>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+<th>Is Error?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DELETED</code></td>
+<td>Successfully acknowledged and cleaned up</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>ALREADY_DELETED</code></td>
+<td>Message was already deleted (idempotent)</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>NOT_FOUND</code></td>
+<td>Message index entry does not exist</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>FORBIDDEN</code></td>
+<td>User does not have access to this message</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>ERROR</code></td>
+<td>An error occurred during processing</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Important:</strong> Partial success is allowed. Some messages may succeed while others fail. Always check the status for each ID.</p>
+<h3 id="examples_2">Examples</h3>
+<h4 id="acknowledge-single-message">Acknowledge single message</h4>
+<pre><code class="language-bash">curl -X POST \
+  -u &quot;user:pass&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;messageIds&quot;: [214]}' \
+  https://elim.example.com/api/duba/v1/messages/ack
+</code></pre>
+<h4 id="acknowledge-multiple-messages">Acknowledge multiple messages</h4>
+<pre><code class="language-bash">curl -X POST \
+  -u &quot;user:pass&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;messageIds&quot;: [214, 215, 216]}' \
+  https://elim.example.com/api/duba/v1/messages/ack
+</code></pre>
+<h4 id="parse-response-with-jq">Parse response with jq</h4>
+<pre><code class="language-bash">curl -X POST \
+  -u &quot;user:pass&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;messageIds&quot;: [214, 215, 216]}' \
+  https://elim.example.com/api/duba/v1/messages/ack | jq .
+</code></pre>
+<h4 id="count-successful-deletions">Count successful deletions</h4>
+<pre><code class="language-bash">curl -X POST \
+  -u &quot;user:pass&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;messageIds&quot;: [214, 215, 216]}' \
+  https://elim.example.com/api/duba/v1/messages/ack | \
+  jq '[.results[] | select(.status == &quot;DELETED&quot;)] | length'
+</code></pre>
+<h4 id="download-and-acknowledge-workflow">Download and acknowledge workflow</h4>
+<pre><code class="language-bash">#!/bin/bash
+# List messages, download each, then acknowledge all at once
+MESSAGE_IDS=$(curl -u &quot;user:pass&quot; \
+  &quot;https://elim.example.com/api/duba/v1/messages?jobId=job-123&quot; | \
+  jq -r '.[].id')
+
+# Download each message
+for id in $MESSAGE_IDS; do
+  echo &quot;Downloading message $id...&quot;
+  curl -u &quot;user:pass&quot; \
+    &quot;https://elim.example.com/api/duba/v1/download/$id&quot; \
+    -o &quot;message-$id.zip&quot;
+done
+
+# Acknowledge all messages at once (bulk operation)
+curl -X POST \
+  -u &quot;user:pass&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &quot;{\&quot;messageIds\&quot;: [$(echo $MESSAGE_IDS | tr '\n' ',' | sed 's/,$//' )]}&quot; \
+  https://elim.example.com/api/duba/v1/messages/ack
+</code></pre>
+<h3 id="data-protection-notes">Data Protection Notes</h3>
+<p>Acknowledging messages is one of three cleanup triggers in the system:</p>
+<ol>
+<li><strong>ACK endpoint (this)</strong> - Client-driven, explicit confirmation</li>
+<li><strong>Sync-based cleanup</strong> - Automatic when message confirmed gone from server</li>
+<li><strong>Retention policy</strong> - Time-based backstop (e.g., 30 days)</li>
+</ol>
+<p><strong>Best practice:</strong> Acknowledge messages as soon as you've successfully downloaded and processed them. This ensures:
+- Sensitive data is deleted promptly (GDPR compliance)
+- Your message list stays clean
+- Audit trail is preserved for compliance</p>
+<p><strong>Idempotent operation:</strong> Safe to acknowledge the same message multiple times. Already-deleted messages return <code>ALREADY_DELETED</code> status (not an error).</p>
+<hr />
+<h2 id="form-pre-fill-with-memento-endpoint">Form Pre-fill with Memento Endpoint</h2>
+<p><strong>Endpoint:</strong> <code>POST /api/duba/v1/memento</code></p>
+<p><strong>Purpose:</strong> Create encrypted memento strings to pre-fill DUBA web forms with data from your system.</p>
+<h3 id="what-this-does_1">What This Does</h3>
+<p>The memento endpoint solves a common integration pattern:</p>
+<ol>
+<li><strong>Your system (e.g., KIS)</strong> has complete case data but wants users to review/approve before submission</li>
+<li><strong>You call this endpoint</strong> with the form data as JSON</li>
+<li><strong>You receive back</strong> an encrypted memento string <strong>and a ready-to-use <code>magicLink</code> URL</strong></li>
+<li><strong>You send the <code>magicLink</code></strong> to the end user (email, portal link, etc.)</li>
+<li><strong>Users click the link</strong> → authenticate automatically → see the pre-filled form</li>
+</ol>
+<p><strong>Benefits:</strong>
+- No direct submission required — users maintain control
+- Form validation happens in the browser (immediate feedback)
+- Users can correct or supplement data before sending
+- Encrypted mementos are tamper-proof
+- <code>magicLink</code> handles authentication automatically — no credentials in the URL</p>
+<h3 id="use-case-example">Use Case Example</h3>
+<pre><code>Hospital KIS → Knows patient details for court guardianship request
+           → Calls /memento with patient/case data as JSON
+           → Receives { &quot;memento&quot;: &quot;...&quot;, &quot;magicLink&quot;: &quot;/mtl/.../duba/form?m=...&quot; }
+           → Prepends host: https://elim.example.com + magicLink
+           → Emails absolute URL to authorized user
+User       → Clicks link (no login required)
+           → Automatically authenticated
+           → Sees pre-filled form with all case details
+           → Reviews, corrects if needed, submits to court
+</code></pre>
+<h3 id="request-body_1">Request Body</h3>
+<p>The endpoint accepts DUBA form data as JSON. All fields except <code>jobId</code> are optional.</p>
+<p><strong>Required Fields:</strong>
+- <code>jobId</code> - Your internal tracking ID (string)
+- <code>absender.egvp_account_id</code> - EGVP/beBPo account ID for submission (integer)</p>
+<p><strong>Common Structure:</strong></p>
+<pre><code class="language-json">{
+  &quot;jobId&quot;: &quot;job-2024-12345&quot;,
+  &quot;meldeZeitpunkt&quot;: &quot;2025-12-10T14:30:00+01:00&quot;,
+  &quot;absender&quot;: {
+    &quot;name&quot;: &quot;Klinikum Musterstadt&quot;,
+    &quot;aktenzeichen&quot;: &quot;KH-2024-001&quot;,
+    &quot;egvp_account_id&quot;: 42
+  },
+  &quot;empfaenger&quot;: {
+    &quot;name&quot;: &quot;Amtsgericht Musterstadt&quot;,
+    &quot;type&quot;: &quot;Gericht&quot;,
+    &quot;safeId&quot;: &quot;gov2test&quot;,
+    &quot;aktenzeichen&quot;: &quot;AZ-2024-67890&quot;,
+    &quot;adresse&quot;: {
+      &quot;strasse&quot;: &quot;Gerichtsplatz 1&quot;,
+      &quot;plz&quot;: &quot;12345&quot;,
+      &quot;stadt&quot;: &quot;Musterstadt&quot;
+    }
+  },
+  &quot;betroffener&quot;: {
+    &quot;name&quot;: {
+      &quot;vorname&quot;: &quot;Max&quot;,
+      &quot;nachname&quot;: &quot;Mustermann&quot;
+    },
+    &quot;geburtsdatum&quot;: &quot;1950-01-15&quot;,
+    &quot;familienstand&quot;: &quot;Verheiratet&quot;,
+    &quot;anschrift&quot;: {
+      &quot;strasse&quot;: &quot;Musterstraße 42&quot;,
+      &quot;plz&quot;: &quot;12345&quot;,
+      &quot;stadt&quot;: &quot;Musterstadt&quot;
+    },
+    &quot;anschriftTelefon&quot;: &quot;+49 123 456789&quot;,
+    &quot;gegenwaertigerAufenthalt&quot;: &quot;Klinik XY, Station 3, Zimmer 12&quot;
+  }
+}
+</code></pre>
+<h3 id="field-reference_1">Field Reference</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>jobId</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Your internal job/case tracking ID</td>
+</tr>
+<tr>
+<td><code>meldeZeitpunkt</code></td>
+<td>datetime (ISO 8601)</td>
+<td>No</td>
+<td>Timestamp of report/registration</td>
+</tr>
+<tr>
+<td><code>absender.name</code></td>
+<td>string</td>
+<td>No</td>
+<td>Sender organization name</td>
+</tr>
+<tr>
+<td><code>absender.aktenzeichen</code></td>
+<td>string</td>
+<td>No</td>
+<td>Your internal case reference</td>
+</tr>
+<tr>
+<td><code>absender.egvp_account_id</code></td>
+<td>integer</td>
+<td>Yes*</td>
+<td>EGVP beBPo account ID for submission</td>
+</tr>
+<tr>
+<td><code>empfaenger.name</code></td>
+<td>string</td>
+<td>No</td>
+<td>Recipient organization name</td>
+</tr>
+<tr>
+<td><code>empfaenger.type</code></td>
+<td>enum</td>
+<td>No</td>
+<td><code>Gericht</code> or <code>Sonstige</code></td>
+</tr>
+<tr>
+<td><code>empfaenger.safeId</code></td>
+<td>string</td>
+<td>No</td>
+<td>EGVP Safe-ID for recipient</td>
+</tr>
+<tr>
+<td><code>empfaenger.aktenzeichen</code></td>
+<td>string</td>
+<td>No</td>
+<td>Court case reference number</td>
+</tr>
+<tr>
+<td><code>empfaenger.adresse.*</code></td>
+<td>object</td>
+<td>No</td>
+<td>Recipient address (strasse, plz, stadt)</td>
+</tr>
+<tr>
+<td><code>betroffener.name.*</code></td>
+<td>object</td>
+<td>No</td>
+<td>Affected person's name (vorname, nachname)</td>
+</tr>
+<tr>
+<td><code>betroffener.geburtsdatum</code></td>
+<td>date (YYYY-MM-DD)</td>
+<td>No</td>
+<td>Date of birth</td>
+</tr>
+<tr>
+<td><code>betroffener.familienstand</code></td>
+<td>enum</td>
+<td>No</td>
+<td><code>Ledig</code>, <code>Verheiratet</code>, <code>Geschieden</code>, <code>Verwitwet</code></td>
+</tr>
+<tr>
+<td><code>betroffener.anschrift.*</code></td>
+<td>object</td>
+<td>No</td>
+<td>Home address</td>
+</tr>
+<tr>
+<td><code>betroffener.anschriftTelefon</code></td>
+<td>string</td>
+<td>No</td>
+<td>Home phone number</td>
+</tr>
+<tr>
+<td><code>betroffener.gegenwaertigerAufenthalt</code></td>
+<td>string</td>
+<td>No</td>
+<td>Current location (e.g., hospital, ward, room)</td>
+</tr>
+</tbody>
+</table>
+<p>* Required for actual form submission, but optional for memento creation</p>
+<h3 id="response_3">Response</h3>
+<p>Returns a JSON object containing the encrypted memento string and a ready-to-use magic link:</p>
+<pre><code class="language-json">{
+  &quot;memento&quot;: &quot;eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..DGG5lQvJC8OpYrCt.Xm8YR...&quot;,
+  &quot;magicLink&quot;: &quot;/mtl/eyJ...token.../duba/?m=eyJ...memento...&quot;
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Nullable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>memento</code></td>
+<td>string</td>
+<td>No</td>
+<td>Encrypted, URL-safe string containing your form data</td>
+</tr>
+<tr>
+<td><code>magicLink</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Relative URL that authenticates and opens the pre-filled form in one click. Prepend your host: <code>https://your-instance + magicLink</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> Memento strings are typically 500-2000 characters depending on data size. They are encrypted with AES-256-GCM and safe to pass via URL parameters. The <code>magicLink</code> token expires after 1 hour by default.</p>
+<h3 id="examples_3">Examples</h3>
+<h4 id="minimal-example-jobid-only">Minimal example (jobId only)</h4>
+<pre><code class="language-bash">curl -X POST \
+  -u &quot;user:pass&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;jobId&quot;:&quot;job-2024-001&quot;,&quot;absender&quot;:{&quot;egvp_account_id&quot;:42}}' \
+  https://elim.example.com/api/duba/v1/memento
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;memento&quot;: &quot;eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..abc123...&quot;,
+  &quot;magicLink&quot;: &quot;/mtl/eyJ...token.../duba/?m=eyJ...memento...&quot;
+}
+</code></pre>
+<h4 id="complete-guardianship-request-example">Complete guardianship request example</h4>
+<pre><code class="language-bash">curl -X POST \
+  -u &quot;user:pass&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;jobId&quot;: &quot;job-2024-12345&quot;,
+    &quot;meldeZeitpunkt&quot;: &quot;2025-12-10T14:30:00+01:00&quot;,
+    &quot;absender&quot;: {
+      &quot;name&quot;: &quot;Klinikum Musterstadt&quot;,
+      &quot;aktenzeichen&quot;: &quot;KH-2024-001&quot;,
+      &quot;egvp_account_id&quot;: 42
+    },
+    &quot;empfaenger&quot;: {
+      &quot;name&quot;: &quot;Amtsgericht Musterstadt&quot;,
+      &quot;type&quot;: &quot;Gericht&quot;,
+      &quot;safeId&quot;: &quot;gov2test&quot;,
+      &quot;aktenzeichen&quot;: &quot;AZ-2024-67890&quot;
+    },
+    &quot;betroffener&quot;: {
+      &quot;name&quot;: {
+        &quot;vorname&quot;: &quot;Max&quot;,
+        &quot;nachname&quot;: &quot;Mustermann&quot;
+      },
+      &quot;geburtsdatum&quot;: &quot;1950-01-15&quot;,
+      &quot;familienstand&quot;: &quot;Verheiratet&quot;,
+      &quot;anschrift&quot;: {
+        &quot;strasse&quot;: &quot;Musterstraße 42&quot;,
+        &quot;plz&quot;: &quot;12345&quot;,
+        &quot;stadt&quot;: &quot;Musterstadt&quot;
+      },
+      &quot;anschriftTelefon&quot;: &quot;+49 123 456789&quot;,
+      &quot;gegenwaertigerAufenthalt&quot;: &quot;Klinik XY, Station 3, Zimmer 12&quot;
+    }
+  }' \
+  https://elim.example.com/api/duba/v1/memento
+</code></pre>
+<h4 id="extract-memento-and-magic-link-with-jq">Extract memento and magic link with jq</h4>
+<pre><code class="language-bash">RESPONSE=$(curl -s -X POST \
+  -u &quot;user:pass&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;jobId&quot;:&quot;job-123&quot;,&quot;absender&quot;:{&quot;egvp_account_id&quot;:42}}' \
+  https://elim.example.com/api/duba/v1/memento)
+
+MEMENTO=$(echo &quot;$RESPONSE&quot; | jq -r '.memento')
+MAGIC_LINK=$(echo &quot;$RESPONSE&quot; | jq -r '.magicLink')
+
+echo &quot;Memento: $MEMENTO&quot;
+echo &quot;Magic link (relative): $MAGIC_LINK&quot;
+echo &quot;Full URL: https://elim.example.com$MAGIC_LINK&quot;
+</code></pre>
+<h3 id="using-the-magic-link-recommended">Using the Magic Link (Recommended)</h3>
+<p>The API response includes a <code>magicLink</code> field — a relative URL that handles both authentication
+and form pre-fill in a single click. This is the recommended approach for giving end users access
+to pre-filled forms.</p>
+<p><strong>The <code>magicLink</code> is a relative path.</strong> Prepend your instance host to make it absolute:</p>
+<pre><code class="language-bash">RESPONSE=$(curl -s -X POST -u &quot;user:pass&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &quot;$FORM_DATA&quot; \
+  &quot;https://elim.example.com/api/duba/v1/memento&quot;)
+
+MAGIC_LINK=$(echo &quot;$RESPONSE&quot; | jq -r '.magicLink')
+FULL_URL=&quot;https://elim.example.com$MAGIC_LINK&quot;
+
+# Send FULL_URL to the end user
+echo &quot;$FULL_URL&quot;
+</code></pre>
+<p>When the end user opens this URL:
+1. The server decrypts the embedded token
+2. The user is authenticated automatically (no login page)
+3. They land directly on the pre-filled form</p>
+<p><strong>Token expiry:</strong> Magic links expire after 1 hour by default. Generate a fresh link close to the
+time you send it to the user.</p>
+<h3 id="alternative-manual-form-url">Alternative: Manual Form URL</h3>
+<p>If the end user already has an active ELIM session (e.g., they are already logged in), you can
+construct a bare form URL using the <code>memento</code> field:</p>
+<p><strong>URL Pattern:</strong></p>
+<pre><code>https://your-instance/duba/{FormName}?m={memento}
+</code></pre>
+<p><strong>Available Form Types:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Form Name</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BetreuungAnregung</code></td>
+<td>Guardianship suggestion/request</td>
+</tr>
+<tr>
+<td><code>UnterbringungAntrag</code></td>
+<td>Involuntary commitment application</td>
+</tr>
+<tr>
+<td><code>FreiheitsentzugAntrag</code></td>
+<td>Deprivation of liberty application</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">MEMENTO=$(echo &quot;$RESPONSE&quot; | jq -r '.memento')
+FORM_URL=&quot;https://elim.example.com/duba/BetreuungAnregung?m=$MEMENTO&quot;
+# Use this only if the user already has an active session
+</code></pre>
+<p><strong>Note:</strong> Bare form URLs require the user to be logged in. If the user is not authenticated, the
+server will redirect to <code>/login</code>. Use the <code>magicLink</code> approach if you cannot guarantee the user
+has an active session.</p>
+<h3 id="complete-end-to-end-example">Complete End-to-End Example</h3>
+<pre><code class="language-bash">#!/bin/bash
+# Complete workflow: Create memento and send magic link to end user
+
+BASE_URL=&quot;https://elim.example.com&quot;
+USER=&quot;your-username&quot;
+PASS=&quot;your-password&quot;
+
+# Step 1: Prepare form data
+FORM_DATA='{
+  &quot;jobId&quot;: &quot;job-2026-12345&quot;,
+  &quot;meldeZeitpunkt&quot;: &quot;2026-02-19T14:30:00+01:00&quot;,
+  &quot;absender&quot;: {
+    &quot;aktenzeichen&quot;: &quot;KH-2024-001&quot;,
+    &quot;egvp_account_id&quot;: 42
+  },
+  &quot;empfaenger&quot;: {
+    &quot;name&quot;: &quot;Amtsgericht Musterstadt&quot;,
+    &quot;type&quot;: &quot;Gericht&quot;,
+    &quot;safeId&quot;: &quot;de.justiz.bund.egvp.bea.12345&quot;
+  },
+  &quot;betroffener&quot;: {
+    &quot;name&quot;: {&quot;vorname&quot;: &quot;Max&quot;, &quot;nachname&quot;: &quot;Mustermann&quot;},
+    &quot;geburtsdatum&quot;: &quot;1950-01-15&quot;,
+    &quot;anschrift&quot;: {
+      &quot;strasse&quot;: &quot;Musterstraße 42&quot;,
+      &quot;plz&quot;: &quot;12345&quot;,
+      &quot;stadt&quot;: &quot;Musterstadt&quot;
+    }
+  }
+}'
+
+# Step 2: Call memento API
+echo &quot;Creating memento...&quot;
+RESPONSE=$(curl -s -X POST \
+  -u &quot;$USER:$PASS&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &quot;$FORM_DATA&quot; \
+  &quot;$BASE_URL/api/duba/v1/memento&quot;)
+
+# Step 3: Extract magic link from response
+MAGIC_LINK=$(echo &quot;$RESPONSE&quot; | jq -r '.magicLink')
+
+if [ -z &quot;$MAGIC_LINK&quot; ] || [ &quot;$MAGIC_LINK&quot; = &quot;null&quot; ]; then
+  echo &quot;Error: Failed to create memento&quot;
+  echo &quot;$RESPONSE&quot; | jq .
+  exit 1
+fi
+
+# Step 4: Construct absolute URL (magicLink is relative)
+FULL_URL=&quot;$BASE_URL$MAGIC_LINK&quot;
+
+echo &quot;Success! Send this URL to the authorized user:&quot;
+echo &quot;$FULL_URL&quot;
+echo &quot;&quot;
+echo &quot;The link authenticates automatically and opens the pre-filled form.&quot;
+echo &quot;Note: This link expires in 1 hour.&quot;
+</code></pre>
+<h3 id="integration-patterns">Integration Patterns</h3>
+<h4 id="pattern-1-email-with-magic-link-recommended">Pattern 1: Email with magic link (Recommended)</h4>
+<pre><code class="language-bash"># Create memento and email the magic link to user
+RESPONSE=$(curl -s -X POST -u &quot;$USER:$PASS&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &quot;$FORM_DATA&quot; \
+  &quot;$BASE_URL/api/duba/v1/memento&quot;)
+
+MAGIC_LINK=$(echo &quot;$RESPONSE&quot; | jq -r '.magicLink')
+FULL_URL=&quot;$BASE_URL$MAGIC_LINK&quot;
+
+# Email the magic link (example using mail command)
+mail -s &quot;Court Form Ready for Review&quot; user@hospital.example.com &lt;&lt;EOF
+Please review and submit the guardianship form:
+$FULL_URL
+
+Click the link to open the pre-filled form directly. No login required.
+Note: This link expires in 1 hour.
+EOF
+</code></pre>
+<h4 id="pattern-2-generate-qr-code-for-mobile-access">Pattern 2: Generate QR code for mobile access</h4>
+<pre><code class="language-bash"># Create memento and generate QR code from magic link
+MAGIC_LINK=$(curl -s -X POST -u &quot;$USER:$PASS&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &quot;$FORM_DATA&quot; \
+  &quot;$BASE_URL/api/duba/v1/memento&quot; | jq -r '.magicLink')
+
+FULL_URL=&quot;$BASE_URL$MAGIC_LINK&quot;
+
+# Generate QR code (requires qrencode tool)
+echo &quot;$FULL_URL&quot; | qrencode -o form-qr.png
+echo &quot;QR code saved to form-qr.png&quot;
+</code></pre>
+<h4 id="pattern-3-batch-form-generation">Pattern 3: Batch form generation</h4>
+<pre><code class="language-bash"># Generate magic links for multiple cases from CSV
+while IFS=, read -r case_id patient_name dob; do
+  FORM_DATA=$(jq -n \
+    --arg jobId &quot;$case_id&quot; \
+    --arg vorname &quot;$(echo $patient_name | cut -d' ' -f1)&quot; \
+    --arg nachname &quot;$(echo $patient_name | cut -d' ' -f2)&quot; \
+    --arg dob &quot;$dob&quot; \
+    '{
+      jobId: $jobId,
+      absender: {egvp_account_id: 42},
+      betroffener: {
+        name: {vorname: $vorname, nachname: $nachname},
+        geburtsdatum: $dob
+      }
+    }')
+
+  MAGIC_LINK=$(curl -s -X POST -u &quot;$USER:$PASS&quot; \
+    -H &quot;Content-Type: application/json&quot; \
+    -d &quot;$FORM_DATA&quot; \
+    &quot;$BASE_URL/api/duba/v1/memento&quot; | jq -r '.magicLink')
+
+  echo &quot;$case_id,$BASE_URL$MAGIC_LINK&quot;
+done &lt; cases.csv &gt; form_links.csv
+
+echo &quot;Generated form links saved to form_links.csv&quot;
+# Note: links expire after 1 hour — generate close to the time of sending
+</code></pre>
+<h3 id="error-handling">Error Handling</h3>
+<h4 id="validation-errors">Validation Errors</h4>
+<p>If the request data is invalid, you'll receive a 400 Bad Request with details:</p>
+<pre><code class="language-bash">curl -X POST -u &quot;user:pass&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;invalid&quot;:&quot;data&quot;}' \
+  https://elim.example.com/api/duba/v1/memento
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;error&quot;: &quot;Validation failed&quot;,
+  &quot;errors&quot;: [
+    &quot;Field 'jobId' is required&quot;
+  ]
+}
+</code></pre>
+<h4 id="handle-errors-in-scripts">Handle Errors in Scripts</h4>
+<pre><code class="language-bash">RESPONSE=$(curl -s -X POST -u &quot;$USER:$PASS&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &quot;$FORM_DATA&quot; \
+  &quot;$BASE_URL/api/duba/v1/memento&quot;)
+
+# Check for error field
+if echo &quot;$RESPONSE&quot; | jq -e '.error' &gt; /dev/null; then
+  echo &quot;Error creating memento:&quot;
+  echo &quot;$RESPONSE&quot; | jq -r '.error'
+  if echo &quot;$RESPONSE&quot; | jq -e '.errors' &gt; /dev/null; then
+    echo &quot;Details:&quot;
+    echo &quot;$RESPONSE&quot; | jq -r '.errors[]'
+  fi
+  exit 1
+fi
+
+# Extract memento
+MEMENTO=$(echo &quot;$RESPONSE&quot; | jq -r '.memento')
+echo &quot;Success: $MEMENTO&quot;
+</code></pre>
+<h3 id="security-notes">Security Notes</h3>
+<p><strong>Memento Encryption:</strong>
+- Mementos are encrypted with AES-256-GCM using your API user's KEK (Key Encryption Key)
+- Each memento is unique even for identical data (includes random IV)
+- Mementos cannot be decrypted without the correct API user credentials
+- Tampering is detected and rejected</p>
+<p><strong>Best Practices:</strong>
+- ✓ Mementos are safe to pass via URL parameters
+- ✓ Mementos can be safely logged or stored
+- ✓ Mementos expire after a reasonable time (check instance configuration)
+- ✗ Don't expose mementos to unauthorized users (they contain sensitive patient data)
+- ✗ Don't reuse mementos across different forms or cases</p>
+<p><strong>Data Minimization:</strong>
+- Only include data that's actually needed for the form
+- Empty/null fields don't bloat the memento (they're omitted)
+- Minimal mementos result in shorter, more manageable URLs</p>
+<hr />
+<h2 id="complete-workflow-examples">Complete Workflow Examples</h2>
+<h3 id="workflow-1-poll-for-new-messages-and-download-them">Workflow 1: Poll for new messages and download them</h3>
+<pre><code class="language-bash">#!/bin/bash
+# Configuration
+BASE_URL=&quot;https://elim.example.com&quot;
+USER=&quot;your-username&quot;
+PASS=&quot;your-password&quot;
+SINCE=&quot;2025-11-25T10:00:00Z&quot;
+
+# Fetch messages since last check
+echo &quot;Fetching messages since $SINCE...&quot;
+MESSAGES=$(curl -s -u &quot;$USER:$PASS&quot; \
+  &quot;$BASE_URL/api/duba/v1/messages?since=$SINCE&quot;)
+
+# Check if we got any messages
+COUNT=$(echo &quot;$MESSAGES&quot; | jq '. | length')
+echo &quot;Found $COUNT messages&quot;
+
+# Download each message
+echo &quot;$MESSAGES&quot; | jq -r '.[].id' | while read ID; do
+  echo &quot;Downloading message $ID...&quot;
+  curl -s -u &quot;$USER:$PASS&quot; \
+    &quot;$BASE_URL/api/duba/v1/download/$ID&quot; \
+    -o &quot;message-$ID.zip&quot;
+
+  if [ $? -eq 0 ]; then
+    echo &quot;  ✓ Downloaded message-$ID.zip&quot;
+  else
+    echo &quot;  ✗ Failed to download message $ID&quot;
+  fi
+done
+
+echo &quot;Done!&quot;
+</code></pre>
+<h3 id="workflow-2-download-all-messages-for-a-specific-job">Workflow 2: Download all messages for a specific job</h3>
+<pre><code class="language-bash">#!/bin/bash
+# Configuration
+BASE_URL=&quot;https://elim.example.com&quot;
+USER=&quot;your-username&quot;
+PASS=&quot;your-password&quot;
+JOB_ID=&quot;job-2024-001&quot;
+
+# Create output directory
+mkdir -p &quot;downloads/$JOB_ID&quot;
+
+# List messages for job
+echo &quot;Fetching messages for job $JOB_ID...&quot;
+MESSAGES=$(curl -s -u &quot;$USER:$PASS&quot; \
+  &quot;$BASE_URL/api/duba/v1/messages?jobId=$JOB_ID&quot;)
+
+# Download each
+echo &quot;$MESSAGES&quot; | jq -r '.[].id' | while read ID; do
+  echo &quot;Downloading message $ID...&quot;
+  curl -s -u &quot;$USER:$PASS&quot; \
+    &quot;$BASE_URL/api/duba/v1/download/$ID&quot; \
+    -o &quot;downloads/$JOB_ID/message-$ID.zip&quot;
+done
+
+echo &quot;All messages for $JOB_ID downloaded to downloads/$JOB_ID/&quot;
+</code></pre>
+<h3 id="workflow-3-check-for-incoming-court-responses">Workflow 3: Check for INCOMING court responses</h3>
+<pre><code class="language-bash">#!/bin/bash
+# Configuration
+BASE_URL=&quot;https://elim.example.com&quot;
+USER=&quot;your-username&quot;
+PASS=&quot;your-password&quot;
+
+# Fetch all messages
+echo &quot;Checking for incoming court responses...&quot;
+MESSAGES=$(curl -s -u &quot;$USER:$PASS&quot; \
+  &quot;$BASE_URL/api/duba/v1/messages&quot;)
+
+# Filter INCOMING messages and download
+echo &quot;$MESSAGES&quot; | jq -r '.[] | select(.direction == &quot;INCOMING&quot;) | .id' | while read ID; do
+  # Get message details
+  MSG=$(echo &quot;$MESSAGES&quot; | jq -r &quot;.[] | select(.id == $ID)&quot;)
+  AKTENZEICHEN=$(echo &quot;$MSG&quot; | jq -r '.aktenzeichen // &quot;unknown&quot;')
+
+  echo &quot;Downloading incoming message $ID (AZ: $AKTENZEICHEN)...&quot;
+  curl -s -u &quot;$USER:$PASS&quot; \
+    &quot;$BASE_URL/api/duba/v1/download/$ID&quot; \
+    -o &quot;incoming-$AKTENZEICHEN-$ID.zip&quot;
+done
+
+echo &quot;Done!&quot;
+</code></pre>
+<h3 id="workflow-4-incremental-polling-with-state-tracking">Workflow 4: Incremental polling with state tracking</h3>
+<pre><code class="language-bash">#!/bin/bash
+# Configuration
+BASE_URL=&quot;https://elim.example.com&quot;
+USER=&quot;your-username&quot;
+PASS=&quot;your-password&quot;
+STATE_FILE=&quot;.last_poll_timestamp&quot;
+
+# Read last poll timestamp (or use default)
+if [ -f &quot;$STATE_FILE&quot; ]; then
+  SINCE=$(cat &quot;$STATE_FILE&quot;)
+  echo &quot;Polling since last check: $SINCE&quot;
+else
+  SINCE=&quot;2025-11-01T00:00:00Z&quot;
+  echo &quot;First poll, using: $SINCE&quot;
+fi
+
+# Fetch new messages
+MESSAGES=$(curl -s -u &quot;$USER:$PASS&quot; \
+  &quot;$BASE_URL/api/duba/v1/messages?since=$SINCE&quot;)
+
+# Process messages
+echo &quot;$MESSAGES&quot; | jq -r '.[].id' | while read ID; do
+  echo &quot;Processing message $ID...&quot;
+  curl -s -u &quot;$USER:$PASS&quot; \
+    &quot;$BASE_URL/api/duba/v1/download/$ID&quot; \
+    -o &quot;message-$ID.zip&quot;
+done
+
+# Update timestamp for next poll
+date -u +&quot;%Y-%m-%dT%H:%M:%SZ&quot; &gt; &quot;$STATE_FILE&quot;
+echo &quot;Updated last poll timestamp&quot;
+</code></pre>
+<hr />
+<h2 id="filtering-best-practices">Filtering Best Practices</h2>
+<h3 id="use-jobid-filtering-for-targeted-queries">Use jobId filtering for targeted queries</h3>
+<p>When you know which cases you're interested in, filter by jobId to reduce response size and processing:</p>
+<pre><code class="language-bash">curl -u &quot;$USER:$PASS&quot; \
+  &quot;$BASE_URL/api/duba/v1/messages?jobId=job-123&amp;jobId=job-456&quot;
+</code></pre>
+<h3 id="use-since-parameter-for-incremental-polling">Use since parameter for incremental polling</h3>
+<p>Avoid re-fetching all messages by using the <code>since</code> parameter:</p>
+<pre><code class="language-bash"># First poll: get everything
+curl -u &quot;$USER:$PASS&quot; &quot;$BASE_URL/api/duba/v1/messages&quot;
+
+# Subsequent polls: only new messages
+LAST_POLL=&quot;2025-11-26T10:00:00Z&quot;
+curl -u &quot;$USER:$PASS&quot; &quot;$BASE_URL/api/duba/v1/messages?since=$LAST_POLL&quot;
+</code></pre>
+<h3 id="combine-filters-for-precise-queries">Combine filters for precise queries</h3>
+<p>Combine multiple filters to narrow results:</p>
+<pre><code class="language-bash"># Only messages for specific jobs in a specific Safe-ID since yesterday
+curl -u &quot;$USER:$PASS&quot; \
+  &quot;$BASE_URL/api/duba/v1/messages?jobId=job-123&amp;safeId=safe-abc&amp;since=2025-11-26T00:00:00Z&quot;
+</code></pre>
+<h3 id="handle-nullable-fields-gracefully">Handle nullable fields gracefully</h3>
+<p>Always check for <code>null</code> values before using fields:</p>
+<pre><code class="language-bash"># Using jq to safely handle nulls
+curl -s -u &quot;$USER:$PASS&quot; &quot;$BASE_URL/api/duba/v1/messages&quot; | \
+  jq -r '.[] | &quot;\(.id): jobId=\(.jobId // &quot;none&quot;), aktenzeichen=\(.aktenzeichen // &quot;not-hydrated&quot;)&quot;'
+</code></pre>
+<h3 id="filter-by-direction-in-client-code">Filter by direction in client code</h3>
+<p>Since the API doesn't have a <code>direction</code> parameter, filter client-side:</p>
+<pre><code class="language-bash"># Get only INCOMING messages
+curl -s -u &quot;$USER:$PASS&quot; &quot;$BASE_URL/api/duba/v1/messages&quot; | \
+  jq '.[] | select(.direction == &quot;INCOMING&quot;)'
+</code></pre>
+<hr />
+<h2 id="error-codes">Error Codes</h2>
+<p>The API uses standard HTTP status codes:</p>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>OK</td>
+<td>Request successful</td>
+</tr>
+<tr>
+<td>400</td>
+<td>Bad Request</td>
+<td>Invalid parameters (e.g., malformed timestamp)</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>Missing or invalid credentials</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>No access to this message or account</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found</td>
+<td>Message does not exist</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal Server Error</td>
+<td>Server error (contact support)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-error-response">Example Error Response</h3>
+<pre><code class="language-bash"># Invalid timestamp format
+curl -u &quot;$USER:$PASS&quot; \
+  &quot;$BASE_URL/api/duba/v1/messages?since=invalid-date&quot;
+
+# Response: 400 Bad Request
+</code></pre>
+<h3 id="handling-errors-in-scripts">Handling Errors in Scripts</h3>
+<pre><code class="language-bash"># Check HTTP status code
+HTTP_CODE=$(curl -s -o response.json -w &quot;%{http_code}&quot; -u &quot;$USER:$PASS&quot; \
+  &quot;$BASE_URL/api/duba/v1/messages&quot;)
+
+if [ &quot;$HTTP_CODE&quot; -eq 200 ]; then
+  echo &quot;Success!&quot;
+  cat response.json | jq .
+elif [ &quot;$HTTP_CODE&quot; -eq 401 ]; then
+  echo &quot;Authentication failed - check credentials&quot;
+elif [ &quot;$HTTP_CODE&quot; -eq 403 ]; then
+  echo &quot;Access denied - check permissions&quot;
+else
+  echo &quot;Error: HTTP $HTTP_CODE&quot;
+fi
+</code></pre>
+<hr />
+<h2 id="reference">Reference</h2>
+<h3 id="api-endpoints-summary">API Endpoints Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Endpoint</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/api/duba/v1/messages</code></td>
+<td>List available messages</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/duba/v1/download/{id}</code></td>
+<td>Download message as ZIP</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/duba/v1/messages/ack</code></td>
+<td>Acknowledge messages (trigger cleanup)</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/duba/v1/memento</code></td>
+<td>Create encrypted memento for form pre-fill</td>
+</tr>
+</tbody>
+</table>
+<h3 id="openapi-specification_1">OpenAPI Specification</h3>
+<p>Interactive API documentation (Swagger UI):</p>
+<pre><code>https://your-instance/api/docs/swagger-ui/index.html?urls.primaryName=DUBA
+</code></pre>
+<h3 id="timestamp-format">Timestamp Format</h3>
+<p>All timestamps use ISO 8601 format with UTC timezone:</p>
+<pre><code>YYYY-MM-DDTHH:MM:SSZ
+Example: 2025-11-26T15:34:10Z
+</code></pre>
+<h3 id="related-documentation">Related Documentation</h3>
+<ul>
+<li><a href="../../../Authentication/magic-token-link/">Magic Token Link (MTL)</a> — How <code>/mtl/</code> authentication tokens work</li>
+<li><a href="../../../Authentication/basic-auth-login/">Basic Auth Login (BAL)</a> — <strong>Deprecated</strong> since v0.2.1. Replaced by Magic Token Link.</li>
+</ul>
+<h3 id="support">Support</h3>
+<p>For technical support or questions about the DUBA API:
+- Contact your system administrator
+- Refer to the OpenAPI specification for detailed schema documentation</p>
+<hr />
+<p><strong>Document Version:</strong> 0.2.1
+<strong>Last Updated:</strong> 2026-02-19
+<strong>API Version:</strong> v1</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.tracking", "toc.follow"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../../js/external-links.js"></script>
+      
+    
+  </body>
+</html>

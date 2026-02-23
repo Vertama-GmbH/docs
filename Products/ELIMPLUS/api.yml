@@ -1,0 +1,954 @@
+openapi: 3.0.3
+info:
+  title: ELIM+ API
+  version: "0.1.2" # Updated 2026-02-20: Added report retrieval endpoints (GET /reports, GET /reports/{reportId})
+  description: API for ELIM+ laboratory reporting (Labormeldung) - DEMIS integration
+servers:
+  - url: /api/elimplus/v1
+    description: ELIM+ API Version 1
+paths:
+  /memento:
+    post:
+      summary: Create encrypted memento string from laboratory report data
+      description: |-
+        Accepts laboratory report data (Labormeldung) as JSON and returns an encrypted memento string.
+        The memento can be used to pre-fill HTML forms via URL parameter.
+
+        Use Case:
+        External systems (e.g., KIS, laboratory systems) submit form data → receive encrypted string →
+        construct URL with memento parameter → user opens pre-filled form.
+
+        This endpoint validates the submitted data against the Labormeldung schema
+        before encryption. The memento string is URL-safe and tamper-proof.
+
+        Note: This endpoint does NOT submit the report to DEMIS.
+        It only creates a pre-fill token for the interactive HTML form.
+      tags:
+        - ELIMPLUS
+      security:
+        - basicAuth: []
+      operationId: createMemento
+      requestBody:
+        required: true
+        description: Laboratory report data to encrypt into memento string
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Labormeldung'
+      responses:
+        '200':
+          description: Memento successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MementoResponse'
+              example:
+                memento: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                magicLink: "/mtl/eyJ...token.../elimplus/?m=eyJ...memento..."
+        '400':
+          description: Bad Request - invalid form data (validation errors)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+              example:
+                errors: ["reportId must not be null"]
+        '401':
+          description: |-
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
+  /reports:
+    get:
+      summary: List pending report IDs for the authenticated API user
+      description: |-
+        Returns the list of report IDs that have been submitted by the authenticated
+        API user but not yet retrieved (unpolled). These are reports waiting for
+        the caller to fetch the full result.
+
+        Use GET /reports/{reportId} to retrieve the full result for each ID.
+
+        The list contains only unpolled report IDs — once a report has been
+        retrieved without ?peek=true it will no longer appear here.
+      tags:
+        - ELIMPLUS
+      security:
+        - basicAuth: []
+      operationId: listPendingReports
+      responses:
+        '200':
+          description: List of pending report IDs (may be empty)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example:
+                - "LAB-2024-00123"
+                - "LAB-2024-00124"
+        '401':
+          description: |-
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
+  /reports/{reportId}:
+    get:
+      summary: Retrieve a single report result by report ID
+      description: |-
+        Returns the full result for a submitted laboratory report.
+
+        By default this is a destructive read: once retrieved, the report is marked
+        as polled and will no longer appear in GET /reports. Use ?peek=true for
+        a non-destructive read that leaves the report in the pending list.
+
+        The report ID is the `reportId` field from the original Labormeldung
+        submitted to POST /memento (and used in the form submission).
+
+        Status semantics:
+        - SUCCESS: Report was successfully submitted to DEMIS. receiptPdf contains
+          the RKI-issued receipt PDF encoded as base64.
+        - FAILURE: Submission failed. failureReason describes the error.
+      tags:
+        - ELIMPLUS
+      security:
+        - basicAuth: []
+      operationId: getReport
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          description: The report ID from the original Labormeldung
+          schema:
+            type: string
+          example: "LAB-2024-00123"
+        - name: peek
+          in: query
+          required: false
+          description: |-
+            If true, retrieve the result without marking it as polled.
+            The report remains in the GET /reports pending list.
+            Default: false (destructive read).
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Report result found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportResult'
+              example:
+                reportId: "LAB-2024-00123"
+                status: "SUCCESS"
+                module: "ELIMPLUS"
+                diseaseCode: "Influenza"
+                description: "Labormeldung Influenza"
+                submittedAt: "2024-12-08T14:32:00Z"
+                receiptPdf: "JVBERi0xLjQK..."
+                failureReason: null
+        '401':
+          description: |-
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
+        '404':
+          description: |-
+            Report not found. No report with this ID exists for the
+            authenticated API user.
+        '410':
+          description: |-
+            Gone. The report was previously retrieved (polled) and is no longer
+            available. Use ?peek=true on future requests to avoid consuming reports.
+components:
+  schemas:
+    MementoResponse:
+      type: object
+      required:
+        - memento
+      properties:
+        memento:
+          type: string
+          description: |-
+            Encrypted, URL-safe memento string containing the form data.
+            Use as query parameter to pre-fill forms: ?m=<string>
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        magicLink:
+          type: string
+          nullable: true
+          description: |-
+            Ready-to-use Magic Token Link URL (relative path).
+            Combines authentication and form pre-fill in a single click:
+            the authenticated API user can forward this URL to a browser
+            session that has no existing login — it will authenticate and
+            open the pre-filled form selection page directly.
+            Prepend your host to make it absolute: https://host + magicLink
+          example: "/mtl/eyJ...token.../elimplus/?m=eyJ...memento..."
+    ValidationErrorResponse:
+      type: object
+      required:
+        - errors
+      description: |-
+        Validation error response returned by Spring's ControllerAdvice.
+        Contains a list of validation error messages.
+      properties:
+        errors:
+          type: array
+          description: List of validation error messages
+          items:
+            type: string
+          example: ["reportId must not be null", "MeldungsDatum must be a valid date"]
+    Labormeldung:
+      type: object
+      description: |-
+        Laboratory report for notifiable diseases (DEMIS integration).
+
+        For memento creation, most fields are optional to allow partial pre-filling.
+        Actual validation for DEMIS submission happens later in the form workflow.
+      required:
+        - reportId
+      properties:
+        reportId:
+          type: string
+          description: |-
+            Unique identifier for this laboratory report.
+            Required to track and correlate this report throughout the workflow.
+          example: "LAB-2024-00123"
+        KrankheitsCode:
+          type: string
+          nullable: true
+          description: Disease code (e.g., ICD-10 or DEMIS-specific code)
+          example: "J09"
+        Krankheit:
+          $ref: '#/components/schemas/Krankheit'
+        MeldungsVerweisId:
+          type: string
+          nullable: true
+          description: |-
+            Reference ID for linking corrections or follow-up reports.
+            Used to reference a previous report that is being corrected or updated.
+          example: "MELD-REF-2024-00001"
+        Patient:
+          $ref: '#/components/schemas/Patient'
+        MeldendeEinrichtung:
+          $ref: '#/components/schemas/MeldendeEinrichtung'
+        MeldendePerson:
+          $ref: '#/components/schemas/MeldendePerson'
+        EinsendendeEinrichtung:
+          $ref: '#/components/schemas/EinsendendeEinrichtung'
+        MeldungsDatum:
+          type: string
+          format: date
+          nullable: true
+          description: Date when the report was created
+          example: "2024-12-08"
+    Krankheit:
+      type: object
+      description: |-
+        Disease-specific form data. Only one disease type should be populated.
+        All fields are optional for memento creation.
+      properties:
+        Influenza:
+          type: object
+          nullable: true
+          description: Influenza-specific data
+        Rsv:
+          type: object
+          nullable: true
+          description: RSV-specific data
+        Norovirus:
+          type: object
+          nullable: true
+          description: Norovirus-specific data
+        Sarscov2:
+          type: object
+          nullable: true
+          description: SARS-CoV-2-specific data
+    Patient:
+      type: object
+      description: |-
+        Patient information - supports both standard and anonymous patients.
+
+        Validation semantics (enforced at form/backend level):
+        - When IsAnonym=true: Anonym object should be populated, Standard should be null
+        - When IsAnonym=false: Standard object should be populated, Anonym should be null
+        - When IsAnonym=null: Both Standard and Anonym can be null
+        - Both Standard and Anonym populated simultaneously is an error
+
+        All fields are optional for lenient memento creation.
+      properties:
+        IsAnonym:
+          type: boolean
+          nullable: true
+          description: |-
+            Indicates patient type: true for anonymous, false for standard, null for unspecified.
+            Anonymous patients have limited data for privacy protection.
+          example: false
+        Standard:
+          $ref: '#/components/schemas/PatientStandard'
+        Anonym:
+          $ref: '#/components/schemas/PatientAnonym'
+    PatientStandard:
+      type: object
+      description: Standard patient with full identification
+      properties:
+        Name:
+          $ref: '#/components/schemas/Name'
+        Geschlecht:
+          $ref: '#/components/schemas/GenderOrNoInformation'
+        Geburtsdatum:
+          type: string
+          format: date
+          nullable: true
+          description: Full birth date (YYYY-MM-DD)
+          example: "1980-05-15"
+        Adresse:
+          $ref: '#/components/schemas/Adresse'
+        Kontakt:
+          $ref: '#/components/schemas/Kontakt'
+    PatientAnonym:
+      type: object
+      description: |-
+        Anonymous patient with limited data for privacy protection.
+
+        Differences from standard patient:
+        - No name or contact information
+        - Birth month/year only (not full date)
+        - Limited address (postal code and country only)
+      properties:
+        Geschlecht:
+          $ref: '#/components/schemas/GenderOrNoInformation'
+        GeburtsmonatJahr:
+          type: string
+          pattern: '^\d{4}-\d{2}$'
+          nullable: true
+          description: Birth month and year in YYYY-MM format (not full date for privacy)
+          example: "1980-05"
+        Adresse:
+          $ref: '#/components/schemas/AnonymAdresse'
+    AnonymAdresse:
+      type: object
+      description: |-
+        Limited address information for anonymous patients (privacy protection).
+
+        Contains only postal code and country - no street name, city, or other identifiable details.
+      properties:
+        PLZ:
+          type: string
+          nullable: true
+          description: Postal code
+          example: "12345"
+        Land:
+          type: string
+          nullable: true
+          description: Country
+          example: "Deutschland"
+    Name:
+      type: object
+      description: Person name
+      properties:
+        Vorname:
+          type: string
+          nullable: true
+          description: First name
+          example: "Max"
+        Nachname:
+          type: string
+          nullable: true
+          description: Last name
+          example: "Mustermann"
+    Adresse:
+      type: object
+      description: Address information
+      properties:
+        Strasse:
+          type: string
+          nullable: true
+          description: Street name and number
+          example: "Musterstraße 123"
+        PLZ:
+          type: string
+          nullable: true
+          description: Postal code
+          example: "12345"
+        Stadt:
+          type: string
+          nullable: true
+          description: City name
+          example: "Musterstadt"
+    Kontakt:
+      type: object
+      description: Contact information
+      properties:
+        Telefon:
+          type: string
+          nullable: true
+          description: Phone number
+          example: "+49 123 456789"
+        Email:
+          type: string
+          format: email
+          nullable: true
+          description: Email address
+          example: "kontakt@example.com"
+        Fax:
+          type: string
+          nullable: true
+          description: Fax number
+          example: "+49 123 456780"
+    GenderOrNoInformation:
+      type: string
+      nullable: true
+      description: |-
+        Gender or no information (administrative gender).
+
+        Values:
+        - NASK: Not asked (nicht gefragt)
+        - ASKU: Asked but unknown (gefragt, aber unbekannt)
+        - MAENNLICH: Male (männlich)
+        - WEIBLICH: Female (weiblich)
+        - DIVERS: Diverse
+        - UNBESTIMMT: Unspecified (unbestimmt)
+      enum:
+        - NASK
+        - ASKU
+        - MAENNLICH
+        - WEIBLICH
+        - DIVERS
+        - UNBESTIMMT
+      example: "MAENNLICH"
+    ConclusionCode:
+      type: string
+      nullable: true
+      description: |-
+        Laboratory report conclusion code (RKI DEMIS).
+
+        Values:
+        - ErregerNachgewiesen: Pathogen detected (meldepflichtiger Erreger nachgewiesen)
+        - ErregerNichtNachgewiesen: Pathogen not detected (meldepflichtiger Erreger nicht nachgewiesen)
+      enum:
+        - ErregerNachgewiesen
+        - ErregerNichtNachgewiesen
+      example: "ErregerNachgewiesen"
+    Interpretation:
+      type: string
+      nullable: true
+      description: |-
+        Laboratory test result interpretation (HL7 FHIR).
+
+        Values:
+        - IND: Indeterminate - result unclear due to sample issues
+        - POS: Positive - parameter detected above threshold
+        - NEG: Negative - parameter below threshold (not detected)
+      enum:
+        - IND
+        - POS
+        - NEG
+      example: "POS"
+    FastenStatus:
+      type: string
+      nullable: true
+      description: |-
+        Patient fasting status (HL7 v2-0916).
+
+        Values:
+        - NotGiven: Not given - patient was not asked at time of procedure
+        - Fasting: Patient was fasting prior to procedure
+        - NotFasting: Patient indicated they did not fast prior to procedure
+      enum:
+        - NotGiven
+        - Fasting
+        - NotFasting
+      example: "NotGiven"
+    Method:
+      type: string
+      nullable: true
+      description: |-
+        Laboratory test method (SNOMED CT).
+
+        Common values include PCR, ELISA, RapidAntigenTest, etc.
+        Full list contains 72 standardized laboratory techniques.
+      enum:
+        - RapidAntigenTest
+        - NaatTechnique
+        - OrceinStain
+        - MicrobialAntibodyMeasurement
+        - TiterDilution
+        - AntigenAssay
+        - ToxinAssay
+        - LAMP
+        - SDA
+        - MicroparticleEIA
+        - ChemiluminescentIA
+        - ELFA
+        - MausBioassay
+        - Hemagglutination
+        - HemagglutinationInhibition
+        - FISH
+        - ZiehlNeelsen
+        - RhodamineAuramine
+        - ElectronMicroscopy
+        - DiskDiffusion
+        - MultiplexPCR
+        - Sequencing
+        - MassSpectrometry
+        - Giemsa
+        - ImmunofluorescenceStain
+        - VirusCellCulture
+        - SusceptibilityTest
+        - IgGIndex
+        - Hplc
+        - Immunoblot
+        - Immunoradiometry
+        - PCR
+        - Serotyping
+        - AgarDilution
+        - FluorescenceMicroscopy
+        - RFLP
+        - BrothDilution
+        - FluorescencePolarization
+        - Biotyping
+        - NucleicAcidAnalysis
+        - TPHA
+        - Microscopy
+        - IgAMeasurement
+        - DFA
+        - Nephelometry
+        - PhenotypeDetermination
+        - POCT
+        - MalariaProphylaxis
+        - ElekTest
+        - IgGMeasurement
+        - IgMMeasurement
+        - ElectrochemiluminescenceIA
+        - FluorescentEnzymeIA
+        - LineImmunoassay
+        - RecombinantImmunoblot
+        - ImmunochromatographicTest
+        - ChemiluminescentMicroparticleIA
+        - ELISA
+        - CultureTechnique
+        - LightMicroscopy
+        - HybridizationProbe
+        - ProbeWithAmplification
+        - Coagulation
+        - GradientTest
+        - FluorescentIA
+        - IonSelectiveElectrode
+        - ImmunoblotAssay
+        - EnzymeIA
+        - LatexAgglutination
+        - Radioimmunoassay
+        - Electrophoresis
+        - FTA_Abs
+      example: "PCR"
+    SpecimenProcessingProcedure:
+      type: string
+      nullable: true
+      description: |-
+        Specimen processing procedure (HL7 v2-0373).
+
+        Values:
+        - Acidification: ACID - Acidification
+        - Alkalization: ALK - Alkalization
+        - Defibrination: DEFB - Defibrination
+        - Filtration: FILT - Filtration
+        - LDLPrecipitation: LDLP - LDL Precipitation
+        - Neutralization: NEUT - Neutralization
+        - Recalification: RECA - Recalification
+        - Ultrafiltration: UFIL - Ultrafiltration
+      enum:
+        - Acidification
+        - Alkalization
+        - Defibrination
+        - Filtration
+        - LDLPrecipitation
+        - Neutralization
+        - Recalification
+        - Ultrafiltration
+      example: "Defibrination"
+    FHIRSpecimenCollectionMethod:
+      type: string
+      nullable: true
+      description: |-
+        FHIR specimen collection method (SNOMED CT).
+
+        Standardized collection techniques for laboratory specimens.
+        Full list contains 277 FHIR-defined collection methods.
+      enum:
+        - HundredHueTechnique
+        - AcidometricMethod
+        - AcquisitionTechnique
+        - AgaroseTechnique
+        - AgglutinationTechnique
+        - AlteredCastTechnique
+        - Analysis
+        - AngerManagementTechnique
+        - CoombsTest
+        - AssayTechnique
+        - BenchekrounTechnique
+        - BilateralLungVentilation
+        - BladderFillingTechnique
+        - BlindTechnique
+        - BloodAspirationTechnique
+        - BloodFlashbackTechnique
+        - BoydenChamberTechnique
+        - BubbleStabilityTestTechnique
+        - CatheterMovementTechnique
+        - CentralPedicleTechnique
+        - CentrifugationTechnique
+        - ChemiluminescenceTechnique
+        - ChessboardMethod
+        - ChromatographyTechnique
+        - ChromogenicInSituHybridizationTechnique
+        - CityUniversityTechnique
+        - CloseRectalDissectionTechnique
+        - ColdIncubation24h
+        - ColdLightTransillumination
+        - ComplementDependentCytotoxicityTechnique
+        - ComplementFixation
+        - Concentration
+        - ConcentrationOfParasitesMethod
+        - ConductivityTechnique
+        - ConfirmatoryTechnique
+        - ConstantAccelerationTechnique
+        - ContinuousInfusion
+        - ContinuousWithdrawalTechnique
+        - ConventionalKaryotypingTechnique
+        - CopyDentureTechnique
+        - CrossCompressionTechnique
+        - Culture
+        - DautreyMethod
+        - DentSleeveTechnique
+        - DentalTechniques
+        - DnaExtractionTechnique
+        - DetectingWithoutClassifying
+        - DialysisTechnique
+        - DifferentialLungVentilation
+        - Dilution
+        - DirectApplicationTechnique
+        - DirectVisionTechnique
+        - SixMinuteWalkDistance
+        - DualCureMethod
+        - ElectrochemistryTechnique
+        - ElectroosmosisTechnique
+        - ElectrosensitivityTechnique
+        - EnzymeMethod
+        - EquilibrationMethod
+        - RdwCalculationTechnique
+        - MchCalculationTechnique
+        - MchcCalculationTechnique
+        - McvCalculationTechnique
+        - BoneMaturationEstimationTechnique
+        - EstimationTechnique
+        - ExplantTechnique
+        - ExtracorporealTechnique
+        - FfooksTechnique
+        - Ch50Technique
+        - Filtration
+        - FinderNeedleTechnique
+        - ProstheticJointFixation
+        - FlapTransferTechnique
+        - FlapValveTechnique
+        - FlowCytometry
+        - FlowTriggering
+        - FlowDirectedTechnique
+        - FluidReplacementTechnique
+        - ForwardSliding
+        - FreezingPointDepression
+        - GasInjectionAndAuscultation
+        - GenotypeDetermination
+        - Gently
+        - GradientMethod
+        - HalfChessboardMethod
+        - HangingDropTechnique
+        - HeelBounce
+        - HeliumSingleBreathTechnique
+        - HeliumSteadyStateTechnique
+        - HemodiafiltrationTechnique
+        - HemodialysisTechnique
+        - HeterophoriaMethod
+        - Hplc
+        - Ch100Technique
+        - HydroxylamineMethod
+        - Illumination
+        - ImagingGuidanceTechnique
+        - ImagingTechnique
+        - ImmediateSpinTechnique
+        - ImmunoassayTechnique
+        - Immunoblotting
+        - Immunohistochemistry
+        - ImplantTechnique
+        - Impulse
+        - InferiorPedicleTechnique
+        - InfusionTechnique
+        - InhalationTechnique
+        - InjectionTechnique
+        - IntermittentAdministration
+        - IntermittentWithdrawalTechnique
+        - IntrathecalConfirmationTechnique
+        - IntravascularConfirmationMethod
+        - IntravenousPiggybackTechnique
+        - IntravenousPushTechnique
+        - IntubationTechnique
+        - IodometricMethod
+        - IontophoresisTechnique
+        - IrrigationTechnique
+        - IsaacsTechnique
+        - IvyTechnique
+        - LateralisingTechnique
+        - Liberally
+        - LightCureMethod
+        - LinePlacementTechnique
+        - LiquidBasedPreparationTechnique
+        - LossOfResistanceTechnique
+        - LowIonicStrengthSaline
+        - MaclureTechnique
+        - ManualMethod
+        - MaximumIntercuspationTechnique
+        - MeasurementTechnique
+        - Mechanical
+        - MechanicalGrabMethod
+        - MeltingCurveTechnique
+        - MicrobiologicalMethod
+        - MicroscopyTechnique
+        - Microvascular
+        - MicSusceptibilityTest
+        - MitrofanoffTechnique
+        - MixedAntiglobulinReactionTechnique
+        - MolecularGenetics
+        - MolecularNucleicAcidAmplificationTechnique
+        - MultipleAllergenBearingDisc
+        - MultipleBreathTechnique
+        - NaturalFilling
+        - NearReadingTechnique
+        - Nephelometry
+        - NeutralZone
+        - NeutralisationMethod
+        - NijmegenModificationBethesdaTechnique
+        - NippleSharingTechnique
+        - NitrocefinMethod
+        - NitrogenWashout
+        - NumericEstimationTechnique
+        - ObturationTechnique
+        - OcclusiveDressingTechnique
+        - OneLungVentilation
+        - ParaffinEmbedding
+        - ParallelingTechnique
+        - ParaesthesiaTechnique
+        - PatientCycledMethod
+        - PatternOnsetOffsetStimulationTechnique
+        - PercutaneousGastrostomyButtonTechnique
+        - PercutaneousTechniques
+        - PeriarticularOsteotomy
+        - PeritonealDialysisTechnique
+        - PhotometryTechnique
+        - PhotonDetectionTechnique
+        - PdwCalculationTechnique
+        - PmvCalculationTechnique
+        - PneumaticOtoscopy
+        - PegPrecipitation
+        - PolymeraseChainReactionTechnique
+        - PositionChange
+        - PostProcessing
+        - PotentiometryTechnique
+        - PoweredMethod
+        - CockcroftGaultPrediction
+        - PressureControlledMethod
+        - PressureLimitedCyclingMethod
+        - PressureTriggering
+        - ProteinProfiling
+        - ProvocationTechnique
+        - PullThroughTechnique
+        - PyrosequencingTechnique
+        - RadionuclideDilutionTechnique
+        - RapidPlasmaReaginTechnique
+        - Rapidly
+        - RebreathingMethod
+        - RectallyInfusedSalineSolution
+        - Refractometry
+        - RelaxationTechnique
+        - RemainingConnected
+        - RemodelledPouchMethod
+        - Reported
+        - RflpTechnique
+        - RetrudedJawRelationTechnique
+        - RnaExtractionTechnique
+        - RoutineNumericEstimationTechnique
+        - SalineMethod
+        - SbisaBar
+        - SedimentationTechnique
+        - SeldingerTechnique
+        - SelfCureMethod
+        - SequenceIdentifierTechnique
+        - SsoProbe
+        - SspPcr
+        - ShamFeedTechnique
+        - ShelfTechnique
+        - SheridanGardinerTechnique
+        - SilverEnhancedInSituHybridizationTechnique
+        - SingleBolus
+        - SingleRadialHaemolysis
+        - SingleTetanyTechnique
+        - SingleBreathTechnique
+        - SjogrenHandTechnique
+        - Slowly
+        - SmearingTechnique
+        - SnellenTechnique
+        - SolidPhaseImmuneTechnique
+        - SolidSphereTechnique
+        - SolubilityTest
+        - SpecificStimulationTechnique
+        - SpectrometryTechnique
+        - SpectrophotometricTechnique
+        - StainingTechnique
+        - StimulationTechnique
+        - SubmucosalTunnelTechnique
+        - SucroseDensityGradientSeparation
+        - SuperiorPedicleTechnique
+        - SurfaceLandmarkTechnique
+        - SuturingTechniques
+        - SwallowedWhole
+        - SweptSpatialFrequencyBars
+        - Tests
+        - ThoracicImpedance
+        - TimeCycledMethod
+        - TimedSixMeterWalkTechnique
+        - TimedUnsupportedSteadyStandTechnique
+        - TransarterialTechnique
+        - TranscutaneousMethod
+        - TransluminalProstheticMethod
+        - Transmission
+        - TurbidimetryTechnique
+        - Typings
+        - UltravioletAbsorption
+        - ValsalvaManeuver
+        - VanSlykeTechnique
+        - VapourPressureDepression
+        - VdrlTechnique
+        - VesselLocationTechnique
+        - Vigorously
+        - Viscometry
+        - VisualEstimation
+        - VolumeControlledMethod
+        - VolumetricTechnique
+        - WarmingIntravenousFluidTechnique
+        - WashingOfSwabs
+        - WedgePressureTechnique
+        - WetPreparationTechnique
+        - WhiteNoiseMaskingOppositeEar
+        - WireGuidedTechnique
+        - WithClearanceMeasurement
+        - WithGlomerularFiltrationRate
+        - WithSeparation
+        - WithUretericPeristalsisAnalysis
+        - WithoutRemount
+        - XrayDiffraction
+        - ZPlastyTechnique
+        - ZScoreCalculationTechnique
+      example: "CoombsTest"
+    MeldendeEinrichtung:
+      type: object
+      description: Notifier facility (reporting institution) - optional for memento
+      properties:
+        EinrichtungsName:
+          type: string
+          nullable: true
+          description: Name of the reporting facility
+          example: "Universitätsklinikum Musterstadt"
+        BSNR:
+          type: string
+          nullable: true
+          description: Betriebsstättennummer (facility number)
+          example: "123456789"
+        Adresse:
+          $ref: '#/components/schemas/Adresse'
+        Kontakt:
+          $ref: '#/components/schemas/Kontakt'
+    MeldendePerson:
+      type: object
+      description: Reporting person - optional for memento
+      properties:
+        Name:
+          $ref: '#/components/schemas/Name'
+        Kontakt:
+          $ref: '#/components/schemas/Kontakt'
+    EinsendendeEinrichtung:
+      type: object
+      description: Sending facility (e.g., laboratory that performed the test) - optional for memento
+      properties:
+        EinrichtungsName:
+          type: string
+          nullable: true
+          description: Name of the sending facility
+          example: "Labor für Medizinische Mikrobiologie"
+        Adresse:
+          $ref: '#/components/schemas/Adresse'
+        Kontakt:
+          $ref: '#/components/schemas/Kontakt'
+    ReportResult:
+      type: object
+      required:
+        - reportId
+        - status
+        - module
+        - submittedAt
+      description: |-
+        Result of a laboratory report submission to DEMIS.
+        Returned by GET /reports/{reportId}.
+      properties:
+        reportId:
+          type: string
+          description: The report ID from the original Labormeldung submission
+          example: "LAB-2024-00123"
+        status:
+          type: string
+          enum:
+            - SUCCESS
+            - FAILURE
+          description: |-
+            Submission outcome.
+            - SUCCESS: Report accepted by DEMIS. receiptPdf is populated.
+            - FAILURE: Submission rejected or error occurred. failureReason is populated.
+          example: "SUCCESS"
+        module:
+          type: string
+          description: Module that produced this report
+          example: "ELIMPLUS"
+        diseaseCode:
+          type: string
+          nullable: true
+          description: |-
+            Disease code identifying the type of report (e.g. Influenza, Rsv, Norovirus, Sarscov2).
+            Null if not available.
+          example: "Influenza"
+        description:
+          type: string
+          nullable: true
+          description: |-
+            Human-readable description of the report (e.g. "Labormeldung Influenza").
+            Null if not available.
+          example: "Labormeldung Influenza"
+        submittedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the report was submitted to DEMIS (ISO 8601)
+          example: "2024-12-08T14:32:00Z"
+        receiptPdf:
+          type: string
+          nullable: true
+          description: |-
+            Base64-encoded RKI receipt PDF. Populated on SUCCESS, null on FAILURE.
+          example: "JVBERi0xLjQK..."
+        failureReason:
+          type: string
+          nullable: true
+          description: |-
+            Human-readable error message describing why the submission failed.
+            Populated on FAILURE, null on SUCCESS.
+          example: null
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic

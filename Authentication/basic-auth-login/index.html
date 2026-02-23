@@ -1,0 +1,3311 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../Reference/endpoints-and-infrastructure/">
+      
+      
+        <link rel="next" href="../magic-token-link/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../img/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Basic Auth Login (BAL) - Vertama: The Manuals</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/extra.css">
+    
+      <link rel="stylesheet" href="../../css/pdf-print.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#basic-auth-login-bal-authentication-pattern" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Vertama: The Manuals" class="md-header__button md-logo" aria-label="Vertama: The Manuals" data-md-component="logo">
+      
+  <img src="../../img/Vertama-Icon.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vertama: The Manuals
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Basic Auth Login (BAL)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Products/BELIM/api-tutorial/" class="md-tabs__link">
+          
+  
+  
+  Products
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../how-to/folder-sync-handbuch/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../background-and-explanations/security-and-encryption/Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/" class="md-tabs__link">
+          
+  
+  
+  Background & Explanations
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Reference/system-requirements/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Authentication
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../about/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  About
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Vertama: The Manuals" class="md-nav__button md-logo" aria-label="Vertama: The Manuals" data-md-component="logo">
+      
+  <img src="../../img/Vertama-Icon.svg" alt="logo">
+
+    </a>
+    Vertama: The Manuals
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Products
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Products
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BELIM
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BELIM
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Products/BELIM/api-tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Products/BELIM/api.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=BELIM" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DIGG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    DIGG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Products/DIGG/api-tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Products/DIGG/api.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIGG" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DIVI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    DIVI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Products/DIVI/api-tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Products/DIVI/api.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIVI" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DUBA
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    DUBA
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Products/DUBA/api-tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Products/DUBA/api.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DUBA" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ELIM
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ELIM
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_1" id="__nav_2_5_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flyer
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Flyer
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Products/ELIM/onepager/OnePager%20%28PNG%29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    One Pager / Flyer (PNG)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Products/ELIM/onepager/OnePager%20%28HTML%29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    One Pager / Flyer (HTML)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Products/ELIM/onepager/OnePager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    One Pager / Flyer (TEXT/Markdown)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ELIM+
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ELIM+
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Products/ELIMPLUS/api-tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Products/ELIMPLUS/api.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=ELIM%2B" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/folder-sync-handbuch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Folder Sync Handbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Background & Explanations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Background & Explanations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security & Encryption
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security & Encryption
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../background-and-explanations/security-and-encryption/Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-User Secret Sharing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../background-and-explanations/security-and-encryption/Password-Based%20User%20Secrets%20Encryption%20with%20Derived%20Keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Password-Based User Secrets Encryption
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../background-and-explanations/security-and-encryption/Implementation-Notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../background-and-explanations/security-and-encryption/API-Usage-Guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Usage Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Reference/system-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systemanforderungen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Reference/endpoints-and-infrastructure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Endpunkte & Infrastruktur
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authentication
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic Auth Login (BAL)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic Auth Login (BAL)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-use-bal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Use BAL?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why Use BAL?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-problem-with-direct-basic-auth-urls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Problem with Direct Basic Auth URLs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-bal-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The BAL Solution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How It Works">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#request-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#url-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        URL Pattern
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="URL Pattern">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Syntax
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#path-extraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path Extraction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-validations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Validations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-elim-pre-filled-form-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 1: ELIM+ Pre-filled Form Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-direct-curl-access-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 2: Direct curl Access (Testing)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-batch-link-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 3: Batch Link Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-4-email-notification-with-bal-link" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 4: Email Notification with BAL Link
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#credential-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credential Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#target-url-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Target URL Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Security
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production Recommendations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pattern-1-api-generated-bal-access-elim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 1: API-Generated + BAL Access (ELIM+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-2-direct-resource-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 2: Direct Resource Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-3-bookmarkable-forms-developmenttesting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 3: Bookmarkable Forms (Development/Testing)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#issue-401-unauthorized" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: 401 Unauthorized
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-302-redirect-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: 302 Redirect Loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-credentials-visible-in-browser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: Credentials Visible in Browser
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-cannot-logout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: Cannot Logout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../magic-token-link/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Magic Token Link (MTL)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-use-bal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Use BAL?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why Use BAL?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-problem-with-direct-basic-auth-urls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Problem with Direct Basic Auth URLs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-bal-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The BAL Solution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How It Works">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#request-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#url-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        URL Pattern
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="URL Pattern">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Syntax
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#path-extraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path Extraction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-validations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Validations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-elim-pre-filled-form-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 1: ELIM+ Pre-filled Form Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-direct-curl-access-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 2: Direct curl Access (Testing)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-batch-link-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 3: Batch Link Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-4-email-notification-with-bal-link" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 4: Email Notification with BAL Link
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#credential-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credential Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#target-url-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Target URL Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Security
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production Recommendations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pattern-1-api-generated-bal-access-elim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 1: API-Generated + BAL Access (ELIM+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-2-direct-resource-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 2: Direct Resource Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-3-bookmarkable-forms-developmenttesting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 3: Bookmarkable Forms (Development/Testing)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#issue-401-unauthorized" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: 401 Unauthorized
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-302-redirect-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: 302 Redirect Loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-credentials-visible-in-browser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: Credentials Visible in Browser
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-cannot-logout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: Cannot Logout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="basic-auth-login-bal-authentication-pattern">Basic Auth Login (BAL) - Authentication Pattern</h1>
+<p>A universal authentication pattern that converts Basic Authentication credentials into secure session-based authentication with automatic redirect.</p>
+<p><strong>Version:</strong> 1.1.0
+<strong>Last Updated:</strong> 2026-02-19</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#why-use-bal">Why Use BAL?</a></li>
+<li><a href="#how-it-works">How It Works</a></li>
+<li><a href="#url-pattern">URL Pattern</a></li>
+<li><a href="#usage-examples">Usage Examples</a></li>
+<li><a href="#security">Security</a></li>
+<li><a href="#integration-patterns">Integration Patterns</a></li>
+</ol>
+<hr />
+<h2 id="overview">Overview</h2>
+<p>The Basic Auth Login (BAL) endpoint provides a universal way for external systems to generate authenticated links that automatically log users into ELIM and redirect them to their target destination.</p>
+<p><strong>Endpoint:</strong> <code>GET /bal/{target-path}</code></p>
+<p><strong>Purpose:</strong> Convert Basic Authentication credentials into secure session-based authentication, enabling:
+- Single-click access to pre-filled forms
+- Proper session management with logout support
+- Secure credential handling</p>
+<hr />
+<h2 id="why-use-bal">Why Use BAL?</h2>
+<h3 id="the-problem-with-direct-basic-auth-urls">The Problem with Direct Basic Auth URLs</h3>
+<p>External systems often want to provide direct links to authenticated resources:</p>
+<pre><code>http://username:password@host/elimplus/Rsv/?m=memento123
+</code></pre>
+<p>However, Basic Authentication has fundamental limitations:
+- <strong>No logout</strong>: Browser caches credentials indefinitely
+- <strong>Security risks</strong>: Credentials sent with every request
+- <strong>Poor UX</strong>: No visible logout button, confusion about session state</p>
+<h3 id="the-bal-solution">The BAL Solution</h3>
+<p>BAL converts Basic Auth into a proper session:</p>
+<pre><code>http://username:password@host/bal/elimplus/Rsv/?m=memento123
+         ↓ BAL endpoint authenticates user
+         ↓ Creates secure session
+         ↓ Redirects to target
+http://host/elimplus/Rsv/?m=memento123
+     (user now has session cookie, no credentials in URL)
+</code></pre>
+<p><strong>Benefits:</strong>
+✅ Users get proper sessions with logout support
+✅ Credentials only sent once during initial authentication
+✅ Standard web application security model
+✅ Compatible with existing Basic Auth integration patterns</p>
+<hr />
+<h2 id="how-it-works">How It Works</h2>
+<h3 id="request-flow">Request Flow</h3>
+<pre><code>1. External System creates authenticated URL:
+   https://user:pass@elim.example.com/bal/elimplus/Rsv/?m=memento123
+
+2. User clicks link → Browser sends GET request to /bal/elimplus/Rsv/?m=memento123
+   with Authorization: Basic &lt;base64(user:pass)&gt; header
+
+3. BAL endpoint:
+   a. Extracts credentials from Authorization header
+   b. Authenticates user via Spring Security
+   c. Creates session-based authentication
+   d. Stores authentication in HTTP session
+
+4. Redirects to target:
+   302 Redirect → /elimplus/Rsv/?m=memento123
+
+5. Browser follows redirect with session cookie (no more Basic Auth)
+
+6. User sees target page, fully authenticated with session
+</code></pre>
+<h3 id="authentication-lifecycle">Authentication Lifecycle</h3>
+<ul>
+<li><strong>Initial request</strong>: Basic Auth credentials validated</li>
+<li><strong>Session creation</strong>: Spring Security session established</li>
+<li><strong>Subsequent requests</strong>: Session cookie used (no credentials)</li>
+<li><strong>Logout</strong>: Standard logout flow available</li>
+</ul>
+<hr />
+<h2 id="url-pattern">URL Pattern</h2>
+<h3 id="syntax">Syntax</h3>
+<pre><code>/bal/{target-path}?{query-parameters}
+</code></pre>
+<p>Where:
+- <code>/bal/</code> - BAL endpoint prefix
+- <code>{target-path}</code> - Internal path to redirect to (everything after <code>/bal/</code>)
+- <code>{query-parameters}</code> - Preserved in redirect</p>
+<h3 id="path-extraction">Path Extraction</h3>
+<table>
+<thead>
+<tr>
+<th>Original URL</th>
+<th>Target Path</th>
+<th>Final Redirect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/bal/elimplus/Rsv</code></td>
+<td><code>/elimplus/Rsv</code></td>
+<td><code>GET /elimplus/Rsv</code></td>
+</tr>
+<tr>
+<td><code>/bal/elimplus/Rsv/?m=abc123</code></td>
+<td><code>/elimplus/Rsv/?m=abc123</code></td>
+<td><code>GET /elimplus/Rsv/?m=abc123</code></td>
+</tr>
+<tr>
+<td><code>/bal/admin/users?page=2</code></td>
+<td><code>/admin/users?page=2</code></td>
+<td><code>GET /admin/users?page=2</code></td>
+</tr>
+<tr>
+<td><code>/bal</code></td>
+<td><code>/</code></td>
+<td><code>GET /</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="security-validations">Security Validations</h3>
+<p>The target URL is validated to prevent attacks:</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Purpose</th>
+<th>Example Blocked</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Must start with <code>/</code></td>
+<td>Prevent external redirects</td>
+<td><code>http://evil.com</code> ❌</td>
+</tr>
+<tr>
+<td>Cannot start with <code>//</code></td>
+<td>Prevent protocol-relative URLs</td>
+<td><code>//evil.com/path</code> ❌</td>
+</tr>
+<tr>
+<td>Cannot contain <code>..</code></td>
+<td>Prevent path traversal</td>
+<td><code>/bal/../../../etc/passwd</code> ❌</td>
+</tr>
+<tr>
+<td>Cannot start with <code>/bal</code></td>
+<td>Prevent infinite loops</td>
+<td><code>/bal/bal/bal/...</code> ❌</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="usage-examples">Usage Examples</h2>
+<h3 id="example-1-elim-pre-filled-form-access">Example 1: ELIM+ Pre-filled Form Access</h3>
+<p><strong>Scenario:</strong> Laboratory system wants to give technicians direct access to pre-filled disease reporting forms.</p>
+<pre><code class="language-bash">#!/bin/bash
+# External laboratory system script
+
+HOST=&quot;elim.example.com&quot;
+END_USER=&quot;lab-tech&quot;
+END_USER_PASSWORD=&quot;tech-secret&quot;
+API_USER=&quot;lab-api&quot;
+API_PASSWORD=&quot;api-secret&quot;
+
+# Step 1: Create memento via API
+MEMENTO=$(curl -s -X POST \
+  -u &quot;$API_USER:$API_PASSWORD&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;reportId&quot;: &quot;LAB-2024-00123&quot;,
+    &quot;Krankheit&quot;: {&quot;Influenza&quot;: {}},
+    &quot;Patient&quot;: {
+      &quot;IsAnonym&quot;: false,
+      &quot;Standard&quot;: {
+        &quot;Name&quot;: {&quot;Vorname&quot;: &quot;Max&quot;, &quot;Nachname&quot;: &quot;Mustermann&quot;},
+        &quot;Geburtsdatum&quot;: &quot;1980-05-15&quot;
+      }
+    }
+  }' \
+  &quot;https://$HOST/api/elimplus/v1/memento&quot; | jq -r '.memento')
+
+# Step 2: Construct BAL URL for end user
+FORM_URL=&quot;https://$END_USER:$END_USER_PASSWORD@$HOST/bal/elimplus/Influenza/?m=$MEMENTO&quot;
+
+# Step 3: Send to user (email, portal, etc.)
+echo &quot;Please review and submit this report:&quot;
+echo &quot;$FORM_URL&quot;
+</code></pre>
+<p><strong>What happens:</strong>
+1. User clicks link
+2. BAL authenticates with <code>lab-tech:tech-secret</code>
+3. Creates session for <code>lab-tech</code> user
+4. Redirects to <code>/elimplus/Influenza/?m={memento}</code>
+5. User sees pre-filled Influenza form
+6. User reviews and submits to DEMIS</p>
+<h3 id="example-2-direct-curl-access-testing">Example 2: Direct curl Access (Testing)</h3>
+<pre><code class="language-bash"># Authenticate and access protected resource
+curl -u &quot;username:password&quot; \
+  -L \
+  &quot;https://elim.example.com/bal/elimplus/Rsv/?m=memento456&quot;
+
+# -L flag follows redirects
+# First request: BAL authenticates
+# Second request: Follows redirect with session cookie
+</code></pre>
+<h3 id="example-3-batch-link-generation">Example 3: Batch Link Generation</h3>
+<pre><code class="language-bash">#!/bin/bash
+# Generate BAL links for multiple reports
+
+BASE_URL=&quot;https://elim.example.com&quot;
+USER=&quot;tech-user&quot;
+PASS=&quot;tech-pass&quot;
+
+# Read CSV with lab results
+while IFS=',' read -r report_id disease firstname lastname dob; do
+  # Create memento (simplified)
+  MEMENTO=$(create_memento &quot;$report_id&quot; &quot;$disease&quot; &quot;$firstname&quot; &quot;$lastname&quot; &quot;$dob&quot;)
+
+  # Generate BAL URL
+  FORM_URL=&quot;https://$USER:$PASS@$BASE_URL/bal/elimplus/$disease/?m=$MEMENTO&quot;
+
+  echo &quot;$report_id,$FORM_URL&quot;
+done &lt; lab_results.csv &gt; form_links.csv
+</code></pre>
+<h3 id="example-4-email-notification-with-bal-link">Example 4: Email Notification with BAL Link</h3>
+<pre><code class="language-bash">#!/bin/bash
+# Send email with authenticated form link
+
+TO=&quot;technician@hospital.com&quot;
+FORM_URL=&quot;https://tech:secret@elim.example.com/bal/elimplus/Norovirus/?m=abc123&quot;
+
+mail -s &quot;Laboratory Report Ready for Review (LAB-2024-789)&quot; &quot;$TO&quot; &lt;&lt;EOF
+Hello,
+
+A laboratory report is ready for your review and submission to DEMIS.
+
+Click here to access the pre-filled form:
+$FORM_URL
+
+The form has been pre-filled with laboratory data. Please review for accuracy
+and submit to the health authority.
+
+Note: You will be automatically logged in when you click the link.
+
+---
+Laboratory Information System
+EOF
+</code></pre>
+<hr />
+<h2 id="security">Security</h2>
+<h3 id="credential-handling">Credential Handling</h3>
+<p><strong>✅ Secure practices:</strong>
+- Credentials only transmitted in initial request
+- HTTPS required in production (credentials never in plain text)
+- Session cookies are HttpOnly and Secure
+- Credentials never logged or stored</p>
+<p><strong>❌ Avoid:</strong>
+- Don't include credentials in query parameters (use Authorization header)
+- Don't reuse credentials across multiple users
+- Don't share BAL URLs publicly (contain credentials)</p>
+<h3 id="target-url-validation">Target URL Validation</h3>
+<p>BAL validates all target URLs to prevent:</p>
+<ol>
+<li>
+<p><strong>Open redirects:</strong>
+   <code>/bal//evil.com/phishing  ❌ Blocked</code></p>
+</li>
+<li>
+<p><strong>Path traversal:</strong>
+   <code>/bal/../../../etc/passwd  ❌ Blocked</code></p>
+</li>
+<li>
+<p><strong>Infinite loops:</strong>
+   <code>/bal/bal/bal/target  ❌ Blocked</code></p>
+</li>
+</ol>
+<h3 id="session-security">Session Security</h3>
+<ul>
+<li><strong>Session fixation protection</strong>: New session ID generated after authentication</li>
+<li><strong>Session timeout</strong>: Configured server-side (typically 30 minutes idle)</li>
+<li><strong>Logout support</strong>: Users can explicitly log out via <code>/logout</code></li>
+<li><strong>CSRF protection</strong>: Enabled for all state-changing operations</li>
+</ul>
+<h3 id="production-recommendations">Production Recommendations</h3>
+<ol>
+<li><strong>Use HTTPS</strong>: Always use HTTPS in production to protect credentials</li>
+<li><strong>Strong passwords</strong>: Enforce strong password policies for end users</li>
+<li><strong>Separate credentials</strong>: Use different credentials for API users vs end users</li>
+<li><strong>Monitor access</strong>: Log authentication attempts and target URLs</li>
+<li><strong>Rate limiting</strong>: Implement rate limiting to prevent brute force attacks</li>
+</ol>
+<hr />
+<h2 id="integration-patterns">Integration Patterns</h2>
+<h3 id="pattern-1-api-generated-bal-access-elim">Pattern 1: API-Generated + BAL Access (ELIM+)</h3>
+<p><strong>Use case:</strong> External system creates data via API, users access via browser</p>
+<pre><code>External System
+    ↓
+[1] POST /api/elimplus/v1/memento → memento string
+    ↓
+[2] Construct: https://user:pass@host/bal/elimplus/Disease/?m={memento}
+    ↓
+[3] Send URL to end user (email, portal, etc.)
+    ↓
+End User clicks link
+    ↓
+[4] GET /bal/elimplus/Disease/?m={memento} with Basic Auth
+    ↓ BAL authenticates and creates session
+    ↓
+[5] 302 Redirect → /elimplus/Disease/?m={memento}
+    ↓
+[6] User sees pre-filled form with session cookie
+</code></pre>
+<h3 id="pattern-2-direct-resource-access">Pattern 2: Direct Resource Access</h3>
+<p><strong>Use case:</strong> External portal provides links to ELIM resources</p>
+<pre><code>External Portal
+    ↓
+Generates link: https://user:pass@host/bal/admin/reports
+    ↓
+User clicks in portal
+    ↓
+BAL authenticates → redirects to /admin/reports
+    ↓
+User browses ELIM with active session
+</code></pre>
+<h3 id="pattern-3-bookmarkable-forms-developmenttesting">Pattern 3: Bookmarkable Forms (Development/Testing)</h3>
+<p><strong>Use case:</strong> Developers/testers need quick access to specific forms</p>
+<pre><code>Developer creates bookmark:
+https://test-user:test-pass@dev.elim.example.com/bal/elimplus/Rsv
+
+Click bookmark → instant authenticated access to RSV form
+</code></pre>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="issue-401-unauthorized">Issue: 401 Unauthorized</h3>
+<p><strong>Cause:</strong> Invalid credentials</p>
+<p><strong>Solution:</strong>
+- Verify username and password are correct
+- Check if user account is active
+- Ensure credentials are properly URL-encoded in the URL</p>
+<h3 id="issue-302-redirect-loop">Issue: 302 Redirect Loop</h3>
+<p><strong>Cause:</strong> Target URL starts with <code>/bal</code></p>
+<p><strong>Solution:</strong>
+- Remove <code>/bal</code> prefix from target path
+- Correct: <code>/bal/elimplus/Rsv</code>
+- Incorrect: <code>/bal/bal/elimplus/Rsv</code></p>
+<h3 id="issue-credentials-visible-in-browser">Issue: Credentials Visible in Browser</h3>
+<p><strong>Cause:</strong> Basic Auth credentials may appear in browser's address bar</p>
+<p><strong>Solution:</strong>
+- This is expected for the initial request
+- After redirect, credentials are gone (session cookie used)
+- Consider generating short-lived links or one-time tokens if this is a concern</p>
+<h3 id="issue-cannot-logout">Issue: Cannot Logout</h3>
+<p><strong>Cause:</strong> Browser caches Basic Auth credentials</p>
+<p><strong>Solution:</strong>
+- BAL automatically converts to session-based auth on first access
+- Users can then use standard <code>/logout</code> endpoint
+- Initial Basic Auth credentials only used for BAL request</p>
+<hr />
+<h2 id="faq">FAQ</h2>
+<p><strong>Q: When should I prefer Magic Token Links (MTL) over BAL?</strong>
+A: For new integrations, prefer MTL. API endpoints (e.g., <code>POST /api/duba/v1/memento</code>) return a
+ready-to-use <code>magicLink</code> field — no manual URL construction needed, no end-user credentials in the
+URL, and tokens self-expire after one hour. See <a href="../magic-token-link/">Magic Token Link (MTL)</a> for
+details. BAL remains supported for existing integrations.</p>
+<p><strong>Q: Is BAL secure for production use?</strong>
+A: Yes, when used with HTTPS. Credentials are only sent in the initial request and then converted to secure session-based authentication.</p>
+<p><strong>Q: Can I use BAL for API endpoints?</strong>
+A: No, BAL is designed for browser-based access. For API endpoints, use Basic Auth directly with the API endpoint (e.g., <code>/api/elimplus/v1/memento</code>).</p>
+<p><strong>Q: What happens if credentials are wrong?</strong>
+A: BAL returns a 401 Unauthorized response or redirects to <code>/login?error</code>.</p>
+<p><strong>Q: Can I use BAL without credentials in the URL?</strong>
+A: Yes, send credentials in the <code>Authorization: Basic</code> header instead of embedding them in the URL.</p>
+<p><strong>Q: Does BAL work with OAuth/OIDC?</strong>
+A: BAL specifically handles Basic Auth → session conversion. For OAuth/OIDC, use the standard OAuth login flow.</p>
+<p><strong>Q: Can I customize the redirect behavior?</strong>
+A: The target path is extracted from the URL structure. To customize further, contact your administrator or see the source code.</p>
+<hr />
+<h2 id="related-documentation">Related Documentation</h2>
+<ul>
+<li><a href="../magic-token-link/">Magic Token Link (MTL)</a> - Recommended alternative: server-issued tokens, no credentials in URL</li>
+<li><a href="../../Products/ELIMPLUS/api-tutorial/">ELIM+ API Integration Guide</a> - Complete API workflow including BAL usage</li>
+<li><a href="../../Products/ELIMPLUS/api.yml">ELIM+ OpenAPI Specification</a> - API endpoint details</li>
+</ul>
+<hr />
+<p><em>This is external-facing documentation for integration partners. For internal implementation details, see <code>src/main/java/de/vertama/web/BasicAuthLoginController.kt</code> in the elim repository.</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.tracking", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../js/external-links.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,4377 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../ELIM/onepager/OnePager/">
+      
+      
+        <link rel="next" href="../api.yml">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../img/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>API Tutorial - Vertama: The Manuals</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../css/extra.css">
+    
+      <link rel="stylesheet" href="../../../css/pdf-print.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#elim-api-integration-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Vertama: The Manuals" class="md-header__button md-logo" aria-label="Vertama: The Manuals" data-md-component="logo">
+      
+  <img src="../../../img/Vertama-Icon.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vertama: The Manuals
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API Tutorial
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../BELIM/api-tutorial/" class="md-tabs__link">
+          
+  
+  
+  Products
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../how-to/folder-sync-handbuch/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../background-and-explanations/security-and-encryption/Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/" class="md-tabs__link">
+          
+  
+  
+  Background & Explanations
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../Reference/system-requirements/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../Authentication/basic-auth-login/" class="md-tabs__link">
+          
+  
+  
+  Authentication
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../about/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  About
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Vertama: The Manuals" class="md-nav__button md-logo" aria-label="Vertama: The Manuals" data-md-component="logo">
+      
+  <img src="../../../img/Vertama-Icon.svg" alt="logo">
+
+    </a>
+    Vertama: The Manuals
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Products
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Products
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BELIM
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BELIM
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BELIM/api-tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BELIM/api.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=BELIM" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DIGG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    DIGG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DIGG/api-tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DIGG/api.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIGG" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DIVI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    DIVI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DIVI/api-tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DIVI/api.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIVI" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DUBA
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    DUBA
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DUBA/api-tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DUBA/api.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DUBA" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ELIM
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ELIM
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_1" id="__nav_2_5_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flyer
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Flyer
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ELIM/onepager/OnePager%20%28PNG%29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    One Pager / Flyer (PNG)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ELIM/onepager/OnePager%20%28HTML%29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    One Pager / Flyer (HTML)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ELIM/onepager/OnePager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    One Pager / Flyer (TEXT/Markdown)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ELIM+
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ELIM+
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introduction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Versioning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openapi-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenAPI Specification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Concepts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#laboratory-report-labormeldung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Laboratory Report (Labormeldung)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memento-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memento Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#magic-token-link-mtl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Magic Token Link (MTL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patient-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Patient Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disease-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disease Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#report-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Report ID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#form-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Form Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memento-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memento Endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Memento Endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#request-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Body
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#field-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#report-retrieval-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Report Retrieval Endpoints
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Report Retrieval Endpoints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-reports-list-pending-report-ids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /reports — List pending report IDs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-reportsreportid-retrieve-report-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /reports/{reportId} — Retrieve report result
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extracting-the-receipt-pdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extracting the receipt PDF
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#polling-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Polling pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-workflow-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Workflow Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Complete Workflow Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workflow-1-complete-external-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 1: Complete external integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-2-email-with-pre-filled-form-link" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 2: Email with pre-filled form link
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-3-batch-form-generation-from-csv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 3: Batch form generation from CSV
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-4-qr-code-for-mobile-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 4: QR code for mobile access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-5-anonymous-patient-reporting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 5: Anonymous patient reporting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#http-status-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP Status Codes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#date-format-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Date Format Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handle-errors-in-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handle Errors in Scripts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-endpoints-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Endpoints Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openapi-specification_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenAPI Specification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disease-routes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disease Routes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#date-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Date Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gender-enum-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gender Enum Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=ELIM%2B" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/folder-sync-handbuch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Folder Sync Handbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Background & Explanations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Background & Explanations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security & Encryption
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security & Encryption
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../background-and-explanations/security-and-encryption/Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-User Secret Sharing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../background-and-explanations/security-and-encryption/Password-Based%20User%20Secrets%20Encryption%20with%20Derived%20Keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Password-Based User Secrets Encryption
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../background-and-explanations/security-and-encryption/Implementation-Notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../background-and-explanations/security-and-encryption/API-Usage-Guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Usage Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Reference/system-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systemanforderungen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Reference/endpoints-and-infrastructure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Endpunkte & Infrastruktur
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authentication
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Authentication/basic-auth-login/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic Auth Login (BAL)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Authentication/magic-token-link/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Magic Token Link (MTL)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introduction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Versioning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openapi-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenAPI Specification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Concepts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#laboratory-report-labormeldung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Laboratory Report (Labormeldung)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memento-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memento Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#magic-token-link-mtl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Magic Token Link (MTL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patient-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Patient Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disease-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disease Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#report-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Report ID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#form-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Form Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memento-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memento Endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Memento Endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#request-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Body
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#field-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#report-retrieval-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Report Retrieval Endpoints
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Report Retrieval Endpoints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-reports-list-pending-report-ids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /reports — List pending report IDs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-reportsreportid-retrieve-report-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /reports/{reportId} — Retrieve report result
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extracting-the-receipt-pdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extracting the receipt PDF
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#polling-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Polling pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-workflow-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Workflow Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Complete Workflow Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workflow-1-complete-external-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 1: Complete external integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-2-email-with-pre-filled-form-link" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 2: Email with pre-filled form link
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-3-batch-form-generation-from-csv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 3: Batch form generation from CSV
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-4-qr-code-for-mobile-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 4: QR code for mobile access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-5-anonymous-patient-reporting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 5: Anonymous patient reporting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#http-status-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP Status Codes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#date-format-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Date Format Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handle-errors-in-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handle Errors in Scripts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-endpoints-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Endpoints Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openapi-specification_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenAPI Specification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disease-routes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disease Routes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#date-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Date Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gender-enum-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gender Enum Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="elim-api-integration-guide">ELIM+ API Integration Guide</h1>
+<p>A practical guide for integration partners using the ELIM+ (Laboratory Reporting) API.</p>
+<p><strong>Version:</strong> 0.1.2
+<strong>Last Updated:</strong> 2026-02-20</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#authentication">Authentication</a></li>
+<li><a href="#core-concepts">Core Concepts</a></li>
+<li><a href="#memento-endpoint">Memento Endpoint</a></li>
+<li><a href="#report-retrieval-endpoints">Report Retrieval Endpoints</a></li>
+<li><a href="#complete-workflow-examples">Complete Workflow Examples</a></li>
+<li><a href="#error-handling">Error Handling</a></li>
+<li><a href="#reference">Reference</a></li>
+</ol>
+<hr />
+<h2 id="introduction">Introduction</h2>
+<p>The ELIM+ API enables laboratory information systems (KIS) to pre-fill laboratory reporting forms for notifiable diseases in Germany (DEMIS integration). This API allows integration partners to:</p>
+<ul>
+<li><strong>Create form mementos</strong> to generate pre-filled form URLs from laboratory data</li>
+<li><strong>Retrieve report results</strong> after end users submit forms to DEMIS</li>
+<li><strong>Support 4 disease types</strong>: Influenza, RSV, Norovirus, SARS-CoV-2</li>
+<li><strong>Enable user review</strong> before submission to public health authorities</li>
+</ul>
+<h3 id="use-case">Use Case</h3>
+<p>ELIM+ solves a common integration pattern:</p>
+<ol>
+<li><strong>Laboratory system (KIS)</strong> has complete test results but wants users to review before DEMIS submission</li>
+<li><strong>System calls API</strong> with laboratory report data as JSON</li>
+<li><strong>API returns</strong> an encrypted memento string <strong>and a ready-to-use <code>magicLink</code> URL</strong></li>
+<li><strong>System sends the <code>magicLink</code></strong> to the end user (email, portal, etc.)</li>
+<li><strong>User clicks the link</strong> — authenticated, lands on ELIM+ index with pre-filled data</li>
+<li><strong>User selects disease form, reviews, and submits</strong> to DEMIS</li>
+</ol>
+<pre><code>KIS / Laboratory System
+    ↓
+[1] POST /api/elimplus/v1/memento  (API user credentials)
+    ↓
+[2] Receives { &quot;memento&quot;: &quot;...&quot;, &quot;magicLink&quot;: &quot;/mtl/.../?m=...&quot; }
+    ↓
+[3] Constructs absolute URL: https://your-instance + magicLink
+    ↓
+[4] Delivers URL to end user (email, portal link, SMS, etc.)
+    ↓
+End User
+    ↓
+[5] Clicks link → authenticated via MTL token
+    → lands on /elimplus/?m={memento}
+    ↓
+[6] Selects disease form → reviews pre-filled data → submits to DEMIS
+    ↓
+KIS / Laboratory System (asynchronous)
+    ↓
+[7] GET /api/elimplus/v1/reports  → list of pending reportIds
+[8] GET /api/elimplus/v1/reports/{reportId}  → full result + receipt PDF
+</code></pre>
+<p><strong>Benefits:</strong>
+- No direct submission required — users maintain control
+- No separate end-user login credentials needed — <code>magicLink</code> handles authentication
+- Form validation happens in browser (immediate feedback)
+- Users can correct or supplement data before sending
+- Encrypted mementos are tamper-proof</p>
+<h3 id="prerequisites">Prerequisites</h3>
+<p>Before using the API, you need:
+- <strong>API User Credentials</strong>: Username and password provided by your administrator
+- <strong>Base URL</strong>: Your ELIM instance URL (e.g., <code>https://elim.example.com</code>)</p>
+<p>That's it. End users do <strong>not</strong> need separate credentials — the <code>magicLink</code> in the API response handles their authentication automatically.</p>
+<h3 id="api-versioning">API Versioning</h3>
+<p>All endpoints are versioned under <code>/api/elimplus/v1/</code>.</p>
+<h3 id="openapi-specification">OpenAPI Specification</h3>
+<p>The complete OpenAPI specification is available at:</p>
+<pre><code>https://your-instance/api/docs/swagger-ui/index.html?urls.primaryName=ELIM+
+</code></pre>
+<hr />
+<h2 id="authentication">Authentication</h2>
+<p>The API uses <strong>HTTP Basic Authentication</strong> with your API user credentials (the service account provided by your administrator). End users do not need separate credentials.</p>
+<h3 id="how-it-works">How It Works</h3>
+<ol>
+<li>Your administrator creates an API user account with username and password</li>
+<li>For each API request, provide credentials in the <code>Authorization</code> header</li>
+<li>The API returns a <code>magicLink</code> in the response — a server-issued token that grants end users one-time authenticated access to the pre-filled form</li>
+</ol>
+<h3 id="example">Example</h3>
+<pre><code class="language-bash">curl -u &quot;api-username:api-password&quot; \
+  -X POST \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;reportId&quot;:&quot;LAB-2026-001&quot;}' \
+  https://elim.example.com/api/elimplus/v1/memento
+</code></pre>
+<p>The response contains both the encrypted memento and a ready-to-use <code>magicLink</code> — no further credentials are needed for the end user.</p>
+<p>See <a href="../../../Authentication/magic-token-link/">Magic Token Link (MTL)</a> for details on how the server-issued token works.</p>
+<hr />
+<h2 id="core-concepts">Core Concepts</h2>
+<h3 id="laboratory-report-labormeldung">Laboratory Report (Labormeldung)</h3>
+<p>The main data structure for notifiable disease reporting. Contains:
+- <strong>reportId</strong> (required): Unique laboratory report identifier
+- <strong>Patient</strong>: Patient information (standard with full identification, or anonymous with limited data for privacy)
+- <strong>MeldendeEinrichtung</strong>: Reporting facility (laboratory)
+- <strong>MeldendePerson</strong>: Reporting person
+- <strong>EinsendendeEinrichtung</strong>: Sending facility (e.g., hospital that ordered the test)
+- <strong>Krankheit</strong>: Disease-specific data (Influenza, RSV, Norovirus, or SARS-CoV-2)
+- <strong>MeldungsDatum</strong>: Report date
+- <strong>MeldungsVerweisId</strong>: Reference ID for linking corrections or follow-up reports</p>
+<h3 id="memento-pattern">Memento Pattern</h3>
+<p>A <strong>memento</strong> is an encrypted, URL-safe string that contains form pre-fill data:
+- Generated from JSON laboratory report data
+- Encrypted with AES-256-GCM using your API user's KEK
+- Tamper-proof and URL-safe
+- Typical size: 500–2000 characters
+- Used as query parameter: <code>?m={memento}</code></p>
+<p><strong>Important:</strong> The memento contains generic pre-fill data (patient info, dates, report IDs) — not disease-specific data. The user selects the disease on the ELIM+ index page. The same memento applies to all disease forms.</p>
+<h3 id="magic-token-link-mtl">Magic Token Link (MTL)</h3>
+<p>The <code>magicLink</code> field in the API response is a server-issued, time-limited URL that:
+- Authenticates the end user automatically (no login page)
+- Redirects to <code>/elimplus/?m={memento}</code> on success
+- Is a <strong>relative path</strong> — prepend your instance host to make it absolute</p>
+<pre><code>magicLink: &quot;/mtl/eyJ...token.../elimplus/?m=eyJ...memento...&quot;
+
+Full URL: https://elim.example.com/mtl/eyJ...token.../elimplus/?m=eyJ...memento...&quot;
+</code></pre>
+<p>See <a href="../../../Authentication/magic-token-link/">Magic Token Link (MTL)</a> for security details and token lifetime.</p>
+<h3 id="patient-types">Patient Types</h3>
+<p>ELIM+ supports two patient types for privacy protection:</p>
+<p><strong>Standard Patient</strong> (<code>IsAnonym: false</code>):
+- Full identification with name, complete birthdate, full address, and contact information
+- Used for typical laboratory reporting where patient identity is available
+- Structure: <code>Patient.Standard</code> contains Name, Geschlecht, Geburtsdatum (YYYY-MM-DD), Adresse, Kontakt</p>
+<p><strong>Anonymous Patient</strong> (<code>IsAnonym: true</code>):
+- Limited data to protect patient privacy
+- No name or contact information
+- Birth month/year only (not full date): <code>GeburtsmonatJahr</code> in YYYY-MM format
+- Limited address with only postal code and country (no street, city, or identifying details)
+- Structure: <code>Patient.Anonym</code> contains Geschlecht, GeburtsmonatJahr, Adresse (PLZ and Land only)</p>
+<p><strong>When to use:</strong>
+- Use <strong>Standard</strong> for normal reporting when patient identity is available
+- Use <strong>Anonymous</strong> when patient wishes to remain anonymous or local regulations require privacy protection</p>
+<h3 id="disease-types">Disease Types</h3>
+<p>ELIM+ supports 4 notifiable diseases:</p>
+<table>
+<thead>
+<tr>
+<th>Disease</th>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Influenza</td>
+<td><code>Influenza</code></td>
+<td>Influenza virus detection (PCR)</td>
+</tr>
+<tr>
+<td>RSV</td>
+<td><code>Rsv</code></td>
+<td>Respiratory Syncytial Virus</td>
+</tr>
+<tr>
+<td>Norovirus</td>
+<td><code>Norovirus</code></td>
+<td>Norovirus RNA detection</td>
+</tr>
+<tr>
+<td>SARS-CoV-2</td>
+<td><code>Sarscov2</code></td>
+<td>COVID-19 laboratory detection</td>
+</tr>
+</tbody>
+</table>
+<h3 id="report-id">Report ID</h3>
+<p>The <code>reportId</code> field in the Labormeldung serves a dual purpose:</p>
+<ol>
+<li><strong>Form pre-fill</strong>: It's embedded in the memento and displayed in the pre-filled form for the end user to review</li>
+<li><strong>Report retrieval key</strong>: After the end user submits to DEMIS, the same <code>reportId</code> is used to retrieve the submission result via <code>GET /reports/{reportId}</code></li>
+</ol>
+<p><strong>Important:</strong> Use a stable, unique ID per laboratory report. The <code>reportId</code> must be unique per API user — submitting a second report with the same <code>reportId</code> will be rejected.</p>
+<h3 id="form-workflow">Form Workflow</h3>
+<ol>
+<li>User opens the magic link → lands on ELIM+ index: <code>/elimplus/</code></li>
+<li>User selects a disease form (Influenza, RSV, Norovirus, SARS-CoV-2)</li>
+<li>System routes to disease-specific form: <code>/elimplus/{Disease}/</code></li>
+<li>Form is pre-filled via memento parameter: <code>/elimplus/{Disease}/?m={memento}</code></li>
+<li>User reviews, corrects if needed, submits to DEMIS</li>
+<li>After successful submission, the result is available via <code>GET /reports/{reportId}</code></li>
+</ol>
+<hr />
+<h2 id="memento-endpoint">Memento Endpoint</h2>
+<p><strong>Endpoint:</strong> <code>POST /api/elimplus/v1/memento</code></p>
+<p><strong>Purpose:</strong> Create encrypted memento string and magic link to pre-fill laboratory reporting forms.</p>
+<h3 id="request-body">Request Body</h3>
+<p>The endpoint accepts laboratory report data as JSON. Only <code>reportId</code> is required; all other fields are optional.</p>
+<p><strong>Minimal Example:</strong></p>
+<pre><code class="language-json">{
+  &quot;reportId&quot;: &quot;LAB-2026-00001&quot;
+}
+</code></pre>
+<p><strong>Complete Example:</strong></p>
+<pre><code class="language-json">{
+  &quot;reportId&quot;: &quot;LAB-2026-00123&quot;,
+  &quot;KrankheitsCode&quot;: &quot;J09&quot;,
+  &quot;MeldungsDatum&quot;: &quot;2026-02-20&quot;,
+  &quot;MeldungsVerweisId&quot;: &quot;MELD-REF-2026-00001&quot;,
+  &quot;Krankheit&quot;: {
+    &quot;Influenza&quot;: {},
+    &quot;Rsv&quot;: null,
+    &quot;Norovirus&quot;: null,
+    &quot;Sarscov2&quot;: null
+  },
+  &quot;Patient&quot;: {
+    &quot;IsAnonym&quot;: false,
+    &quot;Standard&quot;: {
+      &quot;Name&quot;: {
+        &quot;Vorname&quot;: &quot;Max&quot;,
+        &quot;Nachname&quot;: &quot;Mustermann&quot;
+      },
+      &quot;Geschlecht&quot;: &quot;MAENNLICH&quot;,
+      &quot;Geburtsdatum&quot;: &quot;1980-05-15&quot;,
+      &quot;Adresse&quot;: {
+        &quot;Strasse&quot;: &quot;Musterstraße 123&quot;,
+        &quot;PLZ&quot;: &quot;12345&quot;,
+        &quot;Stadt&quot;: &quot;Musterstadt&quot;
+      },
+      &quot;Kontakt&quot;: {
+        &quot;Telefon&quot;: &quot;+49 123 456789&quot;,
+        &quot;Email&quot;: &quot;max.mustermann@example.com&quot;
+      }
+    }
+  },
+  &quot;MeldendeEinrichtung&quot;: {
+    &quot;EinrichtungsName&quot;: &quot;Universitätsklinikum Musterstadt&quot;,
+    &quot;BSNR&quot;: &quot;123456789&quot;,
+    &quot;Adresse&quot;: {
+      &quot;Strasse&quot;: &quot;Klinikstraße 1&quot;,
+      &quot;PLZ&quot;: &quot;12345&quot;,
+      &quot;Stadt&quot;: &quot;Musterstadt&quot;
+    },
+    &quot;Kontakt&quot;: {
+      &quot;Telefon&quot;: &quot;+49 123 456700&quot;,
+      &quot;Email&quot;: &quot;labor@klinikum-musterstadt.de&quot;
+    }
+  },
+  &quot;MeldendePerson&quot;: {
+    &quot;Name&quot;: {
+      &quot;Vorname&quot;: &quot;Dr. Anna&quot;,
+      &quot;Nachname&quot;: &quot;Schmidt&quot;
+    },
+    &quot;Kontakt&quot;: {
+      &quot;Telefon&quot;: &quot;+49 123 456750&quot;,
+      &quot;Email&quot;: &quot;anna.schmidt@klinikum-musterstadt.de&quot;
+    }
+  },
+  &quot;EinsendendeEinrichtung&quot;: {
+    &quot;EinrichtungsName&quot;: &quot;Labor für Medizinische Mikrobiologie&quot;,
+    &quot;Adresse&quot;: {
+      &quot;Strasse&quot;: &quot;Laborweg 5&quot;,
+      &quot;PLZ&quot;: &quot;12345&quot;,
+      &quot;Stadt&quot;: &quot;Musterstadt&quot;
+    },
+    &quot;Kontakt&quot;: {
+      &quot;Telefon&quot;: &quot;+49 123 456800&quot;,
+      &quot;Email&quot;: &quot;kontakt@labor-mikrobiologie.de&quot;
+    }
+  }
+}
+</code></pre>
+<h3 id="field-reference">Field Reference</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>reportId</code></td>
+<td>string</td>
+<td><strong>Yes</strong></td>
+<td>Unique laboratory report identifier</td>
+</tr>
+<tr>
+<td><code>KrankheitsCode</code></td>
+<td>string</td>
+<td>No</td>
+<td>Disease code (e.g., ICD-10)</td>
+</tr>
+<tr>
+<td><code>MeldungsDatum</code></td>
+<td>date (YYYY-MM-DD)</td>
+<td>No</td>
+<td>Report date</td>
+</tr>
+<tr>
+<td><code>MeldungsVerweisId</code></td>
+<td>string</td>
+<td>No</td>
+<td>Reference ID for linking corrections or follow-up reports</td>
+</tr>
+<tr>
+<td><code>Krankheit.*</code></td>
+<td>object</td>
+<td>No</td>
+<td>Disease-specific data (only one should be populated)</td>
+</tr>
+<tr>
+<td><code>Patient.IsAnonym</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>Patient type: false = standard (default), true = anonymous</td>
+</tr>
+<tr>
+<td><code>Patient.Standard.*</code></td>
+<td>object</td>
+<td>No</td>
+<td>Standard patient with full identification (use when IsAnonym=false)</td>
+</tr>
+<tr>
+<td><code>Patient.Standard.Name.*</code></td>
+<td>object</td>
+<td>No</td>
+<td>Patient name (Vorname, Nachname)</td>
+</tr>
+<tr>
+<td><code>Patient.Standard.Geschlecht</code></td>
+<td>enum</td>
+<td>No</td>
+<td>Gender (see enum values below)</td>
+</tr>
+<tr>
+<td><code>Patient.Standard.Geburtsdatum</code></td>
+<td>date (YYYY-MM-DD)</td>
+<td>No</td>
+<td>Full date of birth</td>
+</tr>
+<tr>
+<td><code>Patient.Standard.Adresse.*</code></td>
+<td>object</td>
+<td>No</td>
+<td>Full address (Strasse, PLZ, Stadt, Land)</td>
+</tr>
+<tr>
+<td><code>Patient.Standard.Kontakt.*</code></td>
+<td>object</td>
+<td>No</td>
+<td>Contact information (Telefon, Email, Fax)</td>
+</tr>
+<tr>
+<td><code>Patient.Anonym.*</code></td>
+<td>object</td>
+<td>No</td>
+<td>Anonymous patient with limited data (use when IsAnonym=true)</td>
+</tr>
+<tr>
+<td><code>Patient.Anonym.Geschlecht</code></td>
+<td>enum</td>
+<td>No</td>
+<td>Gender (see enum values below)</td>
+</tr>
+<tr>
+<td><code>Patient.Anonym.GeburtsmonatJahr</code></td>
+<td>string (YYYY-MM)</td>
+<td>No</td>
+<td>Birth month/year only (not full date for privacy)</td>
+</tr>
+<tr>
+<td><code>Patient.Anonym.Adresse.PLZ</code></td>
+<td>string</td>
+<td>No</td>
+<td>Postal code only</td>
+</tr>
+<tr>
+<td><code>Patient.Anonym.Adresse.Land</code></td>
+<td>string</td>
+<td>No</td>
+<td>Country only</td>
+</tr>
+<tr>
+<td><code>MeldendeEinrichtung.*</code></td>
+<td>object</td>
+<td>No</td>
+<td>Reporting facility (laboratory)</td>
+</tr>
+<tr>
+<td><code>MeldendePerson.*</code></td>
+<td>object</td>
+<td>No</td>
+<td>Reporting person</td>
+</tr>
+<tr>
+<td><code>EinsendendeEinrichtung.*</code></td>
+<td>object</td>
+<td>No</td>
+<td>Sending facility</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> <code>Geschlecht</code> enum values:
+- <code>NASK</code> — Not asked (nicht gefragt)
+- <code>ASKU</code> — Asked but unknown (gefragt, aber unbekannt)
+- <code>MAENNLICH</code> — Male
+- <code>WEIBLICH</code> — Female
+- <code>DIVERS</code> — Diverse
+- <code>UNBESTIMMT</code> — Unspecified</p>
+<h3 id="response">Response</h3>
+<p>Returns a JSON object containing the encrypted memento and a ready-to-use magic link:</p>
+<pre><code class="language-json">{
+  &quot;memento&quot;: &quot;eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..DGG5lQvJC8OpYrCt.Xm8YR...&quot;,
+  &quot;magicLink&quot;: &quot;/mtl/eyJ...token.../elimplus/?m=eyJ...memento...&quot;
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Nullable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>memento</code></td>
+<td>string</td>
+<td>No</td>
+<td>Encrypted, URL-safe string containing laboratory report data. Use as <code>?m={memento}</code> query parameter.</td>
+</tr>
+<tr>
+<td><code>magicLink</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Relative URL for authenticated single-click access. Prepend your instance host: <code>https://your-instance + magicLink</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> <code>magicLink</code> is <code>null</code> if the API user has no authentication configuration that supports token generation. In practice this should not occur for properly configured API users.</p>
+<h3 id="quick-reference">Quick Reference</h3>
+<p><strong>Get the magic link and construct the full URL:</strong></p>
+<pre><code class="language-bash">RESPONSE=$(curl -s -X POST \
+  -u &quot;api-user:api-pass&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;reportId&quot;:&quot;LAB-2026-001&quot;}' \
+  https://elim.example.com/api/elimplus/v1/memento)
+
+MAGIC_LINK=$(echo &quot;$RESPONSE&quot; | jq -r '.magicLink')
+
+# Construct absolute URL
+FORM_URL=&quot;https://elim.example.com$MAGIC_LINK&quot;
+echo &quot;Send to user: $FORM_URL&quot;
+</code></pre>
+<hr />
+<h2 id="report-retrieval-endpoints">Report Retrieval Endpoints</h2>
+<p>After an end user submits a laboratory report via the ELIM+ form, the submission result is stored and made available for retrieval by the API user that created the original memento.</p>
+<h3 id="get-reports-list-pending-report-ids">GET /reports — List pending report IDs</h3>
+<p><strong>Endpoint:</strong> <code>GET /api/elimplus/v1/reports</code></p>
+<p>Returns an array of <code>reportId</code> strings for reports that have been submitted to DEMIS but not yet retrieved (unpolled). Reports disappear from this list once retrieved without <code>?peek=true</code>.</p>
+<p><strong>Request:</strong></p>
+<pre><code class="language-bash">curl -u &quot;api-user:api-pass&quot; \
+  https://elim.example.com/api/elimplus/v1/reports
+</code></pre>
+<p><strong>Response (200):</strong></p>
+<pre><code class="language-json">[&quot;LAB-2026-00123&quot;, &quot;LAB-2026-00124&quot;]
+</code></pre>
+<p>An empty array <code>[]</code> means no submissions are pending retrieval.</p>
+<hr />
+<h3 id="get-reportsreportid-retrieve-report-result">GET /reports/{reportId} — Retrieve report result</h3>
+<p><strong>Endpoint:</strong> <code>GET /api/elimplus/v1/reports/{reportId}</code></p>
+<p>Returns the full result for a submitted report, including the RKI receipt PDF for successful submissions.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>In</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>reportId</code></td>
+<td>path</td>
+<td>Yes</td>
+<td>The report ID from the original Labormeldung</td>
+</tr>
+<tr>
+<td><code>peek</code></td>
+<td>query</td>
+<td>No</td>
+<td><code>true</code> = non-destructive read (report remains pending). Default: <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Default (destructive) read:</strong></p>
+<pre><code class="language-bash">curl -u &quot;api-user:api-pass&quot; \
+  https://elim.example.com/api/elimplus/v1/reports/LAB-2026-00123
+</code></pre>
+<p><strong>Non-destructive peek:</strong></p>
+<pre><code class="language-bash">curl -u &quot;api-user:api-pass&quot; \
+  &quot;https://elim.example.com/api/elimplus/v1/reports/LAB-2026-00123?peek=true&quot;
+</code></pre>
+<p><strong>Response (200 — SUCCESS):</strong></p>
+<pre><code class="language-json">{
+  &quot;reportId&quot;: &quot;LAB-2026-00123&quot;,
+  &quot;status&quot;: &quot;SUCCESS&quot;,
+  &quot;module&quot;: &quot;ELIMPLUS&quot;,
+  &quot;diseaseCode&quot;: &quot;Influenza&quot;,
+  &quot;description&quot;: &quot;Labormeldung Influenza&quot;,
+  &quot;submittedAt&quot;: &quot;2026-02-20T14:32:00Z&quot;,
+  &quot;receiptPdf&quot;: &quot;JVBERi0xLjQK...&quot;,
+  &quot;failureReason&quot;: null
+}
+</code></pre>
+<p><strong>Response (200 — FAILURE):</strong></p>
+<pre><code class="language-json">{
+  &quot;reportId&quot;: &quot;LAB-2026-00456&quot;,
+  &quot;status&quot;: &quot;FAILURE&quot;,
+  &quot;module&quot;: &quot;ELIMPLUS&quot;,
+  &quot;diseaseCode&quot;: &quot;Rsv&quot;,
+  &quot;description&quot;: &quot;Labormeldung Rsv&quot;,
+  &quot;submittedAt&quot;: &quot;2026-02-20T15:10:00Z&quot;,
+  &quot;receiptPdf&quot;: null,
+  &quot;failureReason&quot;: &quot;RKI Response Code: 422&quot;
+}
+</code></pre>
+<p><strong>ReportResult fields:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Nullable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>reportId</code></td>
+<td>string</td>
+<td>No</td>
+<td>The original report ID</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>enum</td>
+<td>No</td>
+<td><code>SUCCESS</code> or <code>FAILURE</code></td>
+</tr>
+<tr>
+<td><code>module</code></td>
+<td>string</td>
+<td>No</td>
+<td>Always <code>"ELIMPLUS"</code></td>
+</tr>
+<tr>
+<td><code>diseaseCode</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Disease identifier (e.g., <code>"Influenza"</code>, <code>"Rsv"</code>)</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Human-readable description (e.g., <code>"Labormeldung Influenza"</code>)</td>
+</tr>
+<tr>
+<td><code>submittedAt</code></td>
+<td>date-time</td>
+<td>No</td>
+<td>ISO 8601 timestamp of DEMIS submission</td>
+</tr>
+<tr>
+<td><code>receiptPdf</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Base64-encoded RKI receipt PDF (SUCCESS only)</td>
+</tr>
+<tr>
+<td><code>failureReason</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Error message (FAILURE only)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Status codes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>Report found and returned</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized — check credentials</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Report not found or belongs to a different user</td>
+</tr>
+<tr>
+<td>410</td>
+<td>Gone — report was already retrieved (use <code>?peek=true</code> to avoid)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="extracting-the-receipt-pdf">Extracting the receipt PDF</h3>
+<p>The <code>receiptPdf</code> field is a base64-encoded PDF. To save it:</p>
+<pre><code class="language-bash">RESPONSE=$(curl -s -u &quot;api-user:api-pass&quot; \
+  &quot;https://elim.example.com/api/elimplus/v1/reports/LAB-2026-00123?peek=true&quot;)
+
+# Check status first
+STATUS=$(echo &quot;$RESPONSE&quot; | jq -r '.status')
+
+if [ &quot;$STATUS&quot; = &quot;SUCCESS&quot; ]; then
+  echo &quot;$RESPONSE&quot; | jq -r '.receiptPdf' | base64 --decode &gt; receipt-LAB-2026-00123.pdf
+  echo &quot;Receipt saved&quot;
+else
+  echo &quot;Submission failed: $(echo &quot;$RESPONSE&quot; | jq -r '.failureReason')&quot;
+fi
+</code></pre>
+<p>Or use the provided script:</p>
+<pre><code class="language-bash">./scripts/elimplus-get-report.sh LAB-2026-00123 --save-pdf receipt.pdf
+</code></pre>
+<h3 id="polling-pattern">Polling pattern</h3>
+<p>Reports become available asynchronously — the end user must complete and submit the form first. Poll periodically:</p>
+<pre><code class="language-bash"># Poll for new reports every 60 seconds
+while true; do
+  IDS=$(curl -s -u &quot;api-user:api-pass&quot; \
+    &quot;https://elim.example.com/api/elimplus/v1/reports&quot; | jq -r '.[]')
+
+  for ID in $IDS; do
+    RESULT=$(curl -s -u &quot;api-user:api-pass&quot; \
+      &quot;https://elim.example.com/api/elimplus/v1/reports/$ID&quot;)
+    STATUS=$(echo &quot;$RESULT&quot; | jq -r '.status')
+    echo &quot;$ID: $STATUS&quot;
+
+    if [ &quot;$STATUS&quot; = &quot;SUCCESS&quot; ]; then
+      echo &quot;$RESULT&quot; | jq -r '.receiptPdf' | base64 --decode &gt; &quot;${ID}.pdf&quot;
+    fi
+  done
+
+  sleep 60
+done
+</code></pre>
+<hr />
+<h2 id="complete-workflow-examples">Complete Workflow Examples</h2>
+<h3 id="workflow-1-complete-external-integration">Workflow 1: Complete external integration</h3>
+<pre><code class="language-bash">#!/bin/bash
+# Complete workflow for KIS/laboratory system integration with ELIM+
+
+BASE_URL=&quot;https://elim.example.com&quot;
+API_USER=&quot;lab-api&quot;
+API_PASS=&quot;api-secret&quot;
+
+# Step 1: Create memento and get magic link
+echo &quot;Creating memento via API...&quot;
+RESPONSE=$(curl -s -X POST \
+  -u &quot;$API_USER:$API_PASS&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;reportId&quot;: &quot;LAB-2026-00123&quot;,
+    &quot;KrankheitsCode&quot;: &quot;J09&quot;,
+    &quot;MeldungsDatum&quot;: &quot;2026-02-20&quot;,
+    &quot;Patient&quot;: {
+      &quot;IsAnonym&quot;: false,
+      &quot;Standard&quot;: {
+        &quot;Name&quot;: {&quot;Vorname&quot;: &quot;Max&quot;, &quot;Nachname&quot;: &quot;Mustermann&quot;},
+        &quot;Geschlecht&quot;: &quot;MAENNLICH&quot;,
+        &quot;Geburtsdatum&quot;: &quot;1980-05-15&quot;
+      }
+    },
+    &quot;MeldendeEinrichtung&quot;: {
+      &quot;EinrichtungsName&quot;: &quot;Universitätsklinikum Musterstadt&quot;,
+      &quot;BSNR&quot;: &quot;123456789&quot;
+    }
+  }' \
+  &quot;$BASE_URL/api/elimplus/v1/memento&quot;)
+
+MAGIC_LINK=$(echo &quot;$RESPONSE&quot; | jq -r '.magicLink')
+
+if [ -z &quot;$MAGIC_LINK&quot; ] || [ &quot;$MAGIC_LINK&quot; = &quot;null&quot; ]; then
+  echo &quot;Error: No magic link in response&quot;
+  echo &quot;$RESPONSE&quot; | jq .
+  exit 1
+fi
+
+# Step 2: Construct absolute URL
+FORM_URL=&quot;$BASE_URL$MAGIC_LINK&quot;
+
+# Step 3: Deliver to end user
+echo &quot;&quot;
+echo &quot;Form URL for end user (single-click, no login required):&quot;
+echo &quot;$FORM_URL&quot;
+echo &quot;&quot;
+echo &quot;What happens when user clicks:&quot;
+echo &quot;1. MTL token authenticates the user automatically&quot;
+echo &quot;2. Redirects to /elimplus/?m={memento}&quot;
+echo &quot;3. User selects disease form (e.g., Influenza)&quot;
+echo &quot;4. Form is pre-filled, user reviews and submits to DEMIS&quot;
+</code></pre>
+<hr />
+<h3 id="workflow-2-email-with-pre-filled-form-link">Workflow 2: Email with pre-filled form link</h3>
+<pre><code class="language-bash">#!/bin/bash
+# Create memento and email magic link to laboratory technician
+
+BASE_URL=&quot;https://elim.example.com&quot;
+API_USER=&quot;kis-api-user&quot;
+API_PASS=&quot;api-password&quot;
+
+# Create memento for RSV report
+MAGIC_LINK=$(curl -s -X POST -u &quot;$API_USER:$API_PASS&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;reportId&quot;: &quot;LAB-2026-00456&quot;,
+    &quot;Krankheit&quot;: {&quot;Rsv&quot;: {}},
+    &quot;Patient&quot;: {
+      &quot;IsAnonym&quot;: false,
+      &quot;Standard&quot;: {
+        &quot;Name&quot;: {&quot;Vorname&quot;: &quot;Anna&quot;, &quot;Nachname&quot;: &quot;Schmidt&quot;},
+        &quot;Geburtsdatum&quot;: &quot;1990-03-20&quot;
+      }
+    }
+  }' \
+  &quot;$BASE_URL/api/elimplus/v1/memento&quot; | jq -r '.magicLink')
+
+# Construct absolute URL
+FORM_URL=&quot;$BASE_URL$MAGIC_LINK&quot;
+
+# Email the link (example using mail command)
+echo &quot;Please review and submit the laboratory report: $FORM_URL&quot; | \
+  mail -s &quot;Laboratory Report Ready for Review (LAB-2026-00456)&quot; \
+    technician@hospital.example.com
+
+echo &quot;Email sent with single-click authenticated link&quot;
+echo &quot;Note: The link expires — generate close to the time of sending&quot;
+</code></pre>
+<hr />
+<h3 id="workflow-3-batch-form-generation-from-csv">Workflow 3: Batch form generation from CSV</h3>
+<pre><code class="language-bash">#!/bin/bash
+# Generate multiple pre-filled form links from laboratory results CSV
+
+BASE_URL=&quot;https://elim.example.com&quot;
+API_USER=&quot;kis-batch-user&quot;
+API_PASS=&quot;api-password&quot;
+
+# CSV format: reportId,disease,patientFirstName,patientLastName,dob
+# Example: LAB-2026-001,Influenza,Max,Mustermann,1980-05-15
+
+while IFS=, read -r report_id disease first_name last_name dob; do
+  # Skip header line
+  if [ &quot;$report_id&quot; = &quot;reportId&quot; ]; then
+    continue
+  fi
+
+  # Prepare JSON
+  LAB_DATA=$(jq -n \
+    --arg reportId &quot;$report_id&quot; \
+    --arg disease &quot;$disease&quot; \
+    --arg vorname &quot;$first_name&quot; \
+    --arg nachname &quot;$last_name&quot; \
+    --arg dob &quot;$dob&quot; \
+    '{
+      reportId: $reportId,
+      Krankheit: {($disease): {}},
+      Patient: {
+        IsAnonym: false,
+        Standard: {
+          Name: {Vorname: $vorname, Nachname: $nachname},
+          Geburtsdatum: $dob
+        }
+      }
+    }')
+
+  # Create memento and get magic link
+  MAGIC_LINK=$(curl -s -X POST -u &quot;$API_USER:$API_PASS&quot; \
+    -H &quot;Content-Type: application/json&quot; \
+    -d &quot;$LAB_DATA&quot; \
+    &quot;$BASE_URL/api/elimplus/v1/memento&quot; | jq -r '.magicLink')
+
+  # Output report ID and absolute URL
+  echo &quot;$report_id,$BASE_URL$MAGIC_LINK&quot;
+done &lt; lab_results.csv &gt; form_urls.csv
+
+echo &quot;Generated form URLs saved to form_urls.csv&quot;
+echo &quot;Each URL provides single-click authenticated access to ELIM+ index&quot;
+</code></pre>
+<hr />
+<h3 id="workflow-4-qr-code-for-mobile-access">Workflow 4: QR code for mobile access</h3>
+<pre><code class="language-bash">#!/bin/bash
+# Create memento and generate QR code for mobile scanning
+
+BASE_URL=&quot;https://elim.example.com&quot;
+API_USER=&quot;kis-api&quot;
+API_PASS=&quot;api-password&quot;
+
+# Create memento and get magic link
+MAGIC_LINK=$(curl -s -X POST -u &quot;$API_USER:$API_PASS&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;reportId&quot;: &quot;LAB-2026-00789&quot;,
+    &quot;Krankheit&quot;: {&quot;Sarscov2&quot;: {}},
+    &quot;Patient&quot;: {
+      &quot;IsAnonym&quot;: false,
+      &quot;Standard&quot;: {
+        &quot;Name&quot;: {&quot;Vorname&quot;: &quot;Thomas&quot;, &quot;Nachname&quot;: &quot;Müller&quot;},
+        &quot;Geburtsdatum&quot;: &quot;1975-08-12&quot;
+      }
+    }
+  }' \
+  &quot;$BASE_URL/api/elimplus/v1/memento&quot; | jq -r '.magicLink')
+
+# Construct absolute URL
+FORM_URL=&quot;$BASE_URL$MAGIC_LINK&quot;
+
+# Generate QR code (requires qrencode tool)
+echo &quot;$FORM_URL&quot; | qrencode -o lab-report-qr.png
+
+echo &quot;QR code saved to lab-report-qr.png&quot;
+echo &quot;Scan with mobile device for single-click authenticated access&quot;
+</code></pre>
+<hr />
+<h3 id="workflow-5-anonymous-patient-reporting">Workflow 5: Anonymous patient reporting</h3>
+<pre><code class="language-bash">#!/bin/bash
+# Create memento for anonymous patient (privacy protection)
+
+BASE_URL=&quot;https://elim.example.com&quot;
+API_USER=&quot;kis-api&quot;
+API_PASS=&quot;api-password&quot;
+
+# Create memento with anonymous patient data
+MAGIC_LINK=$(curl -s -X POST -u &quot;$API_USER:$API_PASS&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;reportId&quot;: &quot;LAB-2026-00999&quot;,
+    &quot;KrankheitsCode&quot;: &quot;J09&quot;,
+    &quot;MeldungsDatum&quot;: &quot;2026-02-20&quot;,
+    &quot;Krankheit&quot;: {&quot;Influenza&quot;: {}},
+    &quot;Patient&quot;: {
+      &quot;IsAnonym&quot;: true,
+      &quot;Anonym&quot;: {
+        &quot;Geschlecht&quot;: &quot;MAENNLICH&quot;,
+        &quot;GeburtsmonatJahr&quot;: &quot;1985-06&quot;,
+        &quot;Adresse&quot;: {
+          &quot;PLZ&quot;: &quot;12345&quot;,
+          &quot;Land&quot;: &quot;Deutschland&quot;
+        }
+      }
+    },
+    &quot;MeldendeEinrichtung&quot;: {
+      &quot;EinrichtungsName&quot;: &quot;Universitätsklinikum Musterstadt&quot;,
+      &quot;BSNR&quot;: &quot;123456789&quot;
+    }
+  }' \
+  &quot;$BASE_URL/api/elimplus/v1/memento&quot; | jq -r '.magicLink')
+
+FORM_URL=&quot;$BASE_URL$MAGIC_LINK&quot;
+
+echo &quot;Anonymous patient URL (single-click authenticated access):&quot;
+echo &quot;$FORM_URL&quot;
+echo &quot;&quot;
+echo &quot;Note: Form contains no name, contact info, or full address&quot;
+echo &quot;Only birth month/year, postal code, and country are included&quot;
+</code></pre>
+<hr />
+<h2 id="error-handling">Error Handling</h2>
+<h3 id="http-status-codes">HTTP Status Codes</h3>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>OK</td>
+<td>Request successful</td>
+</tr>
+<tr>
+<td>400</td>
+<td>Bad Request</td>
+<td>Invalid JSON or validation error (memento endpoint)</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>Missing or invalid API credentials</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found</td>
+<td>Report ID does not exist or belongs to a different user</td>
+</tr>
+<tr>
+<td>410</td>
+<td>Gone</td>
+<td>Report was already retrieved (use <code>?peek=true</code> to avoid)</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal Server Error</td>
+<td>Server error (contact support)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="validation-errors">Validation Errors</h3>
+<p>If the request data is invalid, you'll receive a 400 Bad Request with details:</p>
+<pre><code class="language-bash">curl -X POST -u &quot;api-user:api-pass&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;invalid&quot;:&quot;data&quot;}' \
+  https://elim.example.com/api/elimplus/v1/memento
+</code></pre>
+<p>Response (400):</p>
+<pre><code class="language-json">{
+  &quot;errors&quot;: [&quot;reportId must not be null&quot;]
+}
+</code></pre>
+<h3 id="date-format-validation">Date Format Validation</h3>
+<p>Dates must be in ISO 8601 format (YYYY-MM-DD):</p>
+<pre><code class="language-bash"># Invalid date format
+curl -X POST -u &quot;api-user:api-pass&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;reportId&quot;:&quot;LAB-001&quot;,&quot;MeldungsDatum&quot;:&quot;08.12.2026&quot;}' \
+  https://elim.example.com/api/elimplus/v1/memento
+</code></pre>
+<p>Response (400):</p>
+<pre><code class="language-json">{
+  &quot;errors&quot;: [&quot;MeldungsDatum must be a valid date in format YYYY-MM-DD&quot;]
+}
+</code></pre>
+<h3 id="handle-errors-in-scripts">Handle Errors in Scripts</h3>
+<pre><code class="language-bash">#!/bin/bash
+RESPONSE=$(curl -s -w &quot;\n%{http_code}&quot; -X POST \
+  -u &quot;$API_USER:$API_PASS&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &quot;$LAB_DATA&quot; \
+  &quot;$BASE_URL/api/elimplus/v1/memento&quot;)
+
+HTTP_CODE=$(echo &quot;$RESPONSE&quot; | tail -1)
+BODY=$(echo &quot;$RESPONSE&quot; | head -1)
+
+if [ &quot;$HTTP_CODE&quot; -eq 200 ]; then
+  MAGIC_LINK=$(echo &quot;$BODY&quot; | jq -r '.magicLink')
+  FORM_URL=&quot;$BASE_URL$MAGIC_LINK&quot;
+  echo &quot;Success: $FORM_URL&quot;
+elif [ &quot;$HTTP_CODE&quot; -eq 400 ]; then
+  echo &quot;Validation error:&quot;
+  echo &quot;$BODY&quot; | jq -r '.errors[]'
+  exit 1
+elif [ &quot;$HTTP_CODE&quot; -eq 401 ]; then
+  echo &quot;Authentication failed — check API credentials&quot;
+  exit 1
+else
+  echo &quot;Error: HTTP $HTTP_CODE&quot;
+  echo &quot;$BODY&quot;
+  exit 1
+fi
+</code></pre>
+<hr />
+<h2 id="reference">Reference</h2>
+<h3 id="api-endpoints-summary">API Endpoints Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Endpoint</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td><code>/api/elimplus/v1/memento</code></td>
+<td>Create encrypted memento and magic link for form pre-fill</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/elimplus/v1/reports</code></td>
+<td>List pending (unpolled) report IDs</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/elimplus/v1/reports/{reportId}</code></td>
+<td>Retrieve full report result (status, receipt PDF)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="openapi-specification_1">OpenAPI Specification</h3>
+<p>Interactive API documentation (Swagger UI):</p>
+<pre><code>https://your-instance/api/docs/swagger-ui/index.html?urls.primaryName=ELIM+
+</code></pre>
+<h3 id="disease-routes">Disease Routes</h3>
+<table>
+<thead>
+<tr>
+<th>Disease</th>
+<th>API Code</th>
+<th>Form Route</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Influenza</td>
+<td><code>Influenza</code></td>
+<td><code>/elimplus/Influenza/</code></td>
+</tr>
+<tr>
+<td>RSV</td>
+<td><code>Rsv</code></td>
+<td><code>/elimplus/Rsv/</code></td>
+</tr>
+<tr>
+<td>Norovirus</td>
+<td><code>Norovirus</code></td>
+<td><code>/elimplus/Norovirus/</code></td>
+</tr>
+<tr>
+<td>SARS-CoV-2</td>
+<td><code>Sarscov2</code></td>
+<td><code>/elimplus/Sarscov2/</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Entry point:</strong> Always use <code>/elimplus/</code> — the index page where users select their disease form.</p>
+<h3 id="date-format">Date Format</h3>
+<p>All dates use ISO 8601 format:</p>
+<pre><code>YYYY-MM-DD
+Example: 2026-02-20
+</code></pre>
+<h3 id="gender-enum-values">Gender Enum Values</h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NASK</code></td>
+<td>Not asked (nicht gefragt)</td>
+</tr>
+<tr>
+<td><code>ASKU</code></td>
+<td>Asked but unknown (gefragt, aber unbekannt)</td>
+</tr>
+<tr>
+<td><code>MAENNLICH</code></td>
+<td>Male (männlich)</td>
+</tr>
+<tr>
+<td><code>WEIBLICH</code></td>
+<td>Female (weiblich)</td>
+</tr>
+<tr>
+<td><code>DIVERS</code></td>
+<td>Diverse</td>
+</tr>
+<tr>
+<td><code>UNBESTIMMT</code></td>
+<td>Unspecified (unbestimmt)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="security-notes">Security Notes</h3>
+<p><strong>Memento Encryption:</strong>
+- Mementos are encrypted with AES-256-GCM using your API user's KEK (Key Encryption Key)
+- Each memento is unique even for identical data (includes random IV)
+- Mementos cannot be decrypted without the correct API user credentials
+- Tampering is detected and rejected</p>
+<p><strong>Magic Link Security:</strong>
+- Tokens are server-issued and signed — they cannot be forged
+- Each token is single-use and time-limited
+- The target URL (<code>/elimplus/</code>) is encoded inside the encrypted token</p>
+<p><strong>Best Practices:</strong>
+- ✓ Generate the magic link close to the time of sending (token is time-limited)
+- ✓ Mementos are safe to pass via URL parameters and can be logged or stored
+- ✗ Do not expose mementos or magic links to unauthorized users (they contain sensitive patient data)
+- ✗ Do not reuse magic links; generate a fresh one for each workflow run</p>
+<p><strong>Data Minimization:</strong>
+- Only include data that's actually needed for the form
+- Empty/null fields don't bloat the memento (they're omitted)
+- Minimal mementos result in shorter, more manageable URLs</p>
+<h3 id="support">Support</h3>
+<p>For technical support or questions about the ELIM+ API:
+- Contact your system administrator
+- Refer to the OpenAPI specification for detailed schema documentation
+- Check integration test examples in <code>src/integration-test/kotlin/de/vertama/elimplus/</code></p>
+<h3 id="related-documentation">Related Documentation</h3>
+<ul>
+<li><a href="../../../Authentication/magic-token-link/">Magic Token Link (MTL)</a> — How server-issued authentication tokens work</li>
+</ul>
+<hr />
+<p><strong>Document Version:</strong> 0.1.2
+<strong>Last Updated:</strong> 2026-02-20
+<strong>API Version:</strong> v1</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.tracking", "toc.follow"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../../js/external-links.js"></script>
+      
+    
+  </body>
+</html>

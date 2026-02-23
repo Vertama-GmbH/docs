@@ -1,0 +1,2035 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../Password-Based%20User%20Secrets%20Encryption%20with%20Derived%20Keys/" rel="prev"/>
+<link href="../API-Usage-Guide/" rel="next"/>
+<link href="../../../img/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
+<title>Implementation Notes - Vertama: The Manuals</title>
+<link href="../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
+<link href="../../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<link href="../../../css/extra.css" rel="stylesheet"/>
+<link href="../../../css/pdf-print.css" rel="stylesheet"/>
+<script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="indigo" data-md-color-primary="custom" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#multi-user-secret-sharing-implementation-notes">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Vertama: The Manuals" class="md-header__button md-logo" data-md-component="logo" href="../../.." title="Vertama: The Manuals">
+<img alt="logo" src="../../../img/Vertama-Icon.svg"/>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Vertama: The Manuals
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Implementation Notes
+            
+          </span>
+</div>
+</div>
+</div>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../..">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../Products/BELIM/api-tutorial/">
+          
+  
+  
+  Products
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../how-to/folder-sync-handbuch/">
+          
+  
+  
+  Guides
+
+        </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/">
+          
+  
+  
+  Background &amp; Explanations
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../Reference/system-requirements/">
+          
+  
+  
+  Reference
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../Authentication/basic-auth-login/">
+          
+  
+  
+  Authentication
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../about/">
+        
+  
+  
+    
+  
+  About
+
+      </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Vertama: The Manuals" class="md-nav__button md-logo" data-md-component="logo" href="../../.." title="Vertama: The Manuals">
+<img alt="logo" src="../../../img/Vertama-Icon.svg"/>
+</a>
+    Vertama: The Manuals
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../..">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Products
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Products
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    BELIM
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    BELIM
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/BELIM/api-tutorial/">
+<span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/BELIM/api.yml">
+<span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=BELIM">
+<span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    DIGG
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    DIGG
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/DIGG/api-tutorial/">
+<span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/DIGG/api.yml">
+<span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIGG">
+<span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    DIVI
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    DIVI
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/DIVI/api-tutorial/">
+<span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/DIVI/api.yml">
+<span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIVI">
+<span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    DUBA
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    DUBA
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/DUBA/api-tutorial/">
+<span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/DUBA/api.yml">
+<span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DUBA">
+<span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    ELIM
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    ELIM
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_5_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_5_1" id="__nav_2_5_1_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Flyer
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_5_1_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_2_5_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Flyer
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ELIM/onepager/OnePager%20%28PNG%29/">
+<span class="md-ellipsis">
+    
+  
+    One Pager / Flyer (PNG)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ELIM/onepager/OnePager%20%28HTML%29/">
+<span class="md-ellipsis">
+    
+  
+    One Pager / Flyer (HTML)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ELIM/onepager/OnePager/">
+<span class="md-ellipsis">
+    
+  
+    One Pager / Flyer (TEXT/Markdown)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    ELIM+
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_6_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    ELIM+
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ELIMPLUS/api-tutorial/">
+<span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ELIMPLUS/api.yml">
+<span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=ELIM%2B">
+<span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/folder-sync-handbuch/">
+<span class="md-ellipsis">
+    
+  
+    Folder Sync Handbook
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Background &amp; Explanations
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Background &amp; Explanations
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_4_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Security &amp; Encryption
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_4_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Security &amp; Encryption
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/">
+<span class="md-ellipsis">
+    
+  
+    Multi-User Secret Sharing
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Password-Based%20User%20Secrets%20Encryption%20with%20Derived%20Keys/">
+<span class="md-ellipsis">
+    
+  
+    Password-Based User Secrets Encryption
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Implementation Notes
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    Implementation Notes
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#table-of-contents">
+<span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#entity-classes-diagram">
+<span class="md-ellipsis">
+      
+        Entity Classes Diagram
+      
+    </span>
+</a>
+<nav aria-label="Entity Classes Diagram" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cascade-delete-behavior">
+<span class="md-ellipsis">
+      
+        Cascade Delete Behavior
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#jpahibernate-considerations">
+<span class="md-ellipsis">
+      
+        JPA/Hibernate Considerations
+      
+    </span>
+</a>
+<nav aria-label="JPA/Hibernate Considerations" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#entity-design-immutable-data-classes">
+<span class="md-ellipsis">
+      
+        Entity Design: Immutable Data Classes
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#onetoone-relationships-without-mapsid">
+<span class="md-ellipsis">
+      
+        OneToOne Relationships Without @MapsId
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delete-methods-need-annotations">
+<span class="md-ellipsis">
+      
+        Delete Methods Need Annotations
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#bytearray-equality">
+<span class="md-ellipsis">
+      
+        ByteArray Equality
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-strategy">
+<span class="md-ellipsis">
+      
+        Testing Strategy
+      
+    </span>
+</a>
+<nav aria-label="Testing Strategy" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#two-tier-approach-unit-integration">
+<span class="md-ellipsis">
+      
+        Two-Tier Approach: Unit + Integration
+      
+    </span>
+</a>
+<nav aria-label="Two-Tier Approach: Unit + Integration" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unit-tests-servicetestkt">
+<span class="md-ellipsis">
+      
+        Unit Tests (ServiceTest.kt)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-tests-serviceintegrationtestkt">
+<span class="md-ellipsis">
+      
+        Integration Tests (ServiceIntegrationTest.kt)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#test-helpers-cache-vs-capture">
+<span class="md-ellipsis">
+      
+        Test Helpers: Cache vs Capture
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#debugging-transaction-issues">
+<span class="md-ellipsis">
+      
+        Debugging Transaction Issues
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-pitfalls">
+<span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+</a>
+<nav aria-label="Common Pitfalls" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-mixing-test-kdf-parameters">
+<span class="md-ellipsis">
+      
+        1. Mixing Test KDF Parameters
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-password-mismatches-in-test-helpers">
+<span class="md-ellipsis">
+      
+        2. Password Mismatches in Test Helpers
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-forgetting-to-clear-sensitive-data">
+<span class="md-ellipsis">
+      
+        3. Forgetting to Clear Sensitive Data
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-assuming-apiuser-is-available">
+<span class="md-ellipsis">
+      
+        4. Assuming ApiUser is Available
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#performance-tips">
+<span class="md-ellipsis">
+      
+        Performance Tips
+      
+    </span>
+</a>
+<nav aria-label="Performance Tips" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#kdf-parameters-tuning">
+<span class="md-ellipsis">
+      
+        KDF Parameters Tuning
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#caching-strategies">
+<span class="md-ellipsis">
+      
+        Caching Strategies
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#database-indexes">
+<span class="md-ellipsis">
+      
+        Database Indexes
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#memory-management">
+<span class="md-ellipsis">
+      
+        Memory Management
+      
+    </span>
+</a>
+<nav aria-label="Memory Management" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#sensitive-data-lifecycle">
+<span class="md-ellipsis">
+      
+        Sensitive Data Lifecycle
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#verify-clearing-testing">
+<span class="md-ellipsis">
+      
+        Verify Clearing (Testing)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#migration-path">
+<span class="md-ellipsis">
+      
+        Migration Path
+      
+    </span>
+</a>
+<nav aria-label="Migration Path" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#adding-to-existing-application">
+<span class="md-ellipsis">
+      
+        Adding to Existing Application
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#troubleshooting">
+<span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+</a>
+<nav aria-label="Troubleshooting" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-attempted-to-assign-id-from-null-one-to-one-property">
+<span class="md-ellipsis">
+      
+        Error: "attempted to assign id from null one-to-one property"
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-detached-entity-passed-to-persist">
+<span class="md-ellipsis">
+      
+        Error: "detached entity passed to persist"
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-row-was-updated-or-deleted-by-another-transaction">
+<span class="md-ellipsis">
+      
+        Error: "Row was updated or deleted by another transaction"
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-tag-mismatch-during-decryption">
+<span class="md-ellipsis">
+      
+        Error: "Tag mismatch" during decryption
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-no-entitymanager-with-actual-transaction">
+<span class="md-ellipsis">
+      
+        Error: "No EntityManager with actual transaction"
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#code-review-checklist">
+<span class="md-ellipsis">
+      
+        Code Review Checklist
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../API-Usage-Guide/">
+<span class="md-ellipsis">
+    
+  
+    API Usage Guide
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reference/system-requirements/">
+<span class="md-ellipsis">
+    
+  
+    Systemanforderungen
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reference/endpoints-and-infrastructure/">
+<span class="md-ellipsis">
+    
+  
+    Endpunkte &amp; Infrastruktur
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Authentication
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Authentication/basic-auth-login/">
+<span class="md-ellipsis">
+    
+  
+    Basic Auth Login (BAL)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Authentication/magic-token-link/">
+<span class="md-ellipsis">
+    
+  
+    Magic Token Link (MTL)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../about/">
+<span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#table-of-contents">
+<span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#entity-classes-diagram">
+<span class="md-ellipsis">
+      
+        Entity Classes Diagram
+      
+    </span>
+</a>
+<nav aria-label="Entity Classes Diagram" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cascade-delete-behavior">
+<span class="md-ellipsis">
+      
+        Cascade Delete Behavior
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#jpahibernate-considerations">
+<span class="md-ellipsis">
+      
+        JPA/Hibernate Considerations
+      
+    </span>
+</a>
+<nav aria-label="JPA/Hibernate Considerations" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#entity-design-immutable-data-classes">
+<span class="md-ellipsis">
+      
+        Entity Design: Immutable Data Classes
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#onetoone-relationships-without-mapsid">
+<span class="md-ellipsis">
+      
+        OneToOne Relationships Without @MapsId
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delete-methods-need-annotations">
+<span class="md-ellipsis">
+      
+        Delete Methods Need Annotations
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#bytearray-equality">
+<span class="md-ellipsis">
+      
+        ByteArray Equality
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-strategy">
+<span class="md-ellipsis">
+      
+        Testing Strategy
+      
+    </span>
+</a>
+<nav aria-label="Testing Strategy" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#two-tier-approach-unit-integration">
+<span class="md-ellipsis">
+      
+        Two-Tier Approach: Unit + Integration
+      
+    </span>
+</a>
+<nav aria-label="Two-Tier Approach: Unit + Integration" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unit-tests-servicetestkt">
+<span class="md-ellipsis">
+      
+        Unit Tests (ServiceTest.kt)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-tests-serviceintegrationtestkt">
+<span class="md-ellipsis">
+      
+        Integration Tests (ServiceIntegrationTest.kt)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#test-helpers-cache-vs-capture">
+<span class="md-ellipsis">
+      
+        Test Helpers: Cache vs Capture
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#debugging-transaction-issues">
+<span class="md-ellipsis">
+      
+        Debugging Transaction Issues
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-pitfalls">
+<span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+</a>
+<nav aria-label="Common Pitfalls" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-mixing-test-kdf-parameters">
+<span class="md-ellipsis">
+      
+        1. Mixing Test KDF Parameters
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-password-mismatches-in-test-helpers">
+<span class="md-ellipsis">
+      
+        2. Password Mismatches in Test Helpers
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-forgetting-to-clear-sensitive-data">
+<span class="md-ellipsis">
+      
+        3. Forgetting to Clear Sensitive Data
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-assuming-apiuser-is-available">
+<span class="md-ellipsis">
+      
+        4. Assuming ApiUser is Available
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#performance-tips">
+<span class="md-ellipsis">
+      
+        Performance Tips
+      
+    </span>
+</a>
+<nav aria-label="Performance Tips" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#kdf-parameters-tuning">
+<span class="md-ellipsis">
+      
+        KDF Parameters Tuning
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#caching-strategies">
+<span class="md-ellipsis">
+      
+        Caching Strategies
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#database-indexes">
+<span class="md-ellipsis">
+      
+        Database Indexes
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#memory-management">
+<span class="md-ellipsis">
+      
+        Memory Management
+      
+    </span>
+</a>
+<nav aria-label="Memory Management" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#sensitive-data-lifecycle">
+<span class="md-ellipsis">
+      
+        Sensitive Data Lifecycle
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#verify-clearing-testing">
+<span class="md-ellipsis">
+      
+        Verify Clearing (Testing)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#migration-path">
+<span class="md-ellipsis">
+      
+        Migration Path
+      
+    </span>
+</a>
+<nav aria-label="Migration Path" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#adding-to-existing-application">
+<span class="md-ellipsis">
+      
+        Adding to Existing Application
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#troubleshooting">
+<span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+</a>
+<nav aria-label="Troubleshooting" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-attempted-to-assign-id-from-null-one-to-one-property">
+<span class="md-ellipsis">
+      
+        Error: "attempted to assign id from null one-to-one property"
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-detached-entity-passed-to-persist">
+<span class="md-ellipsis">
+      
+        Error: "detached entity passed to persist"
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-row-was-updated-or-deleted-by-another-transaction">
+<span class="md-ellipsis">
+      
+        Error: "Row was updated or deleted by another transaction"
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-tag-mismatch-during-decryption">
+<span class="md-ellipsis">
+      
+        Error: "Tag mismatch" during decryption
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-no-entitymanager-with-actual-transaction">
+<span class="md-ellipsis">
+      
+        Error: "No EntityManager with actual transaction"
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#code-review-checklist">
+<span class="md-ellipsis">
+      
+        Code Review Checklist
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="multi-user-secret-sharing-implementation-notes">Multi-User Secret Sharing - Implementation Notes</h1>
+<blockquote>
+<p><strong>Audience</strong>: Developers working on or extending this implementation
+<strong>Companion to</strong>: <a href="../Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/">Multi-User Secret Sharing with Zero-Knowledge Architecture.md</a></p>
+</blockquote>
+<p>This document captures practical implementation details, gotchas, and lessons learned that aren't covered in the architectural design document.</p>
+<hr/>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#jpahibernate-considerations">JPA/Hibernate Considerations</a></li>
+<li><a href="#testing-strategy">Testing Strategy</a></li>
+<li><a href="#common-pitfalls">Common Pitfalls</a></li>
+<li><a href="#performance-tips">Performance Tips</a></li>
+<li><a href="#memory-management">Memory Management</a></li>
+</ol>
+<hr/>
+<h2 id="entity-classes-diagram">Entity Classes Diagram</h2>
+<div class="mermaid">classDiagram
+    class ApiUser {
+        +Long id
+        +String userName
+        +String password
+        +List~String~ roles
+    }
+
+    class UserCryptoKeys {
+        +Long userId
+        +ByteArray publicKey
+        +ByteArray encryptedPrivateKey
+        +ByteArray privateKeyKDFSalt
+        +ByteArray privateKeyIV
+        +Int kdfIterations
+        +Int kdfMemoryKb
+        +Instant createdAt
+    }
+
+    class SharedSecret {
+        +UUID id
+        +String name
+        +ByteArray encryptedSecret
+        +ByteArray secretIV
+        +Instant createdAt
+    }
+
+    class UserSecretAccess {
+        +ByteArray encryptedDEK
+        +ByteArray dekIV
+        +Instant grantedAt
+    }
+
+    ApiUser "1" --&gt; "1" UserCryptoKeys : CASCADE DELETE
+    ApiUser "1" --&gt; "0..*" SharedSecret : createdBy (SET NULL)
+    ApiUser "1" --&gt; "0..*" UserSecretAccess : user (CASCADE)
+    SharedSecret "1" --&gt; "0..*" UserSecretAccess : secret (CASCADE)
+    ApiUser "1" --&gt; "0..*" UserSecretAccess : grantedBy
+
+    note for UserCryptoKeys "Stores user's X25519 key pair\n- Public key: plaintext\n- Private key: encrypted with KEK\n- KEK derived from password via Argon2id"
+    note for SharedSecret "Encrypted with random DEK\n- DEK NOT stored here\n- Each user has own encrypted DEK copy\n- Multiple users can access same secret"
+    note for UserSecretAccess "Composite PK: (secret_id, user_id)\nStores DEK encrypted via X25519 key agreement:\n1. Derive shared secret (user's private + granter's - public)\n2. Encrypt DEK with shared secret (AES-GCM)\n3. User decrypts DEK with their private key"
+</div>
+<h3 id="cascade-delete-behavior">Cascade Delete Behavior</h3>
+<p><strong>When an ApiUser is deleted:</strong>
+1. <strong>UserCryptoKeys</strong>: Deleted via JPA <code>@OneToOne(cascade = CascadeType.REMOVE)</code> (application-level)
+2. <strong>UserSecretAccess</strong> (where user had access): Deleted via database FK <code>ON DELETE CASCADE</code> (<code>@OnDelete(CASCADE)</code>)
+3. <strong>SharedSecret</strong> (created by user): <code>createdBy</code> set to NULL via database FK <code>ON DELETE SET NULL</code> (<code>@OnDelete(SET_NULL)</code>)
+   - Secret remains in database
+   - Becomes orphaned but still accessible to other users who have access</p>
+<p><strong>When a SharedSecret is deleted:</strong>
+- <strong>UserSecretAccess</strong> records: Deleted via database FK <code>ON DELETE CASCADE</code></p>
+<p><strong>Why mixed cascade strategy?</strong>
+- <strong>JPA cascade</strong> for <code>UserCryptoKeys</code>: Simple 1:1 relationship, no circular references
+- <strong>Database cascade</strong> for <code>UserSecretAccess</code>: Avoids Hibernate circular reference issues when deleting through complex relationship graph
+- <strong>Database SET NULL</strong> for <code>SharedSecret.createdBy</code>: Allows secrets to outlive their creator</p>
+<hr/>
+<h2 id="jpahibernate-considerations">JPA/Hibernate Considerations</h2>
+<h3 id="entity-design-immutable-data-classes">Entity Design: Immutable Data Classes</h3>
+<p>All entities use Kotlin <code>data class</code> with <code>val</code> (immutable) fields for thread safety and functional programming benefits.</p>
+<pre><code class="language-kotlin">@Entity
+data class UserCryptoKeys(
+    @Id val userId: Long,
+    val publicKey: ByteArray,
+    val encryptedPrivateKey: ByteArray,
+    // ... immutable fields
+    @Version var version: Long? = null  // MUST be var!
+)
+</code></pre>
+<p><strong>Why immutable?</strong>
+- Crypto keys shouldn't be accidentally modified
+- Thread-safe
+- Better functional programming semantics</p>
+<p><strong>The <code>@Version</code> requirement:</strong></p>
+<p>When using immutable fields with <code>.copy()</code>, you MUST add a <code>@Version</code> field:</p>
+<pre><code class="language-kotlin">// Without @Version: FAILS
+val keys = repo.findById(userId).orElseThrow()
+val updated = keys.copy(encryptedPrivateKey = newKey)
+repo.save(updated)  // 💥 StaleObjectStateException
+
+// With @Version: WORKS
+@Version var version: Long? = null  // In entity
+</code></pre>
+<p><strong>Why?</strong>
+- <code>.copy()</code> creates a <strong>detached</strong> entity (new object instance)
+- Hibernate can't tell if it's safe to merge without version tracking
+- <code>@Version</code> enables optimistic locking and safe merging
+- Bonus: Prevents lost updates during concurrent modifications</p>
+<p>See: <a href="https://docs.jboss.org/hibernate/orm/6.2/userguide/html_single/Hibernate_User_Guide.html#locking-optimistic">Hibernate Optimistic Locking</a></p>
+<h3 id="onetoone-relationships-without-mapsid">OneToOne Relationships Without <code>@MapsId</code></h3>
+<p>Initial attempt used <code>@MapsId</code> but it requires the relationship to be non-null during persist:</p>
+<pre><code class="language-kotlin">// ❌ FAILS - @MapsId requires user to be non-null
+@OneToOne
+@MapsId
+@JoinColumn(name = "user_id")
+val user: ApiUser? = null
+</code></pre>
+<p><strong>Solution</strong>: Use manual ID + read-only relationship:</p>
+<pre><code class="language-kotlin">// ✅ WORKS
+@Id
+val userId: Long,  // Manual ID
+
+@OneToOne
+@JoinColumn(name = "user_id", insertable = false, updatable = false)
+val user: ApiUser? = null  // Read-only navigation property
+</code></pre>
+<p><strong>How it works:</strong>
+- <code>userId</code> is the PK and FK (same value)
+- <code>user</code> is just for navigation (lazy-loaded when accessed)
+- <code>insertable/updatable = false</code> prevents cascade issues
+- No detached entity problems!</p>
+<h3 id="delete-methods-need-annotations">Delete Methods Need Annotations</h3>
+<p>Spring Data JPA delete methods require both <code>@Modifying</code> and <code>@Transactional</code>:</p>
+<pre><code class="language-kotlin">interface UserSecretAccessRepository : JpaRepository&lt;...&gt; {
+
+    @Modifying
+    @Transactional
+    fun deleteBySecretIdAndUserId(secretId: UUID, userId: Long)
+}
+</code></pre>
+<p><strong>Why?</strong>
+- <code>@Modifying</code>: Marks method as data-modifying operation
+- <code>@Transactional</code>: Ensures EntityManager has active transaction
+- Without them: <code>TransactionRequiredException</code></p>
+<h3 id="bytearray-equality">ByteArray Equality</h3>
+<p>JPA entities with <code>ByteArray</code> fields need custom <code>equals()</code>/<code>hashCode()</code>:</p>
+<pre><code class="language-kotlin">@Entity
+data class UserCryptoKeys(...) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        other as UserCryptoKeys
+        return userId == other.userId  // ID-based equality
+    }
+
+    override fun hashCode(): Int = userId.hashCode()
+}
+</code></pre>
+<p><strong>Why?</strong>
+- <code>ByteArray.equals()</code> checks reference equality, not content
+- Data class default <code>equals()</code> breaks for byte arrays
+- Solution: ID-based equality for entities</p>
+<hr/>
+<h2 id="testing-strategy">Testing Strategy</h2>
+<h3 id="two-tier-approach-unit-integration">Two-Tier Approach: Unit + Integration</h3>
+<p>We maintain both test types for different purposes:</p>
+<h4 id="unit-tests-servicetestkt">Unit Tests (<code>ServiceTest.kt</code>)</h4>
+<ul>
+<li><strong>Purpose</strong>: Fast, isolated, test logic only</li>
+<li><strong>Uses</strong>: Mockito mocks for all repositories</li>
+<li><strong>Speed</strong>: ~2-3 seconds for full suite</li>
+<li><strong>KDF params</strong>: <code>iterations=1, memory=1MB</code> (100x faster)</li>
+<li><strong>Best for</strong>: Regression testing, CI/CD</li>
+</ul>
+<p><strong>Key pattern</strong>: Real crypto operations, mocked persistence:</p>
+<pre><code class="language-kotlin">@BeforeAll
+fun setup() {
+    userKeysRepo = Mockito.mock(UserCryptoKeysRepository::class.java)
+    service = Service(
+        userKeysRepo = userKeysRepo,
+        // ... other mocks
+        kdfIterations = 1,      // Fast KDF
+        kdfMemoryKb = 1024
+    )
+}
+</code></pre>
+<h4 id="integration-tests-serviceintegrationtestkt">Integration Tests (<code>ServiceIntegrationTest.kt</code>)</h4>
+<ul>
+<li><strong>Purpose</strong>: Test real database interactions</li>
+<li><strong>Uses</strong>: Real PostgreSQL via Testcontainers</li>
+<li><strong>Speed</strong>: ~10-15 seconds (includes DB startup)</li>
+<li><strong>KDF params</strong>: Uses service defaults</li>
+<li><strong>Best for</strong>: Catching JPA/Hibernate issues, manual verification</li>
+</ul>
+<p><strong>Key pattern</strong>: No mocks, real Spring context:</p>
+<pre><code class="language-kotlin">@SpringBootTest
+class ServiceIntegrationTest : IntegrationTest() {
+    @Autowired private lateinit var service: Service
+    @Autowired private lateinit var userKeysRepo: UserCryptoKeysRepository
+    // Real dependencies injected by Spring
+}
+</code></pre>
+<h3 id="test-helpers-cache-vs-capture">Test Helpers: Cache vs Capture</h3>
+<p><strong>Unit tests</strong>: Use <code>thenAnswer {}</code> to track saves in maps:</p>
+<pre><code class="language-kotlin">private val userKeysCache = mutableMapOf&lt;Long, UserCryptoKeys&gt;()
+
+Mockito.`when`(userKeysRepo.save(any())).thenAnswer { invocation -&gt;
+    val keys = invocation.arguments[0] as UserCryptoKeys
+    userKeysCache[keys.userId] = keys  // Track in map
+    keys
+}
+
+// Dynamic lookup (survives password rotation)
+Mockito.`when`(userKeysRepo.findById(userId)).thenAnswer {
+    Optional.ofNullable(userKeysCache[userId])  // Always current
+}
+</code></pre>
+<p><strong>Why <code>thenAnswer {}</code> instead of <code>thenReturn()</code>?</strong>
+- <code>thenReturn()</code> captures value at stub-creation time
+- <code>thenAnswer {}</code> evaluates dynamically on each call
+- Needed for password rotation where keys change</p>
+<p><strong>Integration tests</strong>: Just use real repositories, no helpers needed!</p>
+<h3 id="debugging-transaction-issues">Debugging Transaction Issues</h3>
+<p>Common error: <code>No EntityManager with actual transaction available</code></p>
+<p><strong>Cause</strong>: Delete/modify operations without <code>@Transactional</code>
+<strong>Solution</strong>: Add <code>@Transactional</code> to repository method or service method</p>
+<hr/>
+<h2 id="common-pitfalls">Common Pitfalls</h2>
+<h3 id="1-mixing-test-kdf-parameters">1. Mixing Test KDF Parameters</h3>
+<p>❌ <strong>Wrong</strong>:</p>
+<pre><code class="language-kotlin">setupMockUserKeys(user, password = "pass1")  // Uses KDF defaults
+service.createSecret(userId, password = "pass1")  // Uses test KDF
+// Result: Wrong password error!
+</code></pre>
+<p>✅ <strong>Right</strong>: Ensure consistent KDF parameters throughout test lifecycle.</p>
+<h3 id="2-password-mismatches-in-test-helpers">2. Password Mismatches in Test Helpers</h3>
+<pre><code class="language-kotlin">// Helper should accept password
+private fun createMockSecret(
+    user: ApiUser,
+    value: String,
+    password: String = "password"  // Default for convenience
+): UUID
+</code></pre>
+<h3 id="3-forgetting-to-clear-sensitive-data">3. Forgetting to Clear Sensitive Data</h3>
+<p>❌ <strong>Wrong</strong>:</p>
+<pre><code class="language-kotlin">val kek = deriveKey(password, salt)
+val decrypted = decrypt(data, kek)
+return decrypted  // KEK still in memory!
+</code></pre>
+<p>✅ <strong>Right</strong>:</p>
+<pre><code class="language-kotlin">val kek = deriveKey(password, salt)
+try {
+    return decrypt(data, kek)
+} finally {
+    kek.fill(0)  // Always clear
+}
+</code></pre>
+<h3 id="4-assuming-apiuser-is-available">4. Assuming <code>ApiUser</code> is Available</h3>
+<p>The <code>UserCryptoKeys.user</code> field is often <code>null</code> after creation (lazy-loaded). Don't rely on it:</p>
+<pre><code class="language-kotlin">// ❌ May be null
+val user = userKeys.user!!  // NPE risk
+
+// ✅ Use userId instead
+val userId = userKeys.userId
+val user = apiUserRepo.findById(userId).orElseThrow()
+</code></pre>
+<hr/>
+<h2 id="performance-tips">Performance Tips</h2>
+<h3 id="kdf-parameters-tuning">KDF Parameters Tuning</h3>
+<p>Test on your target hardware:</p>
+<pre><code class="language-kotlin">fun measureKDF() {
+    val params = listOf(
+        Pair(1, 1024),      // ~10ms (testing only!)
+        Pair(2, 4096),      // ~50ms
+        Pair(3, 65536),     // ~200ms (default)
+        Pair(4, 65536)      // ~300ms
+    )
+
+    params.forEach { (iter, mem) -&gt;
+        val start = System.currentTimeMillis()
+        Argon2id.derive(password, salt, iter, mem)
+        println("Iterations=$iter, Memory=${mem}KB: ${System.currentTimeMillis() - start}ms")
+    }
+}
+</code></pre>
+<p><strong>Target</strong>: 100-500ms per KDF operation
+- Too fast: Weak against brute-force
+- Too slow: Poor UX</p>
+<h3 id="caching-strategies">Caching Strategies</h3>
+<p><strong>Cache</strong>:
+- ✅ Public keys (rarely change)
+- ✅ Encrypted data (safe to cache)</p>
+<p><strong>Never cache</strong>:
+- ❌ Passwords
+- ❌ KEKs (derived keys)
+- ❌ Decrypted private keys
+- ❌ DEKs
+- ❌ Plaintext secrets</p>
+<h3 id="database-indexes">Database Indexes</h3>
+<pre><code class="language-sql">-- Required indexes
+CREATE INDEX idx_user_secret_access_secret ON user_secret_access(secret_id);
+CREATE INDEX idx_user_secret_access_user ON user_secret_access(user_id);
+CREATE INDEX idx_shared_secret_created_by ON shared_secret(created_by);
+
+-- Composite for common query
+CREATE INDEX idx_user_secret_access_lookup
+  ON user_secret_access(secret_id, user_id);
+</code></pre>
+<hr/>
+<h2 id="memory-management">Memory Management</h2>
+<h3 id="sensitive-data-lifecycle">Sensitive Data Lifecycle</h3>
+<pre><code class="language-kotlin">// 1. Create/derive
+val key = deriveKey(password, salt)
+
+// 2. Use
+val result = encrypt(data, key)
+
+// 3. ALWAYS clear
+try {
+    // Use key
+} finally {
+    key.fill(0)           // ByteArray
+    privateKey.destroy()   // Key interface
+}
+</code></pre>
+<h3 id="verify-clearing-testing">Verify Clearing (Testing)</h3>
+<pre><code class="language-kotlin">@Test
+fun `should clear sensitive data after use`() {
+    val password = "test-password"
+    val service = spy(Service(...))
+
+    service.accessSecret(userId, password, secretId)
+
+    // Verify no keys remain in heap dumps
+    // (Manual inspection or memory profiler)
+}
+</code></pre>
+<p><strong>Note</strong>: Can't easily unit-test memory clearing, but code review + manual verification is important.</p>
+<hr/>
+<h2 id="migration-path">Migration Path</h2>
+<h3 id="adding-to-existing-application">Adding to Existing Application</h3>
+<ol>
+<li><strong>Create tables</strong> (Hibernate auto-DDL or Flyway):</li>
+</ol>
+<pre><code class="language-sql">CREATE TABLE user_crypto_keys (...);
+CREATE TABLE shared_secret (...);
+CREATE TABLE user_secret_access (...);
+</code></pre>
+<ol>
+<li><strong>Optional: Migrate existing secrets</strong>:</li>
+</ol>
+<pre><code class="language-kotlin">fun migrateExistingSecrets() {
+    existingSecrets.forEach { secret -&gt;
+        // Generate DEK, re-encrypt secret
+        // Encrypt DEK with each user's public key
+        // Store in new schema
+    }
+}
+</code></pre>
+<ol>
+<li><strong>Gradual rollout</strong>:</li>
+<li>Phase 1: New users only</li>
+<li>Phase 2: Existing users opt-in</li>
+<li>Phase 3: Force migration</li>
+</ol>
+<hr/>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="error-attempted-to-assign-id-from-null-one-to-one-property">Error: "attempted to assign id from null one-to-one property"</h3>
+<p><strong>Cause</strong>: Using <code>@MapsId</code> with null relationship
+<strong>Fix</strong>: Remove <code>@MapsId</code>, use manual ID management</p>
+<h3 id="error-detached-entity-passed-to-persist">Error: "detached entity passed to persist"</h3>
+<p><strong>Cause</strong>: Trying to save entity with detached relationship
+<strong>Fix</strong>: Add <code>insertable=false, updatable=false</code> to <code>@JoinColumn</code></p>
+<h3 id="error-row-was-updated-or-deleted-by-another-transaction">Error: "Row was updated or deleted by another transaction"</h3>
+<p><strong>Cause</strong>: Missing <code>@Version</code> field for immutable entity updates
+<strong>Fix</strong>: Add <code>@Version var version: Long? = null</code></p>
+<h3 id="error-tag-mismatch-during-decryption">Error: "Tag mismatch" during decryption</h3>
+<p><strong>Cause</strong>: Wrong password or corrupted data
+<strong>Solution</strong>: Check password, verify KDF parameters match</p>
+<h3 id="error-no-entitymanager-with-actual-transaction">Error: "No EntityManager with actual transaction"</h3>
+<p><strong>Cause</strong>: Delete method without <code>@Transactional</code>
+<strong>Fix</strong>: Add <code>@Modifying</code> + <code>@Transactional</code> to repository method</p>
+<hr/>
+<h2 id="code-review-checklist">Code Review Checklist</h2>
+<p>When reviewing secret sharing code:</p>
+<ul>
+<li>[ ] All sensitive byte arrays cleared with <code>.fill(0)</code></li>
+<li>[ ] Keys destroyed with <code>.destroy()</code> after use</li>
+<li>[ ] Try-finally blocks protect key lifecycle</li>
+<li>[ ] No passwords logged or stored</li>
+<li>[ ] KDF parameters appropriate for environment</li>
+<li>[ ] Test KDF parameters only in test code</li>
+<li>[ ] Entity has <code>@Version</code> if using <code>.copy()</code></li>
+<li>[ ] Delete methods have <code>@Modifying</code> + <code>@Transactional</code></li>
+<li>[ ] ByteArray entities override <code>equals()</code>/<code>hashCode()</code></li>
+<li>[ ] Integration tests cover transaction boundaries</li>
+</ul>
+<hr/>
+<p><strong>Document Version</strong>: 1.0
+<strong>Last Updated</strong>: 2025-10-14
+<strong>Related</strong>: <a href="../Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/">Multi-User Secret Sharing with Zero-Knowledge Architecture.md</a></p>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.tracking", "toc.follow"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+<script src="../../../js/external-links.js"></script>
+<script type="module">import mermaid from "https://unpkg.com/mermaid@11.4.0/dist/mermaid.esm.min.mjs";
+mermaid.initialize({});</script></body>
+</html>

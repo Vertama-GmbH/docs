@@ -1,0 +1,3542 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Implementation-Notes/">
+      
+      
+        <link rel="next" href="../../../Reference/system-requirements/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../img/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>API Usage Guide - Vertama: The Manuals</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../css/extra.css">
+    
+      <link rel="stylesheet" href="../../../css/pdf-print.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#multi-user-secret-sharing-api-usage-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Vertama: The Manuals" class="md-header__button md-logo" aria-label="Vertama: The Manuals" data-md-component="logo">
+      
+  <img src="../../../img/Vertama-Icon.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vertama: The Manuals
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API Usage Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../Products/BELIM/api-tutorial/" class="md-tabs__link">
+          
+  
+  
+  Products
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../how-to/folder-sync-handbuch/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/" class="md-tabs__link">
+          
+  
+  
+  Background & Explanations
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../Reference/system-requirements/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../Authentication/basic-auth-login/" class="md-tabs__link">
+          
+  
+  
+  Authentication
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../about/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  About
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Vertama: The Manuals" class="md-nav__button md-logo" aria-label="Vertama: The Manuals" data-md-component="logo">
+      
+  <img src="../../../img/Vertama-Icon.svg" alt="logo">
+
+    </a>
+    Vertama: The Manuals
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Products
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Products
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BELIM
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BELIM
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Products/BELIM/api-tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Products/BELIM/api.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=BELIM" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DIGG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    DIGG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Products/DIGG/api-tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Products/DIGG/api.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIGG" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DIVI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    DIVI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Products/DIVI/api-tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Products/DIVI/api.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIVI" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DUBA
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    DUBA
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Products/DUBA/api-tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Products/DUBA/api.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DUBA" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ELIM
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ELIM
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_1" id="__nav_2_5_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flyer
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Flyer
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Products/ELIM/onepager/OnePager%20%28PNG%29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    One Pager / Flyer (PNG)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Products/ELIM/onepager/OnePager%20%28HTML%29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    One Pager / Flyer (HTML)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Products/ELIM/onepager/OnePager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    One Pager / Flyer (TEXT/Markdown)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ELIM+
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ELIM+
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Products/ELIMPLUS/api-tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Products/ELIMPLUS/api.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=ELIM%2B" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/folder-sync-handbuch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Folder Sync Handbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Background & Explanations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Background & Explanations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security & Encryption
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security & Encryption
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-User Secret Sharing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Password-Based%20User%20Secrets%20Encryption%20with%20Derived%20Keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Password-Based User Secrets Encryption
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Implementation-Notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Usage Guide
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Usage Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-setup-user-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Setup User Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-create-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Create Secret
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-access-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Access Secret
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-grant-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Grant Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-revoke-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Revoke Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-rotate-password" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Rotate Password
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#multi-user-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-User Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-access-before-granting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking Access Before Granting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listing-users-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Listing User's Secrets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listing-users-with-access-to-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Listing Users With Access to Secret
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#securityexception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SecurityException
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#illegalstateexception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IllegalStateException
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommended-error-handling-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Error Handling Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-password-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Password Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Access Control
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-error-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Error Messages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-rate-limiting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Rate Limiting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-audit-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Audit Logging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-password-rotation-reminders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Password Rotation Reminders
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Considerations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kdf-latency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KDF Latency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spring-mvc-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spring MVC Controller
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thymeleaf-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Thymeleaf Template
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#user-has-no-crypto-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "User has no crypto keys"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wrong-password-or-corrupted-private-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Wrong password or corrupted private key"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-has-no-access-to-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "User has no access to secret"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-already-has-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "User already has keys"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Reference/system-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systemanforderungen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Reference/endpoints-and-infrastructure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Endpunkte & Infrastruktur
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authentication
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Authentication/basic-auth-login/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic Auth Login (BAL)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Authentication/magic-token-link/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Magic Token Link (MTL)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-setup-user-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Setup User Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-create-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Create Secret
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-access-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Access Secret
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-grant-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Grant Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-revoke-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Revoke Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-rotate-password" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Rotate Password
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#multi-user-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-User Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-access-before-granting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking Access Before Granting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listing-users-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Listing User's Secrets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listing-users-with-access-to-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Listing Users With Access to Secret
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#securityexception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SecurityException
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#illegalstateexception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IllegalStateException
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommended-error-handling-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Error Handling Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-password-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Password Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Access Control
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-error-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Error Messages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-rate-limiting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Rate Limiting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-audit-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Audit Logging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-password-rotation-reminders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Password Rotation Reminders
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Considerations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kdf-latency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KDF Latency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spring-mvc-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spring MVC Controller
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thymeleaf-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Thymeleaf Template
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#user-has-no-crypto-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "User has no crypto keys"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wrong-password-or-corrupted-private-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Wrong password or corrupted private key"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-has-no-access-to-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "User has no access to secret"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-already-has-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "User already has keys"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="multi-user-secret-sharing-api-usage-guide">Multi-User Secret Sharing - API Usage Guide</h1>
+<blockquote>
+<p><strong>Audience</strong>: Developers integrating with or consuming this API
+<strong>Companion to</strong>: <a href="../Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/">Multi-User Secret Sharing with Zero-Knowledge Architecture.md</a></p>
+</blockquote>
+<p>This guide shows how to use the secret sharing service with practical code examples.</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#quick-start">Quick Start</a></li>
+<li><a href="#core-operations">Core Operations</a></li>
+<li><a href="#advanced-usage">Advanced Usage</a></li>
+<li><a href="#error-handling">Error Handling</a></li>
+<li><a href="#security-best-practices">Security Best Practices</a></li>
+</ol>
+<hr />
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="prerequisites">Prerequisites</h3>
+<ul>
+<li>User must have an <code>ApiUser</code> account with a valid <code>userId</code></li>
+<li>User must have a password (never stored, only used for key derivation)</li>
+</ul>
+<h3 id="basic-flow">Basic Flow</h3>
+<pre><code class="language-kotlin">// 1. Setup (once per user)
+service.setupUserKeys(userId = 1L, password = &quot;user-password&quot;)
+
+// 2. Create secret (by owner)
+val secretId = service.createSecret(
+    userId = 1L,
+    password = &quot;user-password&quot;,
+    name = &quot;Database Credentials&quot;,
+    value = &quot;postgresql://user:pass@host:5432/db&quot;
+)
+
+// 3. Access secret (by owner or granted user)
+val decrypted = service.accessSecret(
+    userId = 1L,
+    password = &quot;user-password&quot;,
+    secretId = secretId
+)
+
+println(decrypted) // &quot;postgresql://user:pass@host:5432/db&quot;
+</code></pre>
+<hr />
+<h2 id="core-operations">Core Operations</h2>
+<h3 id="1-setup-user-keys">1. Setup User Keys</h3>
+<p><strong>When</strong>: Once per user, before they can create or access secrets</p>
+<p><strong>What it does</strong>: Generates X25519 key pair, encrypts private key with password-derived key</p>
+<pre><code class="language-kotlin">service.setupUserKeys(
+    userId = 123L,
+    password = &quot;user-chosen-password&quot;
+)
+</code></pre>
+<p><strong>Returns</strong>: Nothing (throws exception on error)</p>
+<p><strong>Errors</strong>:
+- <code>IllegalStateException</code>: User already has keys (call once only)</p>
+<p><strong>Notes</strong>:
+- Password is <strong>never stored</strong>
+- Server derives encryption key from password using Argon2id
+- Private key is encrypted and stored; public key stored in plaintext
+- If user forgets password, all their secrets are <strong>permanently lost</strong></p>
+<hr />
+<h3 id="2-create-secret">2. Create Secret</h3>
+<p><strong>When</strong>: User wants to store encrypted data</p>
+<p><strong>What it does</strong>: Encrypts secret with random DEK, encrypts DEK with user's public key</p>
+<pre><code class="language-kotlin">// Option A: With password (derives KEK, ~200ms)
+val secretId: UUID = service.createSecret(
+    userId = 123L,
+    password = &quot;user-password&quot;,
+    name = &quot;API Key&quot;,
+    value = &quot;sk_live_abc123xyz789&quot;
+)
+
+// Option B: With pre-derived KEK from session (~1ms)
+val kek = session.getUserKek()
+val secretId: UUID = service.createSecret(
+    userId = 123L,
+    kek = kek,
+    name = &quot;API Key&quot;,
+    value = &quot;sk_live_abc123xyz789&quot;
+)
+</code></pre>
+<p><strong>Parameters</strong>:
+- <code>userId</code>: User creating the secret
+- <code>password</code> OR <code>kek</code>: Authentication credential
+- <code>name</code>: Human-readable label (stored in plaintext)
+- <code>value</code>: Secret data to encrypt (any string)</p>
+<p><strong>Returns</strong>: <code>UUID</code> - unique identifier for the secret</p>
+<p><strong>Errors</strong>:
+- <code>SecurityException</code>: Wrong password or user has no keys</p>
+<p><strong>Notes</strong>:
+- Only the creator has access initially
+- Creator must use <code>grantAccess()</code> to share with others</p>
+<hr />
+<h3 id="3-access-secret">3. Access Secret</h3>
+<p><strong>When</strong>: User wants to decrypt and read a secret</p>
+<p><strong>What it does</strong>: Decrypts user's private key, decrypts DEK, decrypts secret</p>
+<pre><code class="language-kotlin">// With password
+val decrypted: String = service.accessSecret(
+    userId = 123L,
+    password = &quot;user-password&quot;,
+    secretId = UUID.fromString(&quot;...&quot;)
+)
+
+// With KEK from session (faster)
+val kek = session.getUserKek()
+val decrypted: String = service.accessSecret(
+    userId = 123L,
+    kek = kek,
+    secretId = UUID.fromString(&quot;...&quot;)
+)
+</code></pre>
+<p><strong>Parameters</strong>:
+- <code>userId</code>: User accessing the secret
+- <code>password</code> OR <code>kek</code>: Authentication credential
+- <code>secretId</code>: UUID of the secret</p>
+<p><strong>Returns</strong>: Decrypted secret value (plaintext string)</p>
+<p><strong>Errors</strong>:
+- <code>SecurityException</code>: Wrong password, no access, or secret not found</p>
+<p><strong>Notes</strong>:
+- User must have been granted access (creator has implicit access)
+- Password must be correct (no retry logic built-in)</p>
+<hr />
+<h3 id="4-grant-access">4. Grant Access</h3>
+<p><strong>When</strong>: User wants to share a secret with another user</p>
+<p><strong>What it does</strong>: Re-encrypts DEK with grantee's public key</p>
+<pre><code class="language-kotlin">service.grantAccess(
+    secretId = UUID.fromString(&quot;...&quot;),
+    granterUserId = 123L,
+    granterPassword = &quot;granter-password&quot;,
+    granteeUserId = 456L
+)
+</code></pre>
+<p><strong>Parameters</strong>:
+- <code>secretId</code>: Secret to share
+- <code>granterUserId</code>: User granting access (must already have access)
+- <code>granterPassword</code>: Granter's password (to decrypt DEK)
+- <code>granteeUserId</code>: User receiving access</p>
+<p><strong>Returns</strong>: Nothing (throws exception on error)</p>
+<p><strong>Errors</strong>:
+- <code>SecurityException</code>: Granter doesn't have access, wrong password, or grantee has no keys</p>
+<p><strong>Key insights</strong>:
+- <strong>Grantee doesn't need to be online</strong> - only their public key is used
+- <strong>Grantee's password is never shared</strong> - each user decrypts with their own password
+- Granter needs their password to decrypt the DEK, then re-encrypts it for grantee</p>
+<hr />
+<h3 id="5-revoke-access">5. Revoke Access</h3>
+<p><strong>When</strong>: User wants to remove another user's access</p>
+<p><strong>What it does</strong>: Deletes user's encrypted DEK entry</p>
+<pre><code class="language-kotlin">service.revokeAccess(
+    secretId = UUID.fromString(&quot;...&quot;),
+    userId = 456L
+)
+</code></pre>
+<p><strong>Parameters</strong>:
+- <code>secretId</code>: Secret to revoke access to
+- <code>userId</code>: User to revoke access from</p>
+<p><strong>Returns</strong>: Nothing</p>
+<p><strong>Limitations</strong>:
+- If user already decrypted and saved the secret, revocation doesn't affect saved copies
+- No password required (administrative action)
+- Cannot revoke creator's access (database constraint prevents it)</p>
+<hr />
+<h3 id="6-rotate-password">6. Rotate Password</h3>
+<p><strong>When</strong>: User wants to change their password</p>
+<p><strong>What it does</strong>: Re-encrypts private key with new password-derived key</p>
+<pre><code class="language-kotlin">service.rotateUserPassword(
+    userId = 123L,
+    oldPassword = &quot;current-password&quot;,
+    newPassword = &quot;new-secure-password&quot;
+)
+</code></pre>
+<p><strong>Parameters</strong>:
+- <code>userId</code>: User changing password
+- <code>oldPassword</code>: Current password (must be correct)
+- <code>newPassword</code>: New password to set</p>
+<p><strong>Returns</strong>: Nothing (throws exception on error)</p>
+<p><strong>Errors</strong>:
+- <code>SecurityException</code>: Wrong old password</p>
+<p><strong>Notes</strong>:
+- All secrets remain accessible with new password
+- Private key (and thus DEKs) stay the same, just re-encrypted
+- Old password is immediately invalidated</p>
+<hr />
+<h2 id="advanced-usage">Advanced Usage</h2>
+<h3 id="multi-user-workflow">Multi-User Workflow</h3>
+<pre><code class="language-kotlin">// Alice creates secret
+service.setupUserKeys(userId = alice.id, password = &quot;alice-pass&quot;)
+val secretId = service.createSecret(
+    userId = alice.id,
+    password = &quot;alice-pass&quot;,
+    name = &quot;Shared Database&quot;,
+    value = &quot;prod-db-credentials&quot;
+)
+
+// Bob sets up keys
+service.setupUserKeys(userId = bob.id, password = &quot;bob-pass&quot;)
+
+// Alice grants Bob access (Bob doesn't need to be online!)
+service.grantAccess(
+    secretId = secretId,
+    granterUserId = alice.id,
+    granterPassword = &quot;alice-pass&quot;,
+    granteeUserId = bob.id
+)
+
+// Bob accesses with his own password
+val decrypted = service.accessSecret(
+    userId = bob.id,
+    password = &quot;bob-pass&quot;,  // Not Alice's password!
+    secretId = secretId
+)
+</code></pre>
+<h3 id="checking-access-before-granting">Checking Access Before Granting</h3>
+<pre><code class="language-kotlin">// Repository method available
+val hasAccess = accessRepo.existsBySecretIdAndUserId(secretId, userId)
+if (!hasAccess) {
+    service.grantAccess(...)
+}
+</code></pre>
+<h3 id="listing-users-secrets">Listing User's Secrets</h3>
+<pre><code class="language-kotlin">val userAccess: List&lt;UserSecretAccess&gt; = accessRepo.findByUserId(userId)
+userAccess.forEach { access -&gt;
+    println(&quot;Secret: ${access.secret.name}&quot;)
+    println(&quot;Granted by: ${access.grantedBy.name}&quot;)
+    println(&quot;Granted at: ${access.grantedAt}&quot;)
+}
+</code></pre>
+<h3 id="listing-users-with-access-to-secret">Listing Users With Access to Secret</h3>
+<pre><code class="language-kotlin">val accessList: List&lt;UserSecretAccess&gt; = accessRepo.findBySecretId(secretId)
+accessList.forEach { access -&gt;
+    println(&quot;User: ${access.user.name}&quot;)
+    println(&quot;Granted by: ${access.grantedBy.name}&quot;)
+}
+</code></pre>
+<hr />
+<h2 id="error-handling">Error Handling</h2>
+<h3 id="securityexception">SecurityException</h3>
+<p>Most operations throw <code>SecurityException</code> on auth failures:</p>
+<pre><code class="language-kotlin">try {
+    val secret = service.accessSecret(userId, password, secretId)
+} catch (e: SecurityException) {
+    when {
+        e.message?.contains(&quot;Wrong password&quot;) == true -&gt;
+            // Password incorrect
+        e.message?.contains(&quot;has no access&quot;) == true -&gt;
+            // User not granted access
+        e.message?.contains(&quot;has no crypto keys&quot;) == true -&gt;
+            // User hasn't called setupUserKeys()
+        else -&gt;
+            // Other security error
+    }
+}
+</code></pre>
+<h3 id="illegalstateexception">IllegalStateException</h3>
+<pre><code class="language-kotlin">try {
+    service.setupUserKeys(userId, password)
+} catch (e: IllegalStateException) {
+    // User already has keys - cannot call twice
+}
+</code></pre>
+<h3 id="recommended-error-handling-pattern">Recommended Error Handling Pattern</h3>
+<pre><code class="language-kotlin">fun accessSecretSafely(userId: Long, password: String, secretId: UUID): Result&lt;String&gt; {
+    return try {
+        Result.success(service.accessSecret(userId, password, secretId))
+    } catch (e: SecurityException) {
+        Result.failure(e)
+    }
+}
+
+// Usage
+accessSecretSafely(userId, password, secretId)
+    .onSuccess { secret -&gt; println(&quot;Decrypted: $secret&quot;) }
+    .onFailure { error -&gt; logger.error(&quot;Access failed: ${error.message}&quot;) }
+</code></pre>
+<hr />
+<h2 id="security-best-practices">Security Best Practices</h2>
+<h3 id="1-password-handling">1. Password Handling</h3>
+<p>❌ <strong>Don't</strong>:</p>
+<pre><code class="language-kotlin">// Never store passwords
+data class User(val password: String)  // BAD!
+
+// Never log passwords
+logger.info(&quot;User password: $password&quot;)  // BAD!
+</code></pre>
+<p>✅ <strong>Do</strong>:</p>
+<pre><code class="language-kotlin">// Accept password as parameter, use immediately, discard
+fun login(username: String, password: String) {
+    service.accessSecret(userId, password, secretId)
+    // password garbage-collected after function returns
+}
+
+// Use char arrays for passwords (can be cleared)
+fun login(username: String, password: CharArray) {
+    try {
+        val passwordStr = String(password)
+        service.accessSecret(userId, passwordStr, secretId)
+    } finally {
+        password.fill('0')  // Clear password from memory
+    }
+}
+</code></pre>
+<h3 id="2-access-control">2. Access Control</h3>
+<pre><code class="language-kotlin">// Check user owns or has access before operations
+fun userCanAccess(userId: Long, secretId: UUID): Boolean {
+    return accessRepo.existsBySecretIdAndUserId(secretId, userId)
+}
+
+// Verify before granting (prevent over-sharing)
+fun grantIfNotAlready(secretId: UUID, granterUserId: Long, ...) {
+    if (!userCanAccess(granteeUserId, secretId)) {
+        service.grantAccess(...)
+    }
+}
+</code></pre>
+<h3 id="3-error-messages">3. Error Messages</h3>
+<p>❌ <strong>Don't leak information</strong>:</p>
+<pre><code class="language-kotlin">catch (e: SecurityException) {
+    // Reveals whether user exists
+    return &quot;User $userId doesn't have crypto keys&quot;
+}
+</code></pre>
+<p>✅ <strong>Use generic messages</strong>:</p>
+<pre><code class="language-kotlin">catch (e: SecurityException) {
+    logger.warn(&quot;Access denied for user $userId&quot;, e)
+    return &quot;Access denied&quot;  // Generic message to client
+}
+</code></pre>
+<h3 id="4-rate-limiting">4. Rate Limiting</h3>
+<p>Implement rate limiting to prevent brute-force attacks:</p>
+<pre><code class="language-kotlin">@RateLimited(maxAttempts = 5, windowSeconds = 60)
+fun accessSecret(userId: Long, password: String, secretId: UUID): String {
+    return service.accessSecret(userId, password, secretId)
+}
+</code></pre>
+<h3 id="5-audit-logging">5. Audit Logging</h3>
+<p>Log all access operations (but not passwords or secrets):</p>
+<pre><code class="language-kotlin">fun accessSecret(userId: Long, password: String, secretId: UUID): String {
+    val result = try {
+        service.accessSecret(userId, password, secretId)
+    } catch (e: SecurityException) {
+        auditLog.warn(&quot;Failed secret access&quot;, mapOf(
+            &quot;userId&quot; to userId,
+            &quot;secretId&quot; to secretId,
+            &quot;reason&quot; to e.message
+        ))
+        throw e
+    }
+
+    auditLog.info(&quot;Secret accessed&quot;, mapOf(
+        &quot;userId&quot; to userId,
+        &quot;secretId&quot; to secretId
+    ))
+
+    return result
+}
+</code></pre>
+<h3 id="6-password-rotation-reminders">6. Password Rotation Reminders</h3>
+<pre><code class="language-kotlin">fun checkPasswordAge(userId: Long) {
+    val keys = userKeysRepo.findById(userId).orElseThrow()
+    val daysSinceCreation = ChronoUnit.DAYS.between(keys.createdAt, Instant.now())
+
+    if (daysSinceCreation &gt; 90) {
+        notifyUser(userId, &quot;Consider rotating your password&quot;)
+    }
+}
+</code></pre>
+<hr />
+<h2 id="performance-considerations">Performance Considerations</h2>
+<h3 id="kdf-latency">KDF Latency</h3>
+<p>Each password-based operation triggers Argon2id key derivation (~100-500ms). For better performance, use KEK-based method overloads with session-stored KEK:</p>
+<pre><code class="language-kotlin">// Slow: Derives KEK on every call
+repeat(10) {
+    service.accessSecret(userId, password, secretId)  // 10 × 200ms = 2000ms
+}
+
+// Fast: Derive KEK once, reuse from session
+val kek = session.getUserKek()  // Already derived at login
+repeat(10) {
+    service.accessSecret(userId, kek, secretId)  // 10 × &lt;1ms = ~10ms
+}
+</code></pre>
+<p><strong>Recommendation</strong>: Use session-based KEK for normal operations. Reserve password-based methods for high-security actions requiring explicit confirmation.</p>
+<h3 id="database-queries">Database Queries</h3>
+<p>Operations by query count:</p>
+<ul>
+<li><code>setupUserKeys()</code>: 1 write</li>
+<li><code>createSecret()</code>: 3 reads, 2 writes</li>
+<li><code>accessSecret()</code>: 3 reads</li>
+<li><code>grantAccess()</code>: 4 reads, 1 write</li>
+<li><code>revokeAccess()</code>: 1 delete</li>
+</ul>
+<p><strong>Recommendation</strong>: Add indexes on <code>user_secret_access(secret_id, user_id)</code> for optimal performance.</p>
+<hr />
+<h2 id="integration-examples">Integration Examples</h2>
+<h3 id="spring-mvc-controller">Spring MVC Controller</h3>
+<pre><code class="language-kotlin">@RestController
+@RequestMapping(&quot;/api/secrets&quot;)
+class SecretController(
+    private val service: Service,
+    private val accessRepo: UserSecretAccessRepository
+) {
+
+    @PostMapping
+    fun createSecret(
+        @AuthenticationPrincipal user: ApiUser,
+        @RequestParam password: String,
+        @RequestBody request: CreateSecretRequest
+    ): ResponseEntity&lt;SecretResponse&gt; {
+        val secretId = service.createSecret(
+            userId = user.id!!,
+            password = password,
+            name = request.name,
+            value = request.value
+        )
+
+        return ResponseEntity.ok(SecretResponse(secretId))
+    }
+
+    @GetMapping(&quot;/{secretId}&quot;)
+    fun getSecret(
+        @AuthenticationPrincipal user: ApiUser,
+        @PathVariable secretId: UUID,
+        @RequestParam password: String
+    ): ResponseEntity&lt;String&gt; {
+        return try {
+            val decrypted = service.accessSecret(user.id!!, password, secretId)
+            ResponseEntity.ok(decrypted)
+        } catch (e: SecurityException) {
+            ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        }
+    }
+
+    @PostMapping(&quot;/{secretId}/grant&quot;)
+    fun grantAccess(
+        @AuthenticationPrincipal user: ApiUser,
+        @PathVariable secretId: UUID,
+        @RequestParam password: String,
+        @RequestParam granteeUserId: Long
+    ): ResponseEntity&lt;Void&gt; {
+        service.grantAccess(secretId, user.id!!, password, granteeUserId)
+        return ResponseEntity.ok().build()
+    }
+}
+</code></pre>
+<h3 id="thymeleaf-template">Thymeleaf Template</h3>
+<pre><code class="language-html">&lt;!-- Create secret form --&gt;
+&lt;form th:action=&quot;@{/secrets}&quot; method=&quot;post&quot;&gt;
+    &lt;input type=&quot;text&quot; name=&quot;name&quot; placeholder=&quot;Secret name&quot; required /&gt;
+    &lt;textarea name=&quot;value&quot; placeholder=&quot;Secret value&quot; required&gt;&lt;/textarea&gt;
+    &lt;input type=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;Your password&quot; required /&gt;
+    &lt;button type=&quot;submit&quot;&gt;Create Secret&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;!-- Access secret --&gt;
+&lt;form th:action=&quot;@{/secrets/{id}/view(id=${secretId})}&quot; method=&quot;post&quot;&gt;
+    &lt;input type=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;Your password&quot; required /&gt;
+    &lt;button type=&quot;submit&quot;&gt;Decrypt&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;!-- Display decrypted (be careful with XSS!) --&gt;
+&lt;div th:if=&quot;${decrypted}&quot;&gt;
+    &lt;pre th:text=&quot;${decrypted}&quot;&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</code></pre>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="user-has-no-crypto-keys">"User has no crypto keys"</h3>
+<p><strong>Cause</strong>: User hasn't called <code>setupUserKeys()</code> yet</p>
+<p><strong>Fix</strong>: Call <code>setupUserKeys()</code> once per user before other operations</p>
+<h3 id="wrong-password-or-corrupted-private-key">"Wrong password or corrupted private key"</h3>
+<p><strong>Cause</strong>: Password is incorrect</p>
+<p><strong>Fix</strong>: Verify user entered correct password</p>
+<p><strong>Note</strong>: No password recovery possible - forgotten password = lost secrets</p>
+<h3 id="user-has-no-access-to-secret">"User has no access to secret"</h3>
+<p><strong>Cause</strong>: User wasn't granted access</p>
+<p><strong>Fix</strong>: Secret creator must call <code>grantAccess()</code> first</p>
+<h3 id="user-already-has-keys">"User already has keys"</h3>
+<p><strong>Cause</strong>: Called <code>setupUserKeys()</code> twice for same user</p>
+<p><strong>Fix</strong>: Only call once; use <code>rotateUserPassword()</code> to change password</p>
+<hr />
+<p><strong>Document Version</strong>: 1.0
+<strong>Last Updated</strong>: 2025-10-14
+<strong>Related</strong>:
+- <a href="../Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/">Multi-User Secret Sharing with Zero-Knowledge Architecture.md</a>
+- <a href="../Implementation-Notes/">Implementation-Notes.md</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.tracking", "toc.follow"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../../js/external-links.js"></script>
+      
+    
+  </body>
+</html>

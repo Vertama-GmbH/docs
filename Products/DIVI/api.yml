@@ -1,0 +1,682 @@
+openapi: 3.0.3
+info:
+    title: DIVI API
+    version: "0.1.0"
+    description: API for DIVI Intensivregister reporting - submitting bed occupancy reports to the DIVI Intensivregister
+servers:
+    - url: /api/divi/v1
+      description: DIVI API Version 1
+paths:
+    /memento:
+        post:
+            summary: Create encrypted memento string from DIVI report data
+            description: |-
+                Accepts DIVI report data (Intensivregister Meldung) as JSON and returns an encrypted memento string.
+                The memento can be used to pre-fill HTML forms via URL parameter.
+
+                Use Case:
+                External systems submit form data → receive encrypted string →
+                construct URL with memento parameter → user opens pre-filled form.
+
+                This endpoint does NOT submit the report to the DIVI Intensivregister.
+                It only creates a pre-fill token for the interactive HTML form.
+            tags:
+                - DIVI
+            security:
+                - basicAuth: []
+            operationId: createMemento
+            requestBody:
+                required: true
+                description: DIVI report data to encrypt into memento string
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/DiviMementoRequest'
+            responses:
+                '200':
+                    description: Memento successfully created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/MementoResponse'
+                '400':
+                    description: Bad Request - invalid form data (validation errors)
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ValidationErrorResponse'
+                '401':
+                    description: |-
+                        Unauthorized - invalid or missing authentication.
+                        Returns 401 status with WWW-Authenticate header.
+                        Response body is empty.
+    /report:
+        post:
+            summary: Submit a DIVI Intensivregister report
+            description: |-
+                Accepts DIVI report data and submits it to the DIVI Intensivregister API.
+            tags:
+                - DIVI
+            security:
+                - basicAuth: []
+            operationId: submitReport
+            requestBody:
+                required: true
+                description: DIVI report data to submit
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/DiviReportSubmission'
+            responses:
+                '200':
+                    description: Report submission result
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ReportResponse'
+                '400':
+                    description: Bad Request - invalid report data (validation errors)
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ValidationErrorResponse'
+                '401':
+                    description: |-
+                        Unauthorized - invalid or missing authentication.
+                        Returns 401 status with WWW-Authenticate header.
+                        Response body is empty.
+    /reports:
+        get:
+            summary: List pending report IDs for the authenticated API user
+            description: |-
+                Returns the list of report IDs that have been submitted by the authenticated
+                API user but not yet retrieved (unpolled). These are reports waiting for
+                the caller to fetch the full result.
+
+                Use GET /api/divi/v1/reports/{reportId} to retrieve the full result for each ID.
+
+                The list contains only unpolled report IDs — once a report has been
+                retrieved without ?peek=true it will no longer appear here.
+            tags:
+                - DIVI
+            security:
+                -   basicAuth: [ ]
+            operationId: listPendingReports
+            responses:
+                '200':
+                    description: List of pending report IDs (may be empty)
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: string
+                            example:
+                                - "DIVI-2026-00123"
+                                - "DIVI-2026-00124"
+                '401':
+                    description: |-
+                        Unauthorized - invalid or missing authentication.
+                        Returns 401 status with WWW-Authenticate header.
+                        Response body is empty.
+    /reports/{reportId}:
+        get:
+            summary: Retrieve the report of a previously submitted DIVI report
+            description: |-
+                Returns the current status of a report identified by its reportId.
+
+                The response includes whether the report was successfully sent, the send date,
+                any error messages, and the PDF receipt (base64-encoded) if available.
+
+                Reports are looked up by the authenticated user and the given reportId.
+            tags:
+                - DIVI
+            security:
+                - basicAuth: []
+            operationId: getReportStatus
+            parameters:
+                - name: reportId
+                  in: path
+                  required: true
+                  description: The report identifier used when submitting the report
+                  schema:
+                      type: string
+                      example: "divi-2024-00123"
+            responses:
+                '200':
+                    description: Report status found
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/StatusResponse'
+                '401':
+                    description: |-
+                        Unauthorized - invalid or missing authentication.
+                        Returns 401 status with WWW-Authenticate header.
+                        Response body is empty.
+                '404':
+                    description: Report not found for the given reportId and authenticated user
+                '410':
+                    description: |-
+                        Gone. The report was previously retrieved (polled) and is no longer available.
+components:
+    schemas:
+        MementoResponse:
+            type: object
+            required:
+                - memento
+            properties:
+                memento:
+                    type: string
+                    description: |-
+                        Encrypted, URL-safe memento string containing the form data.
+                        Use as query parameter to pre-fill forms: ?m=<string>
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        ValidationErrorResponse:
+            type: object
+            required:
+                - errors
+            description: |-
+                Validation error response returned by Spring's ControllerAdvice.
+                Contains a list of validation error messages.
+            properties:
+                errors:
+                    type: array
+                    description: List of validation error messages
+                    items:
+                        type: string
+                    example: ["reportId must not be null"]
+        DiviMementoRequest:
+            type: object
+            description: |-
+                DIVI Intensivregister report data for memento pre-fill.
+                For memento creation, most fields are optional to allow partial pre-filling.
+            required:
+                - reportId
+            properties:
+                reportId:
+                    type: string
+                    description: |-
+                        Unique identifier for this report (StatusID).
+                        Required to track and correlate this report throughout the workflow.
+                    example: "divi-2024-00123"
+                diviAccountId:
+                    type: integer
+                    format: int64
+                    nullable: true
+                    description: ID of the DIVI account to use for submission
+                meldebereich:
+                    $ref: '#/components/schemas/SmallMeldebereichRequest'
+                auspraegung:
+                    type: string
+                    enum: [V2, V1]
+                    description: Report version (V2 is the current version)
+                    example: "V2"
+                betriebssituation:
+                    type: string
+                    nullable: true
+                    enum: [REGULAERER_BETRIEB, TEILWEISE_EINGESCHRAENKT, EINGESCHRAENKT, KEINE_ANGABE]
+                    description: Operating situation of the hospital
+                betriebseinschraenkungPersonal:
+                    type: boolean
+                    nullable: true
+                betriebseinschraenkungRaum:
+                    type: boolean
+                    nullable: true
+                betriebseinschraenkungBeatmungsgeraet:
+                    type: boolean
+                    nullable: true
+                betriebseinschraenkungVerbrauchsmaterial:
+                    type: boolean
+                    nullable: true
+                kapazitaeten:
+                    $ref: '#/components/schemas/SubmitKapazitaetenRequest'
+                faelleCovidAktuell:
+                    type: integer
+                    format: int32
+                    nullable: true
+                    minimum: 0
+                    maximum: 999
+                altersstrata:
+                    $ref: '#/components/schemas/Altersstrata'
+                neuaufnahmen:
+                    $ref: '#/components/schemas/SubmitNeuaufnahmenRequest'
+                varianten:
+                    $ref: '#/components/schemas/VariantenV2'
+                schwangereCovidStatus:
+                    $ref: '#/components/schemas/SchwangereCovidStatus'
+                impfstatusV2:
+                    $ref: '#/components/schemas/ImpfstatusV2'
+                rsvStatus:
+                    $ref: '#/components/schemas/RsvStatus'
+                influenzaStatus:
+                    $ref: '#/components/schemas/InfluenzaStatus'
+                covid19StatusV3:
+                    $ref: '#/components/schemas/Covid19StatusV3'
+                faelleCovidVortagVerlegtVerstorben:
+                    $ref: '#/components/schemas/FaelleCovidVortagVerlegtVerstorben'
+        DiviReportSubmission:
+            type: object
+            description: |-
+                DIVI report submission request. All required fields must be present.
+                The diviAccountId identifies which DIVI OAuth2 account to use for submission.
+            required:
+                - reportId
+                - diviAccountId
+                - meldebereich
+                - auspraegung
+                - kapazitaeten
+            properties:
+                reportId:
+                    type: string
+                    description: Unique identifier for status tracking
+                diviAccountId:
+                    type: integer
+                    format: int64
+                    description: ID of the DIVI account to use for submission
+                meldebereich:
+                    $ref: '#/components/schemas/SmallMeldebereichRequest'
+                auspraegung:
+                    type: string
+                    enum: [V2, V1]
+                    description: Report version
+                betriebssituation:
+                    type: string
+                    enum: [REGULAERER_BETRIEB, TEILWEISE_EINGESCHRAENKT, EINGESCHRAENKT, KEINE_ANGABE]
+                betriebseinschraenkungPersonal:
+                    type: boolean
+                betriebseinschraenkungRaum:
+                    type: boolean
+                betriebseinschraenkungBeatmungsgeraet:
+                    type: boolean
+                betriebseinschraenkungVerbrauchsmaterial:
+                    type: boolean
+                kapazitaeten:
+                    $ref: '#/components/schemas/SubmitKapazitaetenRequest'
+                faelleCovidAktuell:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                altersstrata:
+                    $ref: '#/components/schemas/Altersstrata'
+                neuaufnahmen:
+                    $ref: '#/components/schemas/SubmitNeuaufnahmenRequest'
+                varianten:
+                    $ref: '#/components/schemas/VariantenV2'
+                schwangereCovidStatus:
+                    $ref: '#/components/schemas/SchwangereCovidStatus'
+                impfstatusV2:
+                    $ref: '#/components/schemas/ImpfstatusV2'
+                rsvStatus:
+                    $ref: '#/components/schemas/RsvStatus'
+                influenzaStatus:
+                    $ref: '#/components/schemas/InfluenzaStatus'
+                covid19StatusV3:
+                    $ref: '#/components/schemas/Covid19StatusV3'
+                faelleCovidVortagVerlegtVerstorben:
+                    $ref: '#/components/schemas/FaelleCovidVortagVerlegtVerstorben'
+        SmallMeldebereichRequest:
+            type: object
+            required:
+                - id
+            properties:
+                id:
+                    type: string
+                    description: Meldebereich ID from the DIVI Intensivregister
+        SubmitKapazitaetenRequest:
+            type: object
+            nullable: true
+            description: ICU bed capacity data
+            required:
+                - intensivBetten
+                - intensivBettenBelegt
+            properties:
+                intensivBetten:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                    description: Total ICU beds
+                intensivBettenBelegt:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                    description: Occupied ICU beds
+                patientenNichtInvasivBeatmet:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                patientenInvasivBeatmet:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                patientenEcmo:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                freieIvKapazitaet:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                freieEcmoKapazitaet:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                intensivBettenNotfall7d:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                statusEinschaetzungHighcare:
+                    type: string
+                    enum: [VERFUEGBAR, BEGRENZT, NICHT_VERFUEGBAR, KEINE_ANGABE]
+                statusEinschaetzungEcmo:
+                    type: string
+                    enum: [VERFUEGBAR, BEGRENZT, NICHT_VERFUEGBAR, KEINE_ANGABE]
+        Altersstrata:
+            type: object
+            nullable: true
+            properties:
+                stratum17minus:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                stratum18bis29:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                stratum30bis39:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                stratum40bis49:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                stratum50bis59:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                stratum60bis69:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                stratum70bis79:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                stratum80plus:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+        SubmitNeuaufnahmenRequest:
+            type: object
+            nullable: true
+            properties:
+                erstaufnahmen:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+        VariantenV2:
+            type: object
+            nullable: true
+            properties:
+                delta:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                omikron:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                sonstige:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                unbekannt:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+        SchwangereCovidStatus:
+            type: object
+            nullable: true
+            properties:
+                anzahlSchwangere:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+        ImpfstatusV2:
+            type: object
+            nullable: true
+            properties:
+                impfstatusUnbekannt:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                impfstatus0Impfungen:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                impfstatus1Impfungen:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                impfstatus2Impfungen:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                impfstatus3Impfungen:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                impfstatus4PlusImpfungen:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+        RsvStatus:
+            type: object
+            nullable: true
+            properties:
+                faelleAktuell:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                faelleAktuellBeatmet:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                faelleAktuellHighFlowOxygen:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                faelleAktuellNichtInvasivBeatmet:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                faelleAktuellEcmo:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+        InfluenzaStatus:
+            type: object
+            nullable: true
+            properties:
+                faelleAktuell:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                faelleAktuellBeatmet:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                faelleAktuellHighFlowOxygen:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                faelleAktuellNichtInvasivBeatmet:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                faelleAktuellEcmo:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+        Covid19StatusV3:
+            type: object
+            nullable: true
+            properties:
+                mitManifestation:
+                    $ref: '#/components/schemas/FaelleCovid19StatusV3'
+                ohneManifestation:
+                    $ref: '#/components/schemas/FaelleCovid19StatusV3OhneManifestation'
+        FaelleCovid19StatusV3:
+            type: object
+            nullable: true
+            properties:
+                faelleAktuell:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                faelleAktuellBeatmet:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                faelleAktuellNichtInvasivBeatmet:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                faelleAktuellEcmo:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+        FaelleCovid19StatusV3OhneManifestation:
+            type: object
+            nullable: true
+            properties:
+                faelleAktuell:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                faelleAktuellBeatmet:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+        FaelleCovidVortagVerlegtVerstorben:
+            type: object
+            nullable: true
+            properties:
+                faelleCovidVortagVerlegt:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+                faelleCovidVortagVerstorben:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 999
+        ReportResponse:
+            type: object
+            required:
+                - reportId
+                - succeeded
+            description: Response after submitting a DIVI report
+            properties:
+                reportId:
+                    type: string
+                    description: The report identifier
+                    example: "divi-2024-00123"
+                succeeded:
+                    type: boolean
+                    description: Whether the report was successfully sent to the DIVI Intensivregister
+                    example: true
+                errorMsg:
+                    type: string
+                    nullable: true
+                    description: Error message if submission failed, null on success
+                    example: null
+        StatusResponse:
+            type: object
+            required:
+                - reportId
+                - succeeded
+            description: Status information for a previously submitted report
+            properties:
+                reportId:
+                    type: string
+                    description: The report identifier
+                    example: "divi-2024-00123"
+                succeeded:
+                    type: boolean
+                    description: Whether the report was successfully sent
+                    example: true
+                sendDate:
+                    type: string
+                    format: date-time
+                    nullable: true
+                    description: Timestamp when the report was sent
+                    example: "2024-12-08T14:30:00Z"
+                formName:
+                    type: string
+                    nullable: true
+                    description: Name of the report form/endpoint used
+                    example: "divi.direct"
+                errorMsg:
+                    type: string
+                    nullable: true
+                    description: Error message if submission failed, null on success
+                    example: null
+                base64Pdf:
+                    type: string
+                    nullable: true
+                    description: |-
+                        Base64-encoded PDF receipt.
+                        Available only for successful reports.
+                    example: null
+    securitySchemes:
+        basicAuth:
+            type: http
+            scheme: basic
