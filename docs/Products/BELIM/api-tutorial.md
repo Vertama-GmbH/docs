@@ -14,10 +14,9 @@ A practical guide for integration partners using the BELIM API.
 3. [Core Concepts](#core-concepts)
 4. [Memento Endpoint](#memento-endpoint)
 5. [Direct Submission Endpoint](#direct-submission-endpoint)
-6. [Status Retrieval Endpoint](#status-retrieval-endpoint)
-7. [Complete Workflow Examples](#complete-workflow-examples)
-8. [Error Handling](#error-handling)
-9. [Reference](#reference)
+6. [Report Retrieval Endpoints](#report-retrieval-endpoints)
+7. [Error Handling](#error-handling)
+8. [Reference](#reference)
 
 ---
 
@@ -197,7 +196,30 @@ Returns a JSON status response immediately detailing success or failure.
 
 ---
 
-## Status Retrieval Endpoint
+## Report Retrieval Endpoints
+
+### GET /reports — List pending report IDs
+
+**Endpoint:** `GET /api/belim/v1/reports`
+
+Returns an array of `reportId` strings for reports that have been submitted to DEMIS but not yet retrieved (unpolled). Reports disappear from this list once retrieved without `?peek=true`.
+
+**Request:**
+```bash
+curl -u "api-user:api-pass" \
+  https://elim.vertamob.de/api/belim/v1/reports
+```
+
+**Response (200):**
+```json
+["BELIM-2026-00123", "BELIM-2026-00124"]
+```
+
+An empty array `[]` means no submissions are pending retrieval.
+
+---
+
+### GET /reports/{reportId} — Retrieve report result
 
 **Endpoint:** `GET /api/belim/v1/status/{reportId}`
 

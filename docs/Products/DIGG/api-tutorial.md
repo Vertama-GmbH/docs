@@ -13,10 +13,9 @@ A practical guide for integration partners using the DIGG (Digitale Geburtsanzei
 2. [Authentication](#authentication)
 3. [Core Concepts](#core-concepts)
 4. [Memento Endpoint](#memento-endpoint)
-5. [Report Retrieval Endpoint](#report-retrieval-endpoint)
-6. [Complete Workflow Examples](#complete-workflow-examples)
-7. [Error Handling](#error-handling)
-8. [Reference](#reference)
+5. [Report Retrieval Endpoints](#report-retrieval-endpoints)
+6. [Error Handling](#error-handling)
+7. [Reference](#reference)
 
 ---
 
@@ -203,7 +202,7 @@ DIGG reports are delivered asynchronously via xPersonenstand/XTA2 transport.
 
 ### GET /reports — List pending report IDs
 
-**Endpoint:** `GET /api/elimplus/v1/reports`
+**Endpoint:** `GET /api/digg/v1/reports`
 
 Returns an array of `reportId` strings for reports that have been submitted to DEMIS but not yet retrieved (unpolled). Reports disappear from this list once retrieved without `?peek=true`.
 

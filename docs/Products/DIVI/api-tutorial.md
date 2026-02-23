@@ -14,10 +14,9 @@ A practical guide for integration partners using the DIVI (Intensivregister) API
 3. [Core Concepts](#core-concepts)
 4. [Direct Submission Endpoint](#direct-submission-endpoint)
 5. [Memento Endpoint](#memento-endpoint)
-6. [Status & Receipt Endpoint](#status--receipt-endpoint)
-7. [Complete Workflow Examples](#complete-workflow-examples)
-8. [Error Handling](#error-handling)
-9. [Reference](#reference)
+6. [Report Retrieval Endpoints](#report-retrieval-endpoints)
+7. [Error Handling](#error-handling)
+8. [Reference](#reference)
 
 ---
 
@@ -175,9 +174,30 @@ You can then pass this string to your users:
 
 ---
 
-## Status & Receipt Endpoint
+## Report Retrieval Endpoints
 
 After a report is submitted (either directly via `api/divi/v1/report` or interactively by a user who used a memento link), you can download the status and PDF receipt.
+
+### GET /reports — List pending report IDs
+
+**Endpoint:** `GET /api/divi/v1/reports`
+
+Returns an array of `reportId` strings for reports that have been submitted to DEMIS but not yet retrieved (unpolled). Reports disappear from this list once retrieved without `?peek=true`.
+
+**Request:**
+```bash
+curl -u "api-user:api-pass" \
+  https://elim.vertamob.de/api/divi/v1/reports
+```
+
+**Response (200):**
+```json
+["DIVI-2026-00123", "DIVI-2026-00124"]
+```
+
+An empty array `[]` means no submissions are pending retrieval.
+
+---
 
 **Endpoint:** `GET /api/divi/v1/status/{reportId}`
 
