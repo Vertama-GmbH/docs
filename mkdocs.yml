@@ -38,7 +38,7 @@ nav:
   - Home: index.md
   - Products:
      - BELIM:
-       #- "API Tutorial": "Products/BELIM/api-tutorial.md"
+       - "API Tutorial": "Products/BELIM/api-tutorial.md"
        - "api.yml (OpenAPI)": Products/BELIM/api.yml
        - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=BELIM"
      - DIGG:
