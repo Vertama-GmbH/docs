@@ -24,6 +24,15 @@ theme:
     - content.code.copy         # Copy button on code blocks
     - search.highlight          # Highlight search term on target page
     - header.autohide           # Hide header when scrolling down
+    - navigation.footer         # Prev/Next page buttons at bottom
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/vertama-gmbh
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/vertama
+    - icon: fontawesome/brands/instagram
+      link: https://www.instagram.com/vertama.gmbh/
 extra_css:
   - css/extra.css
   - css/pdf-print.css
