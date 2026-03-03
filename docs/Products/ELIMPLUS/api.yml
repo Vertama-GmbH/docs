@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: ELIM+ API
-  version: "0.1.2" # Updated 2026-02-20: Added report retrieval endpoints (GET /reports, GET /reports/{reportId})
+  version: "0.2.0" # Updated 2026-03-03: Removed Krankheit (not for pre-fill), removed Fax from Kontakt (not supported)
   description: API for ELIM+ laboratory reporting (Labormeldung) - DEMIS integration
 servers:
   - url: /api/elimplus/v1
@@ -215,13 +215,6 @@ components:
             Unique identifier for this laboratory report.
             Required to track and correlate this report throughout the workflow.
           example: "LAB-2024-00123"
-        KrankheitsCode:
-          type: string
-          nullable: true
-          description: Disease code (e.g., ICD-10 or DEMIS-specific code)
-          example: "J09"
-        Krankheit:
-          $ref: '#/components/schemas/Krankheit'
         MeldungsVerweisId:
           type: string
           nullable: true
@@ -243,28 +236,6 @@ components:
           nullable: true
           description: Date when the report was created
           example: "2024-12-08"
-    Krankheit:
-      type: object
-      description: |-
-        Disease-specific form data. Only one disease type should be populated.
-        All fields are optional for memento creation.
-      properties:
-        Influenza:
-          type: object
-          nullable: true
-          description: Influenza-specific data
-        Rsv:
-          type: object
-          nullable: true
-          description: RSV-specific data
-        Norovirus:
-          type: object
-          nullable: true
-          description: Norovirus-specific data
-        Sarscov2:
-          type: object
-          nullable: true
-          description: SARS-CoV-2-specific data
     Patient:
       type: object
       description: |-
@@ -392,11 +363,6 @@ components:
           nullable: true
           description: Email address
           example: "kontakt@example.com"
-        Fax:
-          type: string
-          nullable: true
-          description: Fax number
-          example: "+49 123 456780"
     GenderOrNoInformation:
       type: string
       nullable: true

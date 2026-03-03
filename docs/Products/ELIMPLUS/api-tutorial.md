@@ -2,8 +2,8 @@
 
 A practical guide for integration partners using the ELIM+ (Laboratory Reporting) API.
 
-**Version:** 0.1.2
-**Last Updated:** 2026-02-20
+**Version:** 0.2.0
+**Last Updated:** 2026-03-03
 
 ---
 
@@ -128,7 +128,6 @@ The main data structure for notifiable disease reporting. Contains:
 - **MeldendeEinrichtung**: Reporting facility (laboratory)
 - **MeldendePerson**: Reporting person
 - **EinsendendeEinrichtung**: Sending facility (e.g., hospital that ordered the test)
-- **Krankheit**: Disease-specific data (Influenza, RSV, Norovirus, or SARS-CoV-2)
 - **MeldungsDatum**: Report date
 - **MeldungsVerweisId**: Reference ID for linking corrections or follow-up reports
 
@@ -230,15 +229,8 @@ The endpoint accepts laboratory report data as JSON. Only `reportId` is required
 ```json
 {
   "reportId": "LAB-2026-00123",
-  "KrankheitsCode": "J09",
   "MeldungsDatum": "2026-02-20",
   "MeldungsVerweisId": "MELD-REF-2026-00001",
-  "Krankheit": {
-    "Influenza": {},
-    "Rsv": null,
-    "Norovirus": null,
-    "Sarscov2": null
-  },
   "Patient": {
     "IsAnonym": false,
     "Standard": {
@@ -302,17 +294,15 @@ The endpoint accepts laboratory report data as JSON. Only `reportId` is required
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `reportId` | string | **Yes** | Unique laboratory report identifier |
-| `KrankheitsCode` | string | No | Disease code (e.g., ICD-10) |
 | `MeldungsDatum` | date (YYYY-MM-DD) | No | Report date |
 | `MeldungsVerweisId` | string | No | Reference ID for linking corrections or follow-up reports |
-| `Krankheit.*` | object | No | Disease-specific data (only one should be populated) |
 | `Patient.IsAnonym` | boolean | No | Patient type: false = standard (default), true = anonymous |
 | `Patient.Standard.*` | object | No | Standard patient with full identification (use when IsAnonym=false) |
 | `Patient.Standard.Name.*` | object | No | Patient name (Vorname, Nachname) |
 | `Patient.Standard.Geschlecht` | enum | No | Gender (see enum values below) |
 | `Patient.Standard.Geburtsdatum` | date (YYYY-MM-DD) | No | Full date of birth |
 | `Patient.Standard.Adresse.*` | object | No | Full address (Strasse, PLZ, Stadt, Land) |
-| `Patient.Standard.Kontakt.*` | object | No | Contact information (Telefon, Email, Fax) |
+| `Patient.Standard.Kontakt.*` | object | No | Contact information (Telefon, Email) |
 | `Patient.Anonym.*` | object | No | Anonymous patient with limited data (use when IsAnonym=true) |
 | `Patient.Anonym.Geschlecht` | enum | No | Gender (see enum values below) |
 | `Patient.Anonym.GeburtsmonatJahr` | string (YYYY-MM) | No | Birth month/year only (not full date for privacy) |
@@ -538,7 +528,6 @@ RESPONSE=$(curl -s -X POST \
   -H "Content-Type: application/json" \
   -d '{
     "reportId": "LAB-2026-00123",
-    "KrankheitsCode": "J09",
     "MeldungsDatum": "2026-02-20",
     "Patient": {
       "IsAnonym": false,
@@ -595,7 +584,6 @@ MAGIC_LINK=$(curl -s -X POST -u "$API_USER:$API_PASS" \
   -H "Content-Type: application/json" \
   -d '{
     "reportId": "LAB-2026-00456",
-    "Krankheit": {"Rsv": {}},
     "Patient": {
       "IsAnonym": false,
       "Standard": {
@@ -648,7 +636,6 @@ while IFS=, read -r report_id disease first_name last_name dob; do
     --arg dob "$dob" \
     '{
       reportId: $reportId,
-      Krankheit: {($disease): {}},
       Patient: {
         IsAnonym: false,
         Standard: {
@@ -689,7 +676,6 @@ MAGIC_LINK=$(curl -s -X POST -u "$API_USER:$API_PASS" \
   -H "Content-Type: application/json" \
   -d '{
     "reportId": "LAB-2026-00789",
-    "Krankheit": {"Sarscov2": {}},
     "Patient": {
       "IsAnonym": false,
       "Standard": {
@@ -727,9 +713,7 @@ MAGIC_LINK=$(curl -s -X POST -u "$API_USER:$API_PASS" \
   -H "Content-Type: application/json" \
   -d '{
     "reportId": "LAB-2026-00999",
-    "KrankheitsCode": "J09",
     "MeldungsDatum": "2026-02-20",
-    "Krankheit": {"Influenza": {}},
     "Patient": {
       "IsAnonym": true,
       "Anonym": {
@@ -926,6 +910,6 @@ For technical support or questions about the ELIM+ API:
 
 ---
 
-**Document Version:** 0.1.2
-**Last Updated:** 2026-02-20
+**Document Version:** 0.2.0
+**Last Updated:** 2026-03-03
 **API Version:** v1
