@@ -1,5 +1,8 @@
 site_name: "Vertama: The Manuals"
 # site_url: https://vertama-gmbh.github.io/
+repo_url: https://github.com/Vertama-GmbH/docs
+repo_name: Vertama-GmbH/docs
+edit_uri: edit/main/docs/
 #
 theme:
   name: 'material'
@@ -21,6 +24,7 @@ theme:
     - navigation.top            # Back to top button
     - navigation.tracking       # Update URL as you scroll
     - toc.follow                # TOC follows scroll position
+    - content.action.edit       # Edit this page pencil icon
     - content.code.copy         # Copy button on code blocks
     - search.highlight          # Highlight search term on target page
     - header.autohide           # Hide header when scrolling down
