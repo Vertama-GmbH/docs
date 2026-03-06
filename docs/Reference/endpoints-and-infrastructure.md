@@ -10,19 +10,9 @@ Diese Seite enthält alle notwendigen technischen Informationen, um eine reibung
 Um eine verschlüsselte Kommunikation zu garantieren, nutzen wir aktuelle SSL/TLS-Standards.
 
 ### Aktuelles Zertifikat
-* **Gültig bis:** 17.02.2026
-
-**Downloads der aktuellen Zertifikate:**
-> [elim.vertamob.de.ca-bundle](endpoints-and-infrastructure/certs/2025/elim.vertamob.de.ca-bundle)
-
-> [elim.vertamob.de.crt](endpoints-and-infrastructure/certs/2025/elim.vertamob.de.crt)
-
-> [elim.vertamob.de.p7b](endpoints-and-infrastructure/certs/2025/elim.vertamob.de.p7b)
-
-### Zukünftiges Zertifikat
 * **Gültig bis:** 25.02.2027
 
-**Downloads der zukünftigen Zertifikate:**
+**Downloads der aktuellen Zertifikate:**
 > [elim.vertamob.de.ca-bundle](endpoints-and-infrastructure/certs/2026/elim.vertamob.de.ca-bundle)
 
 > [elim.vertamob.de.crt](endpoints-and-infrastructure/certs/2026/elim.vertamob.de.crt)
@@ -38,5 +28,5 @@ Falls Ihr Unternehmensnetzwerk durch eine Firewall geschützt ist, müssen die f
 
 ---
 
-**Stand**: Januar 2026<br>
-**Nächste Überprüfung**: Februar 2026
+**Stand**: März 2026<br>
+**Nächste Überprüfung**: Januar 2027
