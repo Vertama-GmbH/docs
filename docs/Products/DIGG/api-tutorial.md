@@ -2,8 +2,8 @@
 
 A practical guide for integration partners using the DIGG (Digitale Geburtsanzeige) API.
 
-**Version:** 0.1.0
-**Last Updated:** 2026-02-23
+**Version:** 0.2.0
+**Last Updated:** 2026-03-09
 
 ---
 
@@ -55,10 +55,11 @@ End User
     ↓
 KIS / Hospital System (asynchronous)
     ↓
-[7] GET /api/digg/v1/reports/{reportId}  → status (PENDING, SUCCESS, FAILURE) + receipt PDF
+[7] GET /api/digg/v1/reports/{id}  → status (PENDING, SUCCESS, FAILURE) + receipt PDF
 ```
 
 **Benefits:**
+
 - No direct automated submission — users maintain control and can review/correct data
 - Form validation happens in browser (immediate feedback)
 - Secure, encrypted mementos protect sensitive parent/child data
@@ -66,6 +67,7 @@ KIS / Hospital System (asynchronous)
 ### Prerequisites
 
 Before using the API, you need:
+
 - **API User Credentials**: Username and password provided by your administrator
 - **Seal or Signature**: You have to create a seal or signature and deposit it at https://elim.vertamob.de/home/signaturen
 
@@ -88,7 +90,7 @@ The API uses **HTTP Basic Authentication** with your API user credentials (the s
 curl -u "api-username:api-password" \
   -X POST \
   -H "Content-Type: application/json" \
-  -d '{"reportId":"DIGG-2026-001"}' \
+  -d '{"id":"DIGG-2026-001"}' \
   https://elim.vertamob.de/api/digg/v1/memento
 ```
 
@@ -99,12 +101,17 @@ curl -u "api-username:api-password" \
 ### Geburtsanzeige
 
 The main data structure for birth registration reporting. Key fields include:
-- **reportId** (required): Unique report identifier for tracking
-- **StandortId**: ID of the reporting hospital
+
+- **id** (required): Unique report identifier for tracking
+- **standortId**: ID of the reporting hospital
+- **nameEinrichtung**: Name of the hospital
+- **ansprechpartner**: Contact name
+- **anschriftAutor**: Hospital Address
 - **geburtsangaben**: Details about time and place of birth
 - **kind**: Child's gender and names
 - **mutter**: Mother's standard or confidential data (vertrauliche Geburt)
 - **elternteil2**: Optional secondary parent data
+- **zuordnungGeburtsanzeige**: Identifier for further official references
 
 ### Digital Signature (Siegel / Signatur)
 
@@ -114,15 +121,17 @@ If a seal is available it will be applied automatically, otherwise the end user 
 ### Memento Pattern
 
 A **memento** is an encrypted, URL-safe string that contains form pre-fill data:
+
 - Generated from JSON hospital report data
 - Tamper-proof and URL-safe
 - Used as query parameter: `?m={memento}`
 
 ### Report ID
 
-The `reportId` field must be unique per API user. It serves a dual purpose:
+The `id` field must be unique per API user. It serves a dual purpose:
+
 1. **Form pre-fill and correlation**: Correlates the hospital data to the form
-2. **Status retrieval key**: After submission, used to retrieve delivery status via `GET /api/digg/v1/status/{reportId}`
+2. **Status retrieval key**: After submission, used to retrieve delivery status via `GET /api/digg/v1/status/{id}`
 
 ---
 
@@ -134,21 +143,29 @@ The `reportId` field must be unique per API user. It serves a dual purpose:
 
 ### Request Body
 
-Only `reportId` is required; all other fields are optional to allow partial pre-filling.
+Only `id` is required; all other fields are optional to allow partial pre-filling.
 
 **Minimal Example:**
 ```json
 {
-  "reportId": "DIGG-2026-00001"
+  "id": "DIGG-2026-00001"
 }
 ```
 
 **Complete Example:**
 ```json
 {
-  "reportId": "DIGG-2026-00123",
+  "id": "DIGG-2026-00123",
   "standortId": "770001",
   "nameEinrichtung": "Universitätsklinikum Musterstadt",
+  "anschriftAutor": {
+    "gebaeude": {
+      "postleitzahl": "10117",
+      "strasse": "Musterstraße",
+      "hausnummer": "1",
+      "wohnort": "Berlin"
+    }
+  },
   "totgeburt": false,
   "vertraulicheGeburt": false,
   "geburtsangaben": {
@@ -204,7 +221,7 @@ DIGG reports are delivered asynchronously via xPersonenstand/XTA2 transport.
 
 **Endpoint:** `GET /api/digg/v1/reports`
 
-Returns an array of `reportId` strings for reports that have been submitted to DEMIS but not yet retrieved (unpolled). Reports disappear from this list once retrieved without `?peek=true`.
+Returns an array of `id` strings for reports that have been submitted to DEMIS but not yet retrieved (unpolled). Reports disappear from this list once retrieved without `?peek=true`.
 
 **Request:**
 ```bash
@@ -221,12 +238,13 @@ An empty array `[]` means no submissions are pending retrieval.
 
 ---
 
-### GET /reports/{reportId} — Retrieve report result
+### GET /reports/{id} — Retrieve report result
 
-**Endpoint:** `GET /api/digg/v1/reports/{reportId}`
+**Endpoint:** `GET /api/digg/v1/reports/{id}`
 
 **Parameters:**
-- `reportId` (path, required)
+
+- `id` (path, required)
 - `peek` (query, optional): `true` for non-destructive read. Default: `false`.
 
 **Non-destructive peek:**
@@ -238,7 +256,7 @@ curl -u "api-user:api-pass" \
 **Response (200 — SUCCESS):**
 ```json
 {
-  "reportId": "DIGG-2026-00123",
+  "id": "DIGG-2026-00123",
   "status": "SUCCESS",
   "module": "DIGG",
   "submittedAt": "2026-02-23T14:32:00Z",
@@ -249,6 +267,7 @@ curl -u "api-user:api-pass" \
 ```
 
 **Status semantics:**
+
 - `PENDING`: Sent but delivery not yet confirmed. Not marked as polled.
 - `SUCCESS`: Successfully delivered to receiver. Contains `receiptPdf` (base64).
 - `FAILURE`: Transport failed. Contains `failureReason`.
@@ -271,10 +290,10 @@ curl -u "api-user:api-pass" \
 
 ### Validation Errors
 
-If the request data is invalid (e.g. missing `reportId`), a 400 Bad Request is returned:
+If the request data is invalid (e.g. missing `id`), a 400 Bad Request is returned:
 ```json
 {
-  "errors": ["reportId must not be null"]
+  "errors": ["id must not be null"]
 }
 ```
 
@@ -284,10 +303,10 @@ If the request data is invalid (e.g. missing `reportId`), a 400 Bad Request is r
 
 ### API Endpoints Summary
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/digg/v1/memento` | Create memento |
-| GET | `/api/digg/v1/reports/{reportId}` | Retrieve report delivery status |
+| Method | Endpoint                    | Description |
+|--------|-----------------------------|-------------|
+| POST | `/api/digg/v1/memento`      | Create memento |
+| GET | `/api/digg/v1/reports/{id}` | Retrieve report delivery status |
 
 ### Date & Time Format
 - **Date**: ISO 8601 format (`YYYY-MM-DD`, e.g., `2026-02-23`)
@@ -302,6 +321,6 @@ If the request data is invalid (e.g. missing `reportId`), a 400 Bad Request is r
 
 ---
 
-**Document Version:** 0.1.0
-**Last Updated:** 2026-02-23
+**Document Version:** 0.2.0
+**Last Updated:** 2026-03-09
 **API Version:** v1
