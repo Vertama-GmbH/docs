@@ -1,0 +1,823 @@
+openapi: 3.0.3
+info:
+  title: ELIM API
+  version: "0.1.0"
+  description: API for ELIM Hospitalisierungsmeldung (disease notification) - DEMIS integration
+servers:
+  - url: /api/elim/v1
+    description: ELIM API Version 1
+paths:
+  /memento:
+    post:
+      summary: Create encrypted memento string from Hospitalisierungsmeldung data
+      description: |-
+        Accepts Hospitalisierungsmeldung data as JSON and returns an encrypted memento string.
+        The memento can be used to pre-fill HTML forms via URL parameter.
+
+        Use Case:
+        External systems (e.g., KIS) submit form data → receive encrypted string →
+        construct URL with memento parameter → user opens pre-filled form.
+
+        This endpoint validates the submitted data against the Hospitalisierungsmeldung schema
+        before encryption. The memento string is URL-safe and tamper-proof.
+
+        Note: This endpoint does NOT submit the report to DEMIS.
+        It only creates a pre-fill token for the interactive HTML form.
+      tags:
+        - ELIM
+      security:
+        - basicAuth: []
+      operationId: createMemento
+      requestBody:
+        required: true
+        description: Hospitalisierungsmeldung data to encrypt into memento string
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Hospitalisierungsmeldung'
+      responses:
+        '200':
+          description: Memento successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MementoResponse'
+              example:
+                memento: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                magicLink: "/mtl/kfC...token.../elim/forms/eyJ...memento..."
+        '400':
+          description: Bad Request - invalid form data (validation errors)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+              example:
+                errors: ["MeldeDatum must be a valid date"]
+        '401':
+          description: |-
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
+  /reports:
+    get:
+      summary: List pending report IDs for the authenticated API user
+      description: |-
+        Returns the list of report IDs that have been submitted by the authenticated
+        API user but not yet retrieved (unpolled). These are reports waiting for
+        the caller to fetch the full result.
+
+        Use GET /reports/{reportId} to retrieve the full result for each ID.
+
+        The list contains only unpolled report IDs — once a report has been
+        retrieved without ?peek=true it will no longer appear here.
+      tags:
+        - ELIM
+      security:
+        - basicAuth: []
+      operationId: listPendingReports
+      responses:
+        '200':
+          description: List of pending report IDs (may be empty)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example:
+                - "ELIM-2024-00123"
+                - "ELIM-2024-00124"
+        '401':
+          description: |-
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
+  /reports/{reportId}:
+    get:
+      summary: Retrieve a single report result by report ID
+      description: |-
+        Returns the full result for a submitted Hospitalisierungsmeldung report.
+
+        By default this is a destructive read: once retrieved, the report is marked
+        as polled and will no longer appear in GET /reports. Use ?peek=true for
+        a non-destructive read that leaves the report in the pending list.
+
+        Status semantics:
+        - SUCCESS: Report was successfully submitted to DEMIS. receiptPdf contains
+          the RKI-issued receipt PDF encoded as base64.
+        - FAILURE: Submission failed. failureReason describes the error.
+      tags:
+        - ELIM
+      security:
+        - basicAuth: []
+      operationId: getReport
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          description: The report ID
+          schema:
+            type: string
+          example: "ELIM-2024-00123"
+        - name: peek
+          in: query
+          required: false
+          description: |-
+            If true, retrieve the result without marking it as polled.
+            The report remains in the GET /reports pending list.
+            Default: false (destructive read).
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Report result found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportResult'
+              example:
+                reportId: "ELIM-2024-00123"
+                status: "SUCCESS"
+                module: "ELIM"
+                submittedAt: "2024-12-08T14:32:00Z"
+                receiptPdf: "JVBERi0xLjQK..."
+                failureReason: null
+        '401':
+          description: |-
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
+        '404':
+          description: |-
+            Report not found. No report with this ID exists for the
+            authenticated API user.
+        '410':
+          description: |-
+            Gone. The report was previously retrieved (polled) and is no longer
+            available. Use ?peek=true on future requests to avoid consuming reports.
+components:
+  schemas:
+    MementoResponse:
+      type: object
+      required:
+        - memento
+      properties:
+        memento:
+          type: string
+          description: |-
+            Encrypted, URL-safe memento string containing the form data.
+            Use as query parameter to pre-fill forms: ?m=<string>
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        magicLink:
+          type: string
+          nullable: true
+          description: |-
+            Ready-to-use Magic Token Link URL (relative path).
+            Combines authentication and form pre-fill in a single click:
+            the authenticated API user can forward this URL to a browser
+            session that has no existing login — it will authenticate and
+            open the pre-filled form selection page directly.
+            Prepend your host to make it absolute: https://host + magicLink
+          example: "/mtl/eyJ...token.../elim/?m=eyJ...memento..."
+    ValidationErrorResponse:
+      type: object
+      required:
+        - errors
+      description: |-
+        Validation error response returned by Spring's ControllerAdvice.
+        Contains a list of validation error messages.
+      properties:
+        errors:
+          type: array
+          description: List of validation error messages
+          items:
+            type: string
+          example: ["MeldeDatum must be a valid date"]
+    Hospitalisierungsmeldung:
+      type: object
+      description: |-
+        Disease notification report (Hospitalisierungsmeldung) for DEMIS integration.
+
+        For memento creation, most fields are optional to allow partial pre-filling.
+        Actual validation for DEMIS submission happens later in the form workflow.
+      properties:
+        MeldeId:
+          type: string
+          nullable: true
+          description: |-
+            Unique identifier for this report (Melde-ID).
+            Used to track and correlate this report throughout the workflow.
+          example: "ELIM-2024-00123"
+        MeldeDatum:
+          type: string
+          format: date
+          nullable: true
+          description: Date when the report was created
+          example: "2024-12-08"
+        Patient:
+          $ref: '#/components/schemas/Patient'
+        MedizinischeInformationen:
+          $ref: '#/components/schemas/MedicalInformation'
+        KlinischeAngaben:
+          $ref: '#/components/schemas/KlinischeAngaben'
+        MeldendeEinrichtung:
+          $ref: '#/components/schemas/MeldendeEinrichtung'
+        Arzt:
+          $ref: '#/components/schemas/Arzt'
+    Patient:
+      type: object
+      description: Patient information
+      properties:
+        Vorname:
+          type: string
+          nullable: true
+          description: First name
+          example: "Max"
+        Name:
+          type: string
+          nullable: true
+          description: Last name
+          example: "Mustermann"
+        Geburtsdatum:
+          type: string
+          format: date
+          nullable: true
+          description: Date of birth (YYYY-MM-DD)
+          example: "1980-05-15"
+        Geschlecht:
+          $ref: '#/components/schemas/GenderOrNoInformation'
+        Adresse:
+          $ref: '#/components/schemas/Address'
+        Kontakt:
+          $ref: '#/components/schemas/Kontakt'
+    Address:
+      type: object
+      description: Full address with separate house number and country handling
+      properties:
+        Strasse:
+          type: string
+          nullable: true
+          description: Street name
+          example: "Musterstraße"
+        Hausnummer:
+          type: string
+          nullable: true
+          description: House number
+          example: "123"
+        PLZ:
+          type: string
+          nullable: true
+          description: Postal code
+          example: "12345"
+        Stadt:
+          type: string
+          nullable: true
+          description: City name
+          example: "Musterstadt"
+        inDeutschland:
+          type: boolean
+          description: Whether the address is in Germany
+          example: true
+        anderesLand:
+          type: string
+          nullable: true
+          description: Country name if not in Germany (ISO 3166 code)
+          example: "AT"
+    Adresse:
+      type: object
+      description: Simple address (used for organizations/labs)
+      properties:
+        Strasse:
+          type: string
+          nullable: true
+          description: Street name and number
+          example: "Musterstraße 123"
+        PLZ:
+          type: string
+          nullable: true
+          description: Postal code
+          example: "12345"
+        Stadt:
+          type: string
+          nullable: true
+          description: City name
+          example: "Musterstadt"
+        Land:
+          type: string
+          nullable: true
+          description: Country (ISO 3166 code)
+          example: "DE"
+    Kontakt:
+      type: object
+      description: Contact information
+      properties:
+        Telefon:
+          type: string
+          nullable: true
+          description: Phone number
+          example: "+49 123 456789"
+        Email:
+          type: string
+          format: email
+          nullable: true
+          description: Email address
+          example: "kontakt@example.com"
+    Name:
+      type: object
+      description: Person name with title
+      properties:
+        Vorname:
+          type: string
+          nullable: true
+          description: First name
+          example: "Dr. Max"
+        Nachname:
+          type: string
+          nullable: true
+          description: Last name
+          example: "Mustermann"
+        Titel:
+          type: string
+          nullable: true
+          description: Title (e.g. Dr., Prof.)
+          example: "Dr."
+    GenderOrNoInformation:
+      type: string
+      nullable: true
+      description: |-
+        Gender or no information (administrative gender).
+
+        Values:
+        - NASK: Not asked (nicht gefragt)
+        - UNKNOWN: Asked but unknown (gefragt, aber unbekannt)
+        - MAENNLICH: Male (männlich)
+        - WEIBLICH: Female (weiblich)
+        - DIVERS: Diverse
+        - UNBESTIMMT: Unspecified (unbestimmt)
+      enum:
+        - NASK
+        - UNKNOWN
+        - MAENNLICH
+        - WEIBLICH
+        - DIVERS
+        - UNBESTIMMT
+      example: "MAENNLICH"
+    MedicalInformation:
+      type: object
+      description: Medical information about the disease
+      properties:
+        Erkrankungsbeginn:
+          type: string
+          format: date
+          nullable: true
+          description: Date of disease onset
+          example: "2024-12-01"
+        DatumDiagnosestellung:
+          type: string
+          format: date
+          nullable: true
+          description: Date of diagnosis
+          example: "2024-12-05"
+        Notes:
+          type: string
+          nullable: true
+          description: Additional notes
+          example: "Patient presented with fever"
+    KlinischeAngaben:
+      type: object
+      description: Clinical information about the patient
+      properties:
+        Verstorben:
+          $ref: '#/components/schemas/YesOrNoOrNoInformation'
+        Todesdatum:
+          type: string
+          format: date
+          nullable: true
+          description: Date of death (if applicable)
+          example: "2024-12-10"
+        Militaer:
+          $ref: '#/components/schemas/Militaer'
+        LaborBeauftragung:
+          $ref: '#/components/schemas/YesOrNoOrNoInformation'
+        Labor:
+          $ref: '#/components/schemas/Organization'
+        Hospitalisiert:
+          $ref: '#/components/schemas/YesOrNoOrNoInformation'
+        Hospitalisierung:
+          $ref: '#/components/schemas/Hospitalisierung'
+        OrganSpende:
+          $ref: '#/components/schemas/YesOrNoOrNoInformation'
+        BeiInfektionsschutzEinrichtung:
+          $ref: '#/components/schemas/YesOrNoOrNoInformation'
+        InfektionsschutzEinrichtungen:
+          type: array
+          nullable: true
+          description: List of infection protection facilities
+          items:
+            $ref: '#/components/schemas/InfektionsschutzEinrichtung'
+        ExpositionsortBekannt:
+          $ref: '#/components/schemas/YesOrNoOrNoInformation'
+        Expositionsorte:
+          type: array
+          nullable: true
+          description: List of exposure locations
+          items:
+            $ref: '#/components/schemas/Expositionsort'
+        Anmerkungen:
+          type: string
+          nullable: true
+          description: Additional notes / remarks
+          example: "Patient recently traveled"
+    YesOrNoOrNoInformation:
+      type: string
+      nullable: true
+      description: |-
+        Yes/No answer or no information.
+
+        Values:
+        - NASK: Not asked (nicht gefragt)
+        - YES: Yes (Ja)
+        - NO: No (Nein)
+        - ASKU: Asked but unknown (gefragt, aber unbekannt)
+      enum:
+        - NASK
+        - "YES"
+        - "NO"
+        - ASKU
+      example: "NASK"
+    Militaer:
+      type: string
+      nullable: true
+      description: |-
+        Military affiliation (Bundeswehr).
+
+        Values:
+        - NASK: Not asked (nicht gefragt)
+        - KeinBezug: No reference to Bundeswehr
+        - Zivilperson: Civilian active in Bundeswehr facility
+        - Soldat: Member of Bundeswehr
+        - ASKU: Asked but unknown (gefragt, aber unbekannt)
+      enum:
+        - NASK
+        - KeinBezug
+        - Zivilperson
+        - Soldat
+        - ASKU
+      example: "NASK"
+    Organization:
+      type: object
+      description: Organization (e.g. laboratory)
+      properties:
+        Name:
+          type: string
+          nullable: true
+          description: Name of the organization
+          example: "Labor für Medizinische Mikrobiologie"
+        Adresse:
+          $ref: '#/components/schemas/Adresse'
+        Telefon:
+          type: string
+          nullable: true
+          description: Phone number
+          example: "+49 30 1111111"
+    Hospitalisierung:
+      type: object
+      description: Hospitalization details
+      properties:
+        AufnahmeAm:
+          type: string
+          format: date
+          nullable: true
+          description: Admission date
+          example: "2024-12-05"
+        EntlassungAm:
+          type: string
+          format: date
+          nullable: true
+          description: Discharge date
+          example: "2024-12-12"
+        ArtDerHospitalisierung:
+          $ref: '#/components/schemas/ArtDerHospitalisierung'
+        IntensivBehandlung:
+          type: boolean
+          description: Whether intensive care was required
+          example: false
+        IntensivBehandlungVon:
+          type: string
+          format: date
+          nullable: true
+          description: Start date of intensive care
+          example: "2024-12-06"
+        IntensivBehandlungBis:
+          type: string
+          format: date
+          nullable: true
+          description: End date of intensive care
+          example: "2024-12-08"
+        Beatmung:
+          type: boolean
+          description: Whether mechanical ventilation was used
+          example: false
+    ArtDerHospitalisierung:
+      type: string
+      nullable: true
+      description: |-
+        Type of hospitalization (hospital department).
+      enum:
+        - AllgemeineChirurgie
+        - AllgemeinePsychiatrie
+        - Angiologie
+        - Augenheilkunde
+        - FrauenheilkundeUndGeburtshilfe
+        - davonGeburtshilfe
+        - Dermatologie
+        - Endokrinologie
+        - Frauenheilkunde
+        - Gastroenterologie
+        - Gefäßchirurgie
+        - Geriatrie
+        - HalsNasenOhrenheilkunde
+        - HämatologieUndInternistischeOnkologie
+        - HeiltherapeutischeAbteilung
+        - HerzThoraxchirurgie
+        - Herzchirurgie
+        - InnereMedizin
+        - Intensivmedizin
+        - Kardiologie
+        - KinderUndJugendpsychiatrie
+        - Kinderchirurgie
+        - Kinderkardiologie
+        - LangzeitbereichKinder
+        - LungenUndBronchialheilkunde
+        - Neonatologie
+        - Nephrologie
+        - Neurochirurgie
+        - Neurologie
+        - Nuklearmedizin
+        - Orthopädie
+        - OrthopädieUndUnfallchirurgie
+        - Pädiatrie
+        - Palliativmedizin
+        - PlastischeChirurgie
+        - Pneumologie
+        - PsychosomatikPsychotherapie
+        - Radiologie
+        - Rheumatologie
+        - Schmerztherapie
+        - SonstigeFachabteilung
+        - Strahlenheilkunde
+        - Suchtmedizin
+        - ThoraxHerzchirurgie
+        - Thoraxchirurgie
+        - Unfallchirurgie
+        - Urologie
+        - Visceralchirurgie
+        - Weaningeinheit
+        - Wirbelsäulenchirurgie
+        - ZahnUndKieferheilkundeMundUndKieferchirurgie
+      example: "InnereMedizin"
+    InfektionsschutzEinrichtung:
+      type: object
+      description: Infection protection facility
+      properties:
+        Typ:
+          $ref: '#/components/schemas/OrganizationType'
+        Beginn:
+          type: string
+          format: date
+          nullable: true
+          description: Start date of association
+          example: "2024-11-01"
+        Ende:
+          type: string
+          format: date
+          nullable: true
+          description: End date of association
+          example: "2024-12-01"
+        Rolle:
+          $ref: '#/components/schemas/OrganizationAssociation'
+        Name:
+          type: string
+          nullable: true
+          description: Name of the facility
+          example: "Kita Sonnenschein"
+        Strasse:
+          type: string
+          nullable: true
+          description: Street
+          example: "Musterstraße 1"
+        PLZ:
+          type: string
+          nullable: true
+          description: Postal code
+          example: "12345"
+        Stadt:
+          type: string
+          nullable: true
+          description: City
+          example: "Musterstadt"
+        Land:
+          type: string
+          nullable: true
+          description: Country
+          example: "DE"
+        Telefon:
+          type: string
+          nullable: true
+          description: Phone number
+          example: "+49 123 456789"
+    OrganizationType:
+      type: string
+      nullable: true
+      description: |-
+        Organization type (infection protection facility category).
+
+        Values:
+        - MedizinischeEinrichtung: Medical facility
+        - Krankenhaus: Hospital
+        - Gemeinschaftseinrichtung: Community facility (e.g. kindergarten)
+        - Gemeinschaftsunterkunft: Community accommodation
+        - HygienerelevanteEinrichtung: Other hygiene-relevant facility
+        - AndereUnterkunft: Other accommodation
+        - Lebensmittelbetrieb: Food establishment
+        - ErregerdiagnostischeUntersuchungsstelle: Pathogen diagnostic laboratory
+      enum:
+        - MedizinischeEinrichtung
+        - Krankenhaus
+        - Gemeinschaftseinrichtung
+        - Gemeinschaftsunterkunft
+        - HygienerelevanteEinrichtung
+        - AndereUnterkunft
+        - Lebensmittelbetrieb
+        - ErregerdiagnostischeUntersuchungsstelle
+      example: "Krankenhaus"
+    OrganizationAssociation:
+      type: string
+      nullable: true
+      description: |-
+        Association type with infection protection facility.
+
+        Values:
+        - Taetigkeit: Employment (Tätigkeit)
+        - Betreuung: Care (Betreuung)
+        - Unterbringung: Accommodation (Unterbringung)
+      enum:
+        - Taetigkeit
+        - Betreuung
+        - Unterbringung
+      example: "Taetigkeit"
+    Expositionsort:
+      type: object
+      description: Exposure location
+      properties:
+        Beginn:
+          type: string
+          format: date
+          nullable: true
+          description: Start date of exposure
+          example: "2024-11-15"
+        Ende:
+          type: string
+          format: date
+          nullable: true
+          description: End date of exposure
+          example: "2024-11-20"
+        Region:
+          $ref: '#/components/schemas/AnswerSetGeographicRegion'
+        Anmerkungen:
+          type: string
+          nullable: true
+          description: Additional notes about the exposure
+          example: "Business trip"
+    AnswerSetGeographicRegion:
+      type: string
+      nullable: true
+      description: |-
+        Geographic region (German federal states).
+      enum:
+        - NASK
+        - ASKU
+        - SchleswigHolstein
+        - Hamburg
+        - Niedersachsen
+        - Bremen
+        - NordrheinWestfalen
+        - Hessen
+        - RheinlandPfalz
+        - BadenWuerttemberg
+        - Bayern
+        - Saarland
+        - Berlin
+        - Brandenburg
+        - MecklenburgVorpommern
+        - Sachsen
+        - SachsenAnhalt
+        - Thueringen
+      example: "Berlin"
+    MeldendeEinrichtung:
+      type: object
+      description: Reporting facility (meldende Einrichtung)
+      properties:
+        Name:
+          type: string
+          nullable: true
+          description: Name of the reporting facility
+          example: "Universitätsklinikum Musterstadt"
+        BSNR:
+          type: string
+          nullable: true
+          description: Betriebsstättennummer (facility number)
+          example: "123456789"
+        IK_Nummer:
+          type: string
+          nullable: true
+          description: Institutionskennzeichen or Standortnummer
+          example: "987654321"
+        StandortId:
+          type: string
+          nullable: true
+          description: Standort ID
+          example: "987654"
+        Adresse:
+          $ref: '#/components/schemas/Address'
+        Kontakt:
+          $ref: '#/components/schemas/Kontakt'
+    Arzt:
+      type: object
+      description: Reporting physician (meldender Arzt)
+      properties:
+        Name:
+          $ref: '#/components/schemas/Name'
+        LANR:
+          type: string
+          nullable: true
+          description: Lebenslange Arztnummer (lifetime physician number)
+          example: "123456789"
+        Kontakt:
+          $ref: '#/components/schemas/Kontakt'
+    ReportResult:
+      type: object
+      required:
+        - reportId
+        - status
+        - module
+        - submittedAt
+      description: |-
+        Result of a Hospitalisierungsmeldung report submission to DEMIS.
+        Returned by GET /reports/{reportId}.
+      properties:
+        reportId:
+          type: string
+          description: The report ID
+          example: "ELIM-2024-00123"
+        status:
+          type: string
+          enum:
+            - SUCCESS
+            - FAILURE
+          description: |-
+            Submission outcome.
+            - SUCCESS: Report accepted by DEMIS. receiptPdf is populated.
+            - FAILURE: Submission rejected or error occurred. failureReason is populated.
+          example: "SUCCESS"
+        module:
+          type: string
+          description: Module that produced this report
+          example: "ELIM"
+        diseaseCode:
+          type: string
+          nullable: true
+          description: |-
+            Disease code identifying the type of report.
+            Null if not available.
+          example: "Influenza"
+        description:
+          type: string
+          nullable: true
+          description: |-
+            Human-readable description of the report.
+            Null if not available.
+          example: "Hospitalisierungsmeldung Influenza"
+        submittedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the report was submitted to DEMIS (ISO 8601)
+          example: "2024-12-08T14:32:00Z"
+        receiptPdf:
+          type: string
+          nullable: true
+          description: |-
+            Base64-encoded RKI receipt PDF. Populated on SUCCESS, null on FAILURE.
+          example: "JVBERi0xLjQK..."
+        failureReason:
+          type: string
+          nullable: true
+          description: |-
+            Human-readable error message describing why the submission failed.
+            Populated on FAILURE, null on SUCCESS.
+          example: null
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
