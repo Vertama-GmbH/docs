@@ -73,6 +73,9 @@ nav:
        #- "Swagger API Viewer": "https://editor.swagger.io/#/?import=https://vertama-gmbh.github.io/docs/Products/DUBA/api.yml"
        - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DUBA"
      - ELIM:
+       - "API Tutorial": "Products/ELIM/api-tutorial.md"
+       - "api.yml (OpenAPI)": Products/ELIM/api.yml
+       - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=ELIM"
        - "Flyer":
          - "Products/ELIM/onepager/OnePager (PNG).md"
          - "Products/ELIM/onepager/OnePager (HTML).md"
