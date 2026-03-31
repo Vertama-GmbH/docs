@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
     title: DIVI API
-    version: "0.1.0"
+    version: "0.2.0"
     description: API for DIVI Intensivregister reporting - submitting bed occupancy reports to the DIVI Intensivregister
 servers:
     - url: /api/divi/v1
@@ -93,7 +93,7 @@ paths:
                 API user but not yet retrieved (unpolled). These are reports waiting for
                 the caller to fetch the full result.
 
-                Use GET /api/divi/v1/reports/{reportId} to retrieve the full result for each ID.
+                Use GET /api/divi/v1/reports/{id} to retrieve the full result for each ID.
 
                 The list contains only unpolled report IDs — once a report has been
                 retrieved without ?peek=true it will no longer appear here.
@@ -112,36 +112,36 @@ paths:
                                 items:
                                     type: string
                             example:
-                                - "DIVI-2026-00123"
-                                - "DIVI-2026-00124"
+                                - "550e8400-e29b-41d4-a716-446655440000"
+                                - "675f3211-b12c-4b81-962a-112233445566"
                 '401':
                     description: |-
                         Unauthorized - invalid or missing authentication.
                         Returns 401 status with WWW-Authenticate header.
                         Response body is empty.
-    /reports/{reportId}:
+    /reports/{id}:
         get:
             summary: Retrieve the report of a previously submitted DIVI report
             description: |-
-                Returns the current status of a report identified by its reportId.
+                Returns the current status of a report identified by its id.
 
                 The response includes whether the report was successfully sent, the send date,
                 any error messages, and the PDF receipt (base64-encoded) if available.
 
-                Reports are looked up by the authenticated user and the given reportId.
+                Reports are looked up by the authenticated user and the given id.
             tags:
                 - DIVI
             security:
                 - basicAuth: []
             operationId: getReportStatus
             parameters:
-                - name: reportId
+                - name: id
                   in: path
                   required: true
-                  description: The report identifier used when submitting the report
+                  description: The report identifier (UUID) used when submitting the report
                   schema:
                       type: string
-                      example: "divi-2024-00123"
+                      example: "550e8400-e29b-41d4-a716-446655440000"
             responses:
                 '200':
                     description: Report status found
@@ -155,7 +155,7 @@ paths:
                         Returns 401 status with WWW-Authenticate header.
                         Response body is empty.
                 '404':
-                    description: Report not found for the given reportId and authenticated user
+                    description: Report not found for the given id and authenticated user
                 '410':
                     description: |-
                         Gone. The report was previously retrieved (polled) and is no longer available.
@@ -172,6 +172,17 @@ components:
                         Encrypted, URL-safe memento string containing the form data.
                         Use as query parameter to pre-fill forms: ?m=<string>
                     example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                magicLink:
+                    type: string
+                    nullable: true
+                    description: |-
+                        Ready-to-use Magic Token Link URL (relative path).
+                        Combines authentication and form pre-fill in a single click:
+                        the authenticated API user can forward this URL to a browser
+                        session that has no existing login — it will authenticate and
+                        open the pre-filled form selection page directly.
+                        Prepend your host to make it absolute: https://host + magicLink
+                    example: "/mtl/eyJ...token.../divi/reporting/new?m=eyJ...memento..."
         ValidationErrorResponse:
             type: object
             required:
@@ -185,26 +196,21 @@ components:
                     description: List of validation error messages
                     items:
                         type: string
-                    example: ["reportId must not be null"]
+                    example: ["id must not be null"]
         DiviMementoRequest:
             type: object
             description: |-
                 DIVI Intensivregister report data for memento pre-fill.
                 For memento creation, most fields are optional to allow partial pre-filling.
             required:
-                - reportId
+                - id
             properties:
-                reportId:
+                id:
                     type: string
                     description: |-
                         Unique identifier for this report (StatusID).
                         Required to track and correlate this report throughout the workflow.
-                    example: "divi-2024-00123"
-                diviAccountId:
-                    type: integer
-                    format: int64
-                    nullable: true
-                    description: ID of the DIVI account to use for submission
+                    example: "550e8400-e29b-41d4-a716-446655440000"
                 meldebereich:
                     $ref: '#/components/schemas/SmallMeldebereichRequest'
                 auspraegung:
@@ -259,21 +265,16 @@ components:
             type: object
             description: |-
                 DIVI report submission request. All required fields must be present.
-                The diviAccountId identifies which DIVI OAuth2 account to use for submission.
             required:
-                - reportId
-                - diviAccountId
+                - id
                 - meldebereich
                 - auspraegung
                 - kapazitaeten
             properties:
-                reportId:
+                id:
                     type: string
                     description: Unique identifier for status tracking
-                diviAccountId:
-                    type: integer
-                    format: int64
-                    description: ID of the DIVI account to use for submission
+                    example: "550e8400-e29b-41d4-a716-446655440000"
                 meldebereich:
                     $ref: '#/components/schemas/SmallMeldebereichRequest'
                 auspraegung:
@@ -621,14 +622,14 @@ components:
         ReportResponse:
             type: object
             required:
-                - reportId
+                - id
                 - succeeded
             description: Response after submitting a DIVI report
             properties:
-                reportId:
+                id:
                     type: string
                     description: The report identifier
-                    example: "divi-2024-00123"
+                    example: "550e8400-e29b-41d4-a716-446655440000"
                 succeeded:
                     type: boolean
                     description: Whether the report was successfully sent to the DIVI Intensivregister
@@ -641,14 +642,14 @@ components:
         StatusResponse:
             type: object
             required:
-                - reportId
+                - id
                 - succeeded
             description: Status information for a previously submitted report
             properties:
-                reportId:
+                id:
                     type: string
                     description: The report identifier
-                    example: "divi-2024-00123"
+                    example: "550e8400-e29b-41d4-a716-446655440000"
                 succeeded:
                     type: boolean
                     description: Whether the report was successfully sent

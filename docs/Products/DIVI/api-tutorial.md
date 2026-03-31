@@ -40,9 +40,9 @@ The DIVI module supports two distinct workflows:
 
 **Workflow B: Staff Review (Memento & Pre-fill)**
 1. **Hospital system (KIS)** gathers partial or complete data.
-2. **System calls API** `POST /api/divi/v1/memento` to get an encrypted `memento` string.
-3. **System constructs URL** to the interactive DIVI form: `https://elim.vertamob.de/divi/?m={memento}`.
-4. **User** opens the link, reviews the pre-filled data, completes missing fields, and clicks submit.
+2. **System calls API** `POST /api/divi/v1/memento` to get an encrypted `memento` string and an authenticated `magicLink`.
+3. **System constructs absolute URL** using the `magicLink`: `https://elim.vertamob.de + magicLink`.
+4. **User** opens the link, is automatically authenticated, reviews the pre-filled data, completes missing fields, and clicks submit.
 
 ### Prerequisites
 
@@ -88,6 +88,21 @@ The main data structure for reporting. Key components include:
 
 - The **Direct Submission** endpoint requires all mandatory fields to perform the transmission.
 - The **Memento** endpoint requires only `reportId` (others are optional), as it merely encrypts the data to assist the human user in filling out the UI form.
+
+### Magic Token Link (MTL)
+
+The `magicLink` field in the Memento API response is a server-issued, time-limited URL that:
+- Authenticates the end user automatically (no login page)
+- Redirects to `/divi/?m={memento}` on success
+- Is a **relative path** — prepend your instance host to make it absolute
+
+```
+magicLink: "/mtl/eyJ...token.../divi/?m=eyJ...memento..."
+
+Full URL: https://elim.vertamob.de/mtl/eyJ...token.../divi/?m=eyJ...memento..."
+```
+
+See [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) for security details and token lifetime.
 
 ### Report ID
 
@@ -161,16 +176,21 @@ Same structure as Direct Submission, but only `reportId` is strictly required.
 
 ### Response
 
-Returns the encrypted memento string.
+Returns a JSON object containing the encrypted memento and a ready-to-use magic link:
 
 ```json
 {
-  "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..DGG5lQvJC8OpYrCt.Xm8YR..."
+  "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..DGG5lQvJC8OpYrCt.Xm8YR...",
+  "magicLink": "/mtl/eyJ...token.../divi/?m=eyJ...memento..."
 }
 ```
 
-You can then pass this string to your users:
-`https://elim.vertamob.de/divi/?m=eyJhb...`
+| Field | Type | Nullable | Description |
+|-------|------|----------|-------------|
+| `memento` | string | No | Encrypted, URL-safe string containing report data. Use as `?m={memento}` query parameter. |
+| `magicLink` | string | Yes | Relative URL for authenticated single-click access. Prepend your instance host: `https://elim.vertamob.de + magicLink` |
+
+You can then pass the full URL (host + `magicLink`) to your users.
 
 ---
 
