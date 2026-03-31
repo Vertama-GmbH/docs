@@ -43,11 +43,11 @@ KIS / Hospital System
     ↓
 [1] POST /api/digg/v1/memento  (API user credentials)
     ↓
-[2] Receives { "memento": "..." }
+[2] Receives { "memento": "...", "magicLink": "/mtl/.../digg/Geburtsbescheinigung?m=..." }
     ↓
-[3] Constructs absolute URL: https://elim.vertamob.de/digg/Geburtsbescheinigung?m={memento}
+[3] Constructs absolute URL: https://elim.vertamob.de + magicLink
     ↓
-[4] Opens URL in browser
+[4] Opens URL in browser — authenticated via MTL token
     ↓
 End User
     ↓
@@ -125,6 +125,21 @@ A **memento** is an encrypted, URL-safe string that contains form pre-fill data:
 - Generated from JSON hospital report data
 - Tamper-proof and URL-safe
 - Used as query parameter: `?m={memento}`
+
+### Magic Token Link (MTL)
+
+The `magicLink` field in the API response is a server-issued, time-limited URL that:
+- Authenticates the end user automatically (no login page)
+- Redirects to `/digg/Geburtsbescheinigung?m={memento}` on success
+- Is a **relative path** — prepend your instance host to make it absolute
+
+```
+magicLink: "/mtl/eyJ...token.../digg/Geburtsbescheinigung?m=eyJ...memento..."
+
+Full URL: https://elim.vertamob.de/mtl/eyJ...token.../digg/Geburtsbescheinigung?m=eyJ...memento..."
+```
+
+See [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) for security details and token lifetime.
 
 ### Report ID
 
@@ -205,11 +220,19 @@ Only `id` is required; all other fields are optional to allow partial pre-fillin
 
 ### Response
 
+Returns a JSON object containing the encrypted memento and a ready-to-use magic link:
+
 ```json
 {
-  "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..DGG5lQvJC8OpYrCt.Xm8YR..."
+  "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..DGG5lQvJC8OpYrCt.Xm8YR...",
+  "magicLink": "/mtl/eyJ...token.../digg/Geburtsbescheinigung?m=eyJ...memento..."
 }
 ```
+
+| Field | Type | Nullable | Description |
+|-------|------|----------|-------------|
+| `memento` | string | No | Encrypted, URL-safe string containing report data. Use as `?m={memento}` query parameter. |
+| `magicLink` | string | Yes | Relative URL for authenticated single-click access. Prepend your instance host: `https://elim.vertamob.de + magicLink` |
 
 ---
 

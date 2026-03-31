@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: DIGG API
-  version: "0.2.0"
+  version: "0.3.0"
   description: API for DIGG birth registration reporting (Geburtsmeldung) - xPersonenstand integration
 servers:
   - url: /api/digg/v1
@@ -59,39 +59,39 @@ paths:
             Returns 401 status with WWW-Authenticate header.
             Response body is empty.
   /reports:
-      get:
-          summary: List pending report IDs for the authenticated API user
+    get:
+      summary: List pending report IDs for the authenticated API user
+      description: |-
+        Returns the list of report IDs that have been submitted by the authenticated
+        API user but not yet retrieved (unpolled). These are reports waiting for
+        the caller to fetch the full result.
+        
+        Use GET /reports/{id} to retrieve the full result for each ID.
+        
+        The list contains only unpolled report IDs — once a report has been
+        retrieved without ?peek=true it will no longer appear here.
+      tags:
+        - DIGG
+      security:
+        -   basicAuth: [ ]
+      operationId: listPendingReports
+      responses:
+        '200':
+          description: List of pending report IDs (may be empty)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example:
+                - "DIGG-2024-00123"
+                - "DIGG-2024-00124"
+        '401':
           description: |-
-              Returns the list of report IDs that have been submitted by the authenticated
-              API user but not yet retrieved (unpolled). These are reports waiting for
-              the caller to fetch the full result.
-
-              Use GET /reports/{id} to retrieve the full result for each ID.
-
-              The list contains only unpolled report IDs — once a report has been
-              retrieved without ?peek=true it will no longer appear here.
-          tags:
-              - DIGG
-          security:
-              -   basicAuth: [ ]
-          operationId: listPendingReports
-          responses:
-              '200':
-                  description: List of pending report IDs (may be empty)
-                  content:
-                      application/json:
-                          schema:
-                              type: array
-                              items:
-                                  type: string
-                          example:
-                              - "DIGG-2024-00123"
-                              - "DIGG-2024-00124"
-              '401':
-                  description: |-
-                      Unauthorized - invalid or missing authentication.
-                      Returns 401 status with WWW-Authenticate header.
-                      Response body is empty.
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
   /reports/{id}:
     get:
       summary: Retrieve the status of a previously submitted DIGG report
@@ -172,6 +172,17 @@ components:
             Encrypted, URL-safe memento string containing the form data.
             Use as query parameter to pre-fill forms: ?m=<string>
           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        magicLink:
+          type: string
+          nullable: true
+          description: |-
+            Ready-to-use Magic Token Link URL (relative path).
+            Combines authentication and form pre-fill in a single click:
+            the authenticated API user can forward this URL to a browser
+            session that has no existing login — it will authenticate and
+            open the pre-filled form selection page directly.
+            Prepend your host to make it absolute: https://host + magicLink
+          example: "/mtl/eyJ...token.../digg/Geburtsbescheinigung?m=eyJ...memento..."
     ValidationErrorResponse:
       type: object
       required:
@@ -365,12 +376,12 @@ components:
           nullable: true
           description: Pseudonym family name
     Elternteil2:
-        type: object
-        nullable: true
-        description: Parent 2 information
-        properties:
-            name:
-                $ref: '#/components/schemas/PersonName'
+      type: object
+      nullable: true
+      description: Parent 2 information
+      properties:
+        name:
+          $ref: '#/components/schemas/PersonName'
     PersonName:
       type: object
       nullable: true
