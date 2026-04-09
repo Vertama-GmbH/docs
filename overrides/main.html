@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+  <!--
+    Umami analytics (self-hosted, privacy-friendly, no cookies).
+    Injected here (extrahead) rather than extra_javascript so it loads once
+    in <head> and survives navigation.instant SPA-style page changes.
+
+    data-domains: limits tracking to listed domains — script is a no-op elsewhere.
+    Note: ad blockers will silently block this request; there is no reliable
+    workaround on a static GitHub Pages host (no server-side proxy available).
+    Expect partial coverage for technical audiences.
+  -->
+  <script
+    defer
+    src="https://umami.v1.vertamob.com/script.js"
+    data-website-id="bfc7264d-4d6e-40cb-97ff-4fae3976f388"
+    data-domains="docs.vertama.com"
+  ></script>
+{% endblock %}
