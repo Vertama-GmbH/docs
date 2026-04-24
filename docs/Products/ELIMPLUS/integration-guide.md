@@ -2,8 +2,10 @@
 
 A practical guide for integration partners using the ELIM+ (Laboratory Reporting) API.
 
-**Version:** 0.2.0
-**Last Updated:** 2026-03-03
+**Version:** 0.3.0
+**Last Updated:** 2026-04-24
+
+> **Migrating from v0.2?** `MeldendeEinrichtung` is now flat (`BSNR` / `Telefon` / `Email`). See the short [v0.2 → v0.3 migration notes](migration-v0.2-to-v0.3.md).
 
 ---
 
@@ -16,7 +18,8 @@ A practical guide for integration partners using the ELIM+ (Laboratory Reporting
 5. [Report Retrieval Endpoints](#report-retrieval-endpoints)
 6. [Complete Workflow Examples](#complete-workflow-examples)
 7. [Error Handling](#error-handling)
-8. [Reference](#reference)
+8. [Roadmap](#roadmap)
+9. [Reference](#reference)
 
 ---
 
@@ -26,8 +29,9 @@ The ELIM+ API enables laboratory information systems (KIS) to pre-fill laborator
 
 - **Create form mementos** to generate pre-filled form URLs from laboratory data
 - **Retrieve report results** after end users submit forms to DEMIS
-- **Support 4 disease types**: Influenza, RSV, Norovirus, SARS-CoV-2
 - **Enable user review** before submission to public health authorities
+
+The API is **disease-agnostic**: the memento carries generic pre-fill data (patient, facility, dates, report IDs). The end user selects the disease form in the browser after opening the magic link. Disease-aware pre-fill and direct per-disease submission are on the [roadmap](roadmap.md).
 
 ### Use Case
 
@@ -179,14 +183,16 @@ ELIM+ supports two patient types for privacy protection:
 
 ### Disease Types
 
-ELIM+ supports 4 notifiable diseases:
+ELIM+ currently provides browser forms for 4 notifiable diseases:
 
-| Disease | Code | Description |
-|---------|------|-------------|
+| Disease | Code (in result / browser route) | Description |
+|---------|----------------------------------|-------------|
 | Influenza | `Influenza` | Influenza virus detection (PCR) |
 | RSV | `Rsv` | Respiratory Syncytial Virus |
 | Norovirus | `Norovirus` | Norovirus RNA detection |
 | SARS-CoV-2 | `Sarscov2` | COVID-19 laboratory detection |
+
+**Not part of the API.** The memento payload has no disease field; the end user picks the disease on the ELIM+ index page after opening the magic link. The disease code only appears in the retrieval result (`diseaseCode` on the `ReportResult`) once the user has submitted a form. Disease-aware memento pre-fill and direct per-disease POST endpoints are [planned](roadmap.md), not yet available.
 
 ### Report ID
 
@@ -199,12 +205,13 @@ The `reportId` field in the Labormeldung serves a dual purpose:
 
 ### Form Workflow
 
+All steps after the magic link are browser interactions by the end user — not API calls from the integrator.
+
 1. User opens the magic link → lands on ELIM+ index: `/elimplus/`
 2. User selects a disease form (Influenza, RSV, Norovirus, SARS-CoV-2)
-3. System routes to disease-specific form: `/elimplus/{Disease}/`
-4. Form is pre-filled via memento parameter: `/elimplus/{Disease}/?m={memento}`
-5. User reviews, corrects if needed, submits to DEMIS
-6. After successful submission, the result is available via `GET /reports/{reportId}`
+3. Browser navigates to the disease form: `/elimplus/{Disease}/?m={memento}`
+4. User reviews, corrects if needed, submits to DEMIS
+5. After successful submission, the result is available to the integrator via `GET /reports/{reportId}`
 
 ---
 
@@ -252,17 +259,9 @@ The endpoint accepts laboratory report data as JSON. Only `reportId` is required
     }
   },
   "MeldendeEinrichtung": {
-    "EinrichtungsName": "Universitätsklinikum Musterstadt",
     "BSNR": "123456789",
-    "Adresse": {
-      "Strasse": "Klinikstraße 1",
-      "PLZ": "12345",
-      "Stadt": "Musterstadt"
-    },
-    "Kontakt": {
-      "Telefon": "+49 123 456700",
-      "Email": "labor@klinikum-musterstadt.de"
-    }
+    "Telefon": "+49 123 456700",
+    "Email": "labor@klinikum-musterstadt.de"
   },
   "MeldendePerson": {
     "Name": {
@@ -308,9 +307,11 @@ The endpoint accepts laboratory report data as JSON. Only `reportId` is required
 | `Patient.Anonym.GeburtsmonatJahr` | string (YYYY-MM) | No | Birth month/year only (not full date for privacy) |
 | `Patient.Anonym.Adresse.PLZ` | string | No | Postal code only |
 | `Patient.Anonym.Adresse.Land` | string | No | Country only |
-| `MeldendeEinrichtung.*` | object | No | Reporting facility (laboratory) |
+| `MeldendeEinrichtung.BSNR` | string | No | 9-digit Betriebsstättennummer — the routing key. Resolves to a facility under an IK in the ApiUser's Customer scope. Name and address flow from the [Krankenhausstandorte registry](../../background-and-explanations/krankenhausstandorte.md). |
+| `MeldendeEinrichtung.Telefon` | string | No | Phone number (required at form submit — registry does not carry it; supply here or the user fills at review) |
+| `MeldendeEinrichtung.Email` | string (email) | No | Optional contact email |
 | `MeldendePerson.*` | object | No | Reporting person |
-| `EinsendendeEinrichtung.*` | object | No | Sending facility |
+| `EinsendendeEinrichtung.*` | object | No | Sending facility (keeps the nested shape: `EinrichtungsName`, `Adresse`, `Kontakt`) |
 
 **Note:** `Geschlecht` enum values:
 - `NASK` — Not asked (nicht gefragt)
@@ -538,8 +539,8 @@ RESPONSE=$(curl -s -X POST \
       }
     },
     "MeldendeEinrichtung": {
-      "EinrichtungsName": "Universitätsklinikum Musterstadt",
-      "BSNR": "123456789"
+      "BSNR": "123456789",
+      "Telefon": "+49 123 456700"
     }
   }' \
   "$BASE_URL/api/elimplus/v1/memento")
@@ -555,82 +556,62 @@ fi
 # Step 2: Construct absolute URL
 FORM_URL="$BASE_URL$MAGIC_LINK"
 
-# Step 3: Deliver to end user
-echo ""
+# Step 3: Deliver to end user (email, portal link, SMS, QR code, …)
 echo "Form URL for end user (single-click, no login required):"
 echo "$FORM_URL"
-echo ""
-echo "What happens when user clicks:"
-echo "1. MTL token authenticates the user automatically"
-echo "2. Redirects to /elimplus/?m={memento}"
-echo "3. User selects disease form (e.g., Influenza)"
-echo "4. Form is pre-filled, user reviews and submits to DEMIS"
 ```
+
+When the user opens the link, the MTL token authenticates them and the browser lands on `/elimplus/?m={memento}`. From there the user selects the disease form, reviews the pre-filled data, and submits to DEMIS.
 
 ---
 
-### Workflow 2: Email with pre-filled form link
+### Workflow 2: Anonymous patient variant
+
+Anonymous reporting uses `IsAnonym: true` with the `Anonym` block (no name, birth month/year only, postal code + country only).
 
 ```bash
 #!/bin/bash
-# Create memento and email magic link to laboratory technician
-
 BASE_URL="https://elim.example.com"
-API_USER="kis-api-user"
-API_PASS="api-password"
 
-# Create memento for RSV report
 MAGIC_LINK=$(curl -s -X POST -u "$API_USER:$API_PASS" \
   -H "Content-Type: application/json" \
   -d '{
-    "reportId": "LAB-2026-00456",
+    "reportId": "LAB-2026-00999",
+    "MeldungsDatum": "2026-02-20",
     "Patient": {
-      "IsAnonym": false,
-      "Standard": {
-        "Name": {"Vorname": "Anna", "Nachname": "Schmidt"},
-        "Geburtsdatum": "1990-03-20"
+      "IsAnonym": true,
+      "Anonym": {
+        "Geschlecht": "MAENNLICH",
+        "GeburtsmonatJahr": "1985-06",
+        "Adresse": {"PLZ": "12345", "Land": "Deutschland"}
       }
+    },
+    "MeldendeEinrichtung": {
+      "BSNR": "123456789",
+      "Telefon": "+49 123 456700"
     }
   }' \
   "$BASE_URL/api/elimplus/v1/memento" | jq -r '.magicLink')
 
-# Construct absolute URL
-FORM_URL="$BASE_URL$MAGIC_LINK"
-
-# Email the link (example using mail command)
-echo "Please review and submit the laboratory report: $FORM_URL" | \
-  mail -s "Laboratory Report Ready for Review (LAB-2026-00456)" \
-    technician@hospital.example.com
-
-echo "Email sent with single-click authenticated link"
-echo "Note: The link expires — generate close to the time of sending"
+echo "$BASE_URL$MAGIC_LINK"
 ```
 
 ---
 
 ### Workflow 3: Batch form generation from CSV
 
+Generate magic links for a batch of laboratory results. The memento is disease-agnostic — disease is selected by the human in the browser.
+
 ```bash
 #!/bin/bash
-# Generate multiple pre-filled form links from laboratory results CSV
-
+# CSV format: reportId,patientFirstName,patientLastName,dob
 BASE_URL="https://elim.example.com"
-API_USER="kis-batch-user"
-API_PASS="api-password"
 
-# CSV format: reportId,disease,patientFirstName,patientLastName,dob
-# Example: LAB-2026-001,Influenza,Max,Mustermann,1980-05-15
+while IFS=, read -r report_id first_name last_name dob; do
+  [ "$report_id" = "reportId" ] && continue   # skip header
 
-while IFS=, read -r report_id disease first_name last_name dob; do
-  # Skip header line
-  if [ "$report_id" = "reportId" ]; then
-    continue
-  fi
-
-  # Prepare JSON
   LAB_DATA=$(jq -n \
     --arg reportId "$report_id" \
-    --arg disease "$disease" \
     --arg vorname "$first_name" \
     --arg nachname "$last_name" \
     --arg dob "$dob" \
@@ -645,101 +626,30 @@ while IFS=, read -r report_id disease first_name last_name dob; do
       }
     }')
 
-  # Create memento and get magic link
   MAGIC_LINK=$(curl -s -X POST -u "$API_USER:$API_PASS" \
     -H "Content-Type: application/json" \
     -d "$LAB_DATA" \
     "$BASE_URL/api/elimplus/v1/memento" | jq -r '.magicLink')
 
-  # Output report ID and absolute URL
   echo "$report_id,$BASE_URL$MAGIC_LINK"
 done < lab_results.csv > form_urls.csv
-
-echo "Generated form URLs saved to form_urls.csv"
-echo "Each URL provides single-click authenticated access to ELIM+ index"
 ```
 
 ---
 
-### Workflow 4: QR code for mobile access
+### Manual testing with the provided scripts
+
+The V.ap repository ships helper scripts under `scripts/` for manual testing. They wrap these same API calls with credential loading and output formatting.
 
 ```bash
-#!/bin/bash
-# Create memento and generate QR code for mobile scanning
-
-BASE_URL="https://elim.example.com"
-API_USER="kis-api"
-API_PASS="api-password"
-
-# Create memento and get magic link
-MAGIC_LINK=$(curl -s -X POST -u "$API_USER:$API_PASS" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "reportId": "LAB-2026-00789",
-    "Patient": {
-      "IsAnonym": false,
-      "Standard": {
-        "Name": {"Vorname": "Thomas", "Nachname": "Müller"},
-        "Geburtsdatum": "1975-08-12"
-      }
-    }
-  }' \
-  "$BASE_URL/api/elimplus/v1/memento" | jq -r '.magicLink')
-
-# Construct absolute URL
-FORM_URL="$BASE_URL$MAGIC_LINK"
-
-# Generate QR code (requires qrencode tool)
-echo "$FORM_URL" | qrencode -o lab-report-qr.png
-
-echo "QR code saved to lab-report-qr.png"
-echo "Scan with mobile device for single-click authenticated access"
+# Create a memento from a JSON file, print the magic link,
+# and open it directly in your default browser:
+scripts/run scripts/elimplus-create-memento.sh \
+  --json-file scripts/examples/elimplus-full.json \
+  --open
 ```
 
----
-
-### Workflow 5: Anonymous patient reporting
-
-```bash
-#!/bin/bash
-# Create memento for anonymous patient (privacy protection)
-
-BASE_URL="https://elim.example.com"
-API_USER="kis-api"
-API_PASS="api-password"
-
-# Create memento with anonymous patient data
-MAGIC_LINK=$(curl -s -X POST -u "$API_USER:$API_PASS" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "reportId": "LAB-2026-00999",
-    "MeldungsDatum": "2026-02-20",
-    "Patient": {
-      "IsAnonym": true,
-      "Anonym": {
-        "Geschlecht": "MAENNLICH",
-        "GeburtsmonatJahr": "1985-06",
-        "Adresse": {
-          "PLZ": "12345",
-          "Land": "Deutschland"
-        }
-      }
-    },
-    "MeldendeEinrichtung": {
-      "EinrichtungsName": "Universitätsklinikum Musterstadt",
-      "BSNR": "123456789"
-    }
-  }' \
-  "$BASE_URL/api/elimplus/v1/memento" | jq -r '.magicLink')
-
-FORM_URL="$BASE_URL$MAGIC_LINK"
-
-echo "Anonymous patient URL (single-click authenticated access):"
-echo "$FORM_URL"
-echo ""
-echo "Note: Form contains no name, contact info, or full address"
-echo "Only birth month/year, postal code, and country are included"
-```
+The `--open` flow is the fastest way to see your payload as a pre-filled form end-to-end. Example payloads live alongside the script in `scripts/examples/`.
 
 ---
 
@@ -758,7 +668,7 @@ echo "Only birth month/year, postal code, and country are included"
 
 ### Validation Errors
 
-If the request data is invalid, you'll receive a 400 Bad Request with details:
+If the request data is invalid, you'll receive a 400 Bad Request with an `errors` array naming the offending fields. **Always read `errors[]` first** — it pinpoints the problem (wrong type, malformed date, invalid email, unknown BSNR, …) without needing to guess.
 
 ```bash
 curl -X POST -u "api-user:api-pass" \
@@ -773,6 +683,12 @@ Response (400):
   "errors": ["reportId must not be null"]
 }
 ```
+
+Typical validation messages you may encounter:
+
+- `"Geburtsdatum must be a valid date"` — date not in `YYYY-MM-DD` (e.g. `19831010` instead of `1983-10-10`)
+- `"Email must be a well-formed email address"` — malformed or placeholder email; send `null` or omit the field
+- `"MeldungsDatum must be a valid date in format YYYY-MM-DD"` — German-locale formats like `08.12.2026` are rejected
 
 ### Date Format Validation
 
@@ -826,6 +742,12 @@ fi
 
 ---
 
+## Roadmap
+
+The direction of travel for the ELIM+ API — disease-aware memento, deep-link magic token links, direct per-disease POST — is tracked in the [ELIM+ Roadmap](roadmap.md). None of it is part of v0.3; the current generic-memento flow keeps working.
+
+---
+
 ## Reference
 
 ### API Endpoints Summary
@@ -843,16 +765,18 @@ Interactive API documentation (Swagger UI):
 https://your-instance/api/docs/swagger-ui/index.html?urls.primaryName=ELIM+
 ```
 
-### Disease Routes
+### Browser Form Pages
 
-| Disease | API Code | Form Route |
-|---------|----------|------------|
+These are the pages the end user navigates to in the browser after opening the magic link. **They are not API endpoints** — integrators do not call them, and the memento payload does not name a disease.
+
+| Disease | Code (result / URL) | Browser page |
+|---------|---------------------|--------------|
 | Influenza | `Influenza` | `/elimplus/Influenza/` |
 | RSV | `Rsv` | `/elimplus/Rsv/` |
 | Norovirus | `Norovirus` | `/elimplus/Norovirus/` |
 | SARS-CoV-2 | `Sarscov2` | `/elimplus/Sarscov2/` |
 
-**Entry point:** Always use `/elimplus/` — the index page where users select their disease form.
+**Entry point:** The magic link always lands on `/elimplus/` — the index page where the user selects the disease form. Skipping the index via a direct deep-link is on the [roadmap](roadmap.md).
 
 ### Date Format
 
@@ -907,9 +831,11 @@ For technical support or questions about the ELIM+ API:
 ### Related Documentation
 
 - [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) — How server-issued authentication tokens work
+- [Krankenhausstandorte Registry](../../background-and-explanations/krankenhausstandorte.md) — The authoritative BSNR/IK registry used to resolve `MeldendeEinrichtung`
+- [v0.2 → v0.3 Migration Notes](migration-v0.2-to-v0.3.md) — What changed and how to update your calls
 
 ---
 
-**Document Version:** 0.2.0
-**Last Updated:** 2026-03-03
+**Document Version:** 0.3.0
+**Last Updated:** 2026-04-24
 **API Version:** v1

@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: ELIM+ API
-  version: "0.3.0"
+  version: "0.2.0" # Updated 2026-03-03: Removed Krankheit (not for pre-fill), removed Fax from Kontakt (not supported)
   description: API for ELIM+ laboratory reporting (Labormeldung) - DEMIS integration
 servers:
   - url: /api/elimplus/v1
@@ -816,34 +816,22 @@ components:
       example: "CoombsTest"
     MeldendeEinrichtung:
       type: object
-      description: |-
-        Notifier facility identification. The BSNR is the routing key: it resolves
-        via the Krankenhausstandorte registry (name + postal address) against the
-        Customer-scoped IK set of the authenticated ApiUser. Telefon is required
-        at form submit — the registry does not carry phone data, so the caller
-        supplies it. Email is optional and emitted to the bundle only when present.
+      description: Notifier facility (reporting institution) - optional for memento
       properties:
+        EinrichtungsName:
+          type: string
+          nullable: true
+          description: Name of the reporting facility
+          example: "Universitätsklinikum Musterstadt"
         BSNR:
           type: string
           nullable: true
-          description: |-
-            Betriebsstättennummer — 9-digit KBV facility number. Must resolve to an
-            active Einrichtung under an IK in the authenticated ApiUser's Customer scope.
+          description: Betriebsstättennummer (facility number)
           example: "123456789"
-        Telefon:
-          type: string
-          nullable: true
-          description: |-
-            Phone number for the notifier facility. Required at form submit — the
-            Krankenhausstandorte registry does not carry phone data, so the caller
-            supplies it. Nullable here to permit partial memento pre-fills.
-          example: "+49 123 456700"
-        Email:
-          type: string
-          format: email
-          nullable: true
-          description: Optional contact email. Emitted to the bundle only when present.
-          example: "meldungen@example-klinik.de"
+        Adresse:
+          $ref: '#/components/schemas/Adresse'
+        Kontakt:
+          $ref: '#/components/schemas/Kontakt'
     MeldendePerson:
       type: object
       description: Reporting person - optional for memento

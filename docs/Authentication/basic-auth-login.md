@@ -426,7 +426,7 @@ A: The target path is extracted from the URL structure. To customize further, co
 ## Related Documentation
 
 - [Magic Token Link (MTL)](magic-token-link.md) - Recommended alternative: server-issued tokens, no credentials in URL
-- [ELIM+ API Integration Guide](../Products/ELIMPLUS/api-tutorial.md) - Complete API workflow including BAL usage
+- [ELIM+ API Integration Guide](../Products/ELIMPLUS/integration-guide.md) - Complete API workflow including BAL usage
 - [ELIM+ OpenAPI Specification](../Products/ELIMPLUS/api.yml) - API endpoint details
 
 ---
