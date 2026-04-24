@@ -651,6 +651,8 @@ scripts/run scripts/elimplus-create-memento.sh \
 
 The `--open` flow is the fastest way to see your payload as a pre-filled form end-to-end. Example payloads live alongside the script in `scripts/examples/`.
 
+**Submitting test reports against a real environment** (DEMIS `LIVE_TEST`, not production) is a separate topic — see [Testing & Sandbox](testing-and-sandbox.md) for the two supported paths (your own gematik test slot, or Vertama's shared test infrastructure).
+
 ---
 
 ## Error Handling

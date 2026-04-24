@@ -26,6 +26,9 @@ Not every integration scenario can reference a currently-valid registry entry â€
 
 V.ap supports test scenarios for these cases. If you need to work with an ApiUser or with requests whose BSNRs or other mandatory fields won't resolve against the public registry, coordinate with us â€” we'll arrange the overlay needed for your use case.
 
+For the ELIM+ product specifically, the concrete setup paths are documented in [ELIM+ Testing & Sandbox](../Products/ELIMPLUS/testing-and-sandbox.md).
+
 ## Related Documentation
 
 - [ELIM+ API Integration Guide](../Products/ELIMPLUS/integration-guide.md)
+- [ELIM+ Testing & Sandbox](../Products/ELIMPLUS/testing-and-sandbox.md)

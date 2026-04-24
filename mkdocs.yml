@@ -83,6 +83,7 @@ nav:
          - "Products/ELIM/onepager/OnePager.md"
      - "ELIM+":
        - "Integration Guide": "Products/ELIMPLUS/integration-guide.md"
+       - "Testing & Sandbox": "Products/ELIMPLUS/testing-and-sandbox.md"
        - "Roadmap": "Products/ELIMPLUS/roadmap.md"
        - "Migration v0.2 → v0.3": "Products/ELIMPLUS/migration-v0.2-to-v0.3.md"
        - "api.yml (OpenAPI)": Products/ELIMPLUS/api.yml
