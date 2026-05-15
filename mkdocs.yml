@@ -90,6 +90,12 @@ nav:
        - "api-v0.2.0.yml (previous)": Products/ELIMPLUS/api-v0.2.0.yml
        #- "Swagger API Viewer": "https://editor.swagger.io/#/?import=https://vertama-gmbh.github.io/docs/Products/ELIMPLUS/api.yml"
        - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=ELIM%2B"
+     - "V.connect":
+       - "What is V.connect": "Products/V.connect/index.md"
+       - "Fremdaufruf":
+         - "Overview": "Products/V.connect/Fremdaufruf/overview.md"
+         - "Installation": "Products/V.connect/Fremdaufruf/installation.md"
+         - "User Manual (DE)": "Products/V.connect/Fremdaufruf/user-manual.md"
 
   - Guides:
     - "Folder Sync Handbook": "how-to/folder-sync-handbuch.md"
