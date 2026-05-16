@@ -143,6 +143,24 @@ request_timeout = "10s"                     # Go duration string; default: 10s
 connect_timeout = "3s"                      # default: 3s
 tls_verify      = true                      # default: true; false permitted for dev only
 
+[allowlist]
+# Optional. When present and non-empty, requests whose upstream
+# path is not on the list are rejected with 404 path_not_allowed,
+# before any upstream call. Each entry must be an absolute path
+# (start with '/'); matching is verbatim — no glob, no trailing-
+# slash normalisation, no case folding.
+paths = [
+    "/api/duba/v1/memento",
+    "/api/elimplus/v1/memento",
+]
+
+[access]
+# Required when bind.address is not a loopback address (i.e. for
+# intranet-bound deployments). When set, every request must carry
+# a matching `_s` URL parameter; on mismatch the component returns
+# 403. Leave unset for loopback-only deployments.
+secret = ""
+
 [log]
 level       = "info"                        # debug | info | warn | error
 destination = "stderr"                      # stderr | file (V1; syslog/eventlog planned)
@@ -159,6 +177,11 @@ The service also refuses to start on any of:
   self-signed V.ap).
 - `bind.address` not a valid IP.
 - `bind.port` outside `[1, 65535]`.
+- `bind.address` is **not a loopback address AND `[access] secret`
+  is unset or empty**. Intranet-bound deployments require an
+  access secret as their trust boundary.
+- `[allowlist] paths` contains an entry that does not start with
+  `/` (each entry must be an absolute path).
 - `log.destination = "file"` without `log.file_path`, or a path
   the service account cannot write.
 - `log.destination = "eventlog"` on a non-Windows platform.
@@ -197,6 +220,8 @@ service start time rather than at rest in a file. Precedence is
 | `http.request_timeout`   | `FREMDAUFRUF_HTTP_REQUEST_TIMEOUT`    |
 | `http.connect_timeout`   | `FREMDAUFRUF_HTTP_CONNECT_TIMEOUT`    |
 | `http.tls_verify`        | `FREMDAUFRUF_HTTP_TLS_VERIFY`         |
+| `allowlist.paths`        | `FREMDAUFRUF_ALLOWLIST_PATHS` (comma-separated, e.g. `"/a,/b"`) |
+| `access.secret`          | `FREMDAUFRUF_ACCESS_SECRET`           |
 | `log.level`              | `FREMDAUFRUF_LOG_LEVEL`               |
 | `log.destination`        | `FREMDAUFRUF_LOG_DESTINATION`         |
 | `log.file_path`          | `FREMDAUFRUF_LOG_FILE_PATH`           |
@@ -207,8 +232,8 @@ configuration file, overriding the platform default; the
 
 At startup the service logs each effective configuration field
 with its source (`from file`, `from env`, or `from default`).
-`api_secret` is included in the source tracking but its value is
-never printed.
+`api_secret` and `[access] secret` are included in the source
+tracking but their values are never printed.
 
 ---
 
@@ -350,8 +375,12 @@ shutdown).
 | Service refuses to start; log says *missing required configuration*  | One of `vap_base_url`, `api_user`, `api_secret` is empty. Provide via config or env-var override.                                             |
 | Service refuses to start; log says *config file ... has mode ...*    | Config file is readable by group/other. `chmod 0600` on Linux / restrict ACL on Windows.                                                      |
 | Service refuses to start; log says *vap_base_url uses http://*       | Plain HTTP is permitted only with `http.tls_verify = false`, intended for dev only. Set the V.ap base URL to `https://` for production.       |
-| Service starts but every request returns 502 `upstream_unavailable`  | The workstation cannot reach V.ap. Check DNS, firewall, proxy; rerun the curl check from [§4.2](#42-verify-vap-reachability).                 |
+| Service refuses to start; log says *non-loopback... requires [access] secret* | `bind.address` is not loopback and no access secret is configured. Set `[access] secret`, or bind to `127.0.0.1` for the loopback model.  |
+| Service refuses to start; log says *allowlist.paths entry must be an absolute path* | An `[allowlist].paths` entry is missing its leading `/`. Each entry must be an absolute upstream path (e.g. `/api/duba/v1/memento`). |
+| Service starts but every request returns 502 `upstream_unavailable`  | The component cannot reach V.ap. Check DNS, firewall, proxy; rerun the curl check from [§4.2](#42-verify-vap-reachability).                   |
 | Every request returns 502 `upstream_auth_failed`                     | `api_user` / `api_secret` do not match a valid V.ap API user. Confirm with your Vertama contact.                                              |
+| Requests return 403 `access_denied`                                  | (Intranet deployment.) The `_s` URL parameter is missing or does not match the configured `[access] secret`. Verify the KIS template carries the correct `_s` value. |
+| Requests return 404 `path_not_allowed`                               | The requested upstream path is not on the configured `[allowlist] paths` list. Either add the path or use the V.ap URL-builder tooling, which only emits allowlisted endpoints. |
 | Requests return 400 `coercion_failed`                                | A typed parameter (date, boolean) was substituted by the KIS with an unacceptable value. Reproduce with the V.ap URL-builder live-test panel. |
 | Requests return 422                                                  | V.ap validation rejected the payload. The response body carries V.ap's `errors[]` — read it for the field-level cause.                        |
 | Browser follows the 303 but lands on the V.ap login page             | The `magicLink` token has expired or the API user is no longer authorised. Generate a fresh request.                                          |

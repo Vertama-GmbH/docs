@@ -244,28 +244,46 @@ walks through it step by step.
 | Trigger                                      | Component response                                            |
 |----------------------------------------------|---------------------------------------------------------------|
 | Successful POST, V.ap returns 200            | **303 See Other** with `Location: <vap-base><magicLink>`      |
+| Caller fails the access-secret check (intranet deployment, §6) | 403 Forbidden                            |
+| Caller's path is not on the configured allowlist (§6)          | 404 Not Found                            |
 | Malformed URL, coercion failure, …           | 400 Bad Request                                               |
 | V.ap returns 400 (validation)                | 422 Unprocessable Entity, with V.ap's `errors[]` propagated   |
 | V.ap returns 401 / 403 / 5xx, or unreachable | 502 Bad Gateway                                               |
 
-The component never returns 401 or 403 itself. Credentials live in
-the component's config and are not exposed to the caller — the
-caller talks only to loopback.
+The component never returns 401 itself. Upstream auth failures
+(401/403 from V.ap) surface as 502; a 403 from the component
+itself indicates the caller failed the access-secret check (§6),
+not an upstream auth failure.
 
 ---
 
 ## 4. Deployment model
 
-**Primary deployment: per-workstation, loopback-bound.** The single
-binary installs on each KIS workstation, runs as a Windows service
-or a Linux systemd unit, and binds to `127.0.0.1`. Reachable only
-from processes on the same workstation. Installation and operation
-are covered in the [Installation Manual](installation.md).
+V1 supports two deployment shapes; both run from the same binary
+with different configuration.
 
-**Future: hospital-network central deployment.** The same binary
-bound to a routable address, fronted by per-call auth and TLS,
-delivered as a container handed to hospital IT. Not part of V1;
-folded into the same codebase when implemented.
+**Per-workstation, loopback-bound.** Each KIS workstation runs its
+own instance bound to `127.0.0.1`. Trust boundary: the workstation
+operating system. Operationally simple — one workstation, one
+install — fits when each workstation is a self-contained
+integration point.
+
+**Hospital-network-bound (intranet-shared).** A single installation
+inside the hospital network, bound to a routable address, serves
+many KIS workstations. Trust boundary: a configured **access
+secret** that every caller must supply on every request (§6).
+Operationally lighter when many workstations need the same
+integration.
+
+Both shapes use the same binary, the same configuration schema,
+and the same upstream contract with V.ap. The choice of shape is a
+deployment decision, not a product decision. The
+[Installation Manual](installation.md) covers both.
+
+**Future: container packaging** — formal container distribution
+with signed image, deployment guide, and operations runbook for
+hospital IT. The binary itself supports both deployment shapes
+today; only the formal container distribution surface is deferred.
 
 ---
 
@@ -283,8 +301,43 @@ startup, single-digit MB resident memory.
 
 ## 6. Security posture
 
-- **Inbound scope:** loopback only in the primary deployment. The
-  component never accepts connections from outside the workstation.
+### Authority model
+
+What can be done through the Fremdaufruf component is governed by
+three independent controls:
+
+| Control                                                  | Owner            |
+|----------------------------------------------------------|------------------|
+| What an API user may do at V.ap                          | Vertama (V.ap)   |
+| Which upstream paths this installation may reach         | Hospital admin   |
+| Whether a caller is allowed to reach the component       | Hospital admin   |
+
+**V.ap-side authorisation is the primary control.** The configured
+API user has a defined scope at V.ap, and what that scope permits
+is governed by V.ap's per-API-user authorisation. The component is
+not the gatekeeper for which V.ap actions can be performed — V.ap
+is.
+
+**Hospital admins may narrow the surface locally** by configuring
+an optional path allowlist in the component's configuration. With
+the allowlist set, paths outside the list are rejected by the
+component (404) before any upstream call is made. Without an
+allowlist, all paths the configured API user is V.ap-authorised
+for remain reachable.
+
+**For intranet-bound deployments**, every caller must supply a
+configured access secret on every request (`_s` URL parameter). On
+mismatch the component returns 403 before any upstream call. The
+secret is the trust-boundary control for non-loopback deployments,
+playing the role the workstation OS plays for loopback ones.
+Configuration is covered in the
+[Installation Manual](installation.md).
+
+### Wire-level guarantees
+
+- **Inbound scope:** the listener binds only to the address
+  configured. The component never accepts connections beyond what
+  the bind address itself permits.
 - **Outbound scope:** HTTPS to the configured V.ap base URL only.
   Other destinations are not reachable from component logic.
 - **Credentials:** stored at rest in a file-permission-restricted
@@ -294,18 +347,25 @@ startup, single-digit MB resident memory.
 - **Audit logging:** every request logs timestamp, target endpoint
   path, parameter count, V.ap status code, and outcome. **Parameter
   values and parameter keys are never logged**, regardless of log
-  level — only the count.
+  level — only the count. The configured access secret and any
+  `_s` URL parameter value are likewise never logged.
 - **TLS:** verification against the system trust store is
   mandatory by default. Disabling verification is permitted only
   for local development against a self-signed V.ap and the
   component emits a startup warning when it is in that mode.
-- **Workstation trust boundary:** GET URLs from the KIS to the
-  component still contain patient data in the URL — but they
-  travel only over loopback, never the network. The trust boundary
-  is the workstation OS, the same boundary the KIS itself operates
-  within. The data-protection improvement is over the
+- **Loopback deployment trust boundary:** GET URLs from the KIS to
+  the component contain patient data in the URL but travel only
+  over loopback, never the network. The trust boundary is the
+  workstation OS, the same boundary the KIS itself operates
+  within.
+- **Intranet deployment trust boundary:** GET URLs traverse the
+  hospital network between caller and component. The trust
+  boundary is the hospital network plus the access secret; the
+  secret travels in the URL alongside the patient data and is
+  exposed to whatever observes intranet traffic. As with the
+  loopback case, the data-protection improvement is over
   *internet-facing* leakage paths (V.ap server logs, intermediate
-  proxy logs, `Referer`) — not over local-OS observation.
+  proxy logs, `Referer`) — not over intranet observation.
 
 ---
 
