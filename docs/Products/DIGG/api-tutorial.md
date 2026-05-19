@@ -2,8 +2,8 @@
 
 A practical guide for integration partners using the DIGG (Digitale Geburtsanzeige) API.
 
-**Version:** 0.2.0
-**Last Updated:** 2026-03-09
+**Version:** 0.2.1
+**Last Updated:** 2026-05-19
 
 ---
 
@@ -158,7 +158,7 @@ The `id` field must be unique per API user. It serves a dual purpose:
 
 ### Request Body
 
-Only `id` is required; all other fields are optional to allow partial pre-filling.
+Only `id` is required; all other fields are optional to allow partial pre-filling (see [Formal API Definition](#reference) for the complete schema).
 
 **Minimal Example:**
 ```json
@@ -167,7 +167,7 @@ Only `id` is required; all other fields are optional to allow partial pre-fillin
 }
 ```
 
-**Complete Example:**
+**Extended Example:**
 ```json
 {
   "id": "DIGG-2026-00123",
@@ -324,26 +324,25 @@ If the request data is invalid (e.g. missing `id`), a 400 Bad Request is returne
 
 ## Reference
 
+### Formal API Definition
+
+- [OpenAPI](./api.yml) 
+- [API Viewer (Swagger)](https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIGG)
+
 ### API Endpoints Summary
 
-| Method | Endpoint                    | Description |
-|--------|-----------------------------|-------------|
-| POST | `/api/digg/v1/memento`      | Create memento |
+| Method | Endpoint                   | Description                     |
+|--------|----------------------------|---------------------------------|
+| POST | `/api/digg/v1/memento`     | Create memento                  |
+| GET | `/api/digg/v1/reports` | List pending report IDs         |
 | GET | `/api/digg/v1/reports/{id}` | Retrieve report delivery status |
 
 ### Date & Time Format
 - **Date**: ISO 8601 format (`YYYY-MM-DD`, e.g., `2026-02-23`)
 - **Time**: ISO 8601 format (`HH:mm`, e.g., `14:30`)
 
-### Gender Enum Values
-| Value | Description |
-|-------|-------------|
-| `MAENNLICH` | Male |
-| `WEIBLICH` | Female |
-| `UNBESTIMMT` | Unspecified |
-
 ---
 
-**Document Version:** 0.2.0
-**Last Updated:** 2026-03-09
+**Document Version:** 0.2.1
+**Last Updated:** 2026-05-19
 **API Version:** v1
