@@ -2,8 +2,8 @@
 
 A practical guide for integration partners using the DIGG (Digitale Geburtsanzeige) API.
 
-**Version:** 0.2.1
-**Last Updated:** 2026-05-19
+**Version:** 0.3.0
+**Last Updated:** 2026-05-21
 
 ---
 
@@ -109,8 +109,10 @@ The main data structure for birth registration reporting. Key fields include:
 - **anschriftAutor**: Hospital Address
 - **geburtsangaben**: Details about time and place of birth
 - **kind**: Child's gender and names
+- **mehrlingsgeburt**: In case of a multiple birth
 - **mutter**: Mother's standard or confidential data (vertrauliche Geburt)
 - **elternteil2**: Optional secondary parent data
+- **standesamtKennung**: Optional Standesamtkennung if multiple Standesämter are applicable (and configured)
 - **zuordnungGeburtsanzeige**: Identifier for further official references
 
 ### Digital Signature (Siegel / Signatur)
@@ -343,6 +345,6 @@ If the request data is invalid (e.g. missing `id`), a 400 Bad Request is returne
 
 ---
 
-**Document Version:** 0.2.1
-**Last Updated:** 2026-05-19
+**Document Version:** 0.3.0
+**Last Updated:** 2026-05-21
 **API Version:** v1

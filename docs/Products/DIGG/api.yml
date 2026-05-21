@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: DIGG API
-  version: "0.3.0"
+  version: "0.4.0"
   description: API for DIGG birth registration reporting (Geburtsmeldung) - xPersonenstand integration
 servers:
   - url: /api/digg/v1
@@ -241,6 +241,8 @@ components:
           $ref: '#/components/schemas/TotgeburtAngaben'
         kind:
           $ref: '#/components/schemas/Kind'
+        mehrlingsgeburt:
+          $ref: '#/components/schemas/Mehrlingsgeburt'
         mutter:
           $ref: '#/components/schemas/Mutter'
         elternteil2:
@@ -253,6 +255,11 @@ components:
           type: string
           nullable: true
           description: Reference string for matching birth registration to parental data delivery
+        standesamtKennung:
+          type: string
+          nullable: true
+          description: Consists of the prefix 'psw' and the Standesamt-Nummer, e.g. psw:01002110. See https://www.xrepository.de/details/urn:xoev-de:bund:bmi:bit:codeliste:dvdv.praefix and https://www.xrepository.de/details/urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:standesamtsnummern
+          example: 'psw:01002110'
     Geburtsangaben:
       type: object
       nullable: true
@@ -323,6 +330,23 @@ components:
           example: "WEIBLICH"
         name:
           $ref: '#/components/schemas/PersonNameVeraenderung'
+    Mehrlingsgeburt:
+      type: object
+      nullable: true
+      description: Details of a multiple birth, if applicable
+      properties:
+        anzahlKnaben:
+          type: integer
+          nullable: false
+          description: Number of lads
+        anzahlMaedchen:
+          type: integer
+          nullable: false
+          description: Number of girls
+        anzahlUnbestimmt:
+          type: integer
+          nullable: false
+          description: Number of indeterminate
     PersonNameVeraenderung:
       type: object
       nullable: true
