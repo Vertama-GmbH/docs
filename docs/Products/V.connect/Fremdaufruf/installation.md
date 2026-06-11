@@ -130,9 +130,14 @@ over env, which takes precedence over the platform default.
 ### 3.2 Schema
 
 ```toml
-vap_base_url = "https://elim.example.com"   # required; MUST be https://
-api_user     = "lab-api"                    # required; provisioned by Vertama
-api_secret   = "<password>"                 # required; provisioned by Vertama
+vap_base_url     = "https://vap.example.com"    # required; MUST be https://
+vap_redirect_url = ""                           # optional; URL used in the 303 Location header.
+                                                # Defaults to vap_base_url when unset. Set when
+                                                # the component's view of V.ap differs from the
+                                                # browser's (containers, intranet split-DNS, load
+                                                # balancers fronting V.ap).
+api_user         = "lab-api"                    # required; provisioned by Vertama
+api_secret       = "<password>"                 # required; provisioned by Vertama
 
 [bind]
 address = "127.0.0.1"                       # default: 127.0.0.1
@@ -213,6 +218,7 @@ service start time rather than at rest in a file. Precedence is
 | Field                    | Environment variable                  |
 |--------------------------|---------------------------------------|
 | `vap_base_url`           | `FREMDAUFRUF_VAP_BASE_URL`            |
+| `vap_redirect_url`       | `FREMDAUFRUF_VAP_REDIRECT_URL`        |
 | `api_user`               | `FREMDAUFRUF_API_USER`                |
 | `api_secret`             | `FREMDAUFRUF_API_SECRET`              |
 | `bind.address`           | `FREMDAUFRUF_BIND_ADDRESS`            |
@@ -258,7 +264,7 @@ effective configuration with provenance markers (`from file`,
 From the workstation:
 
 ```bash
-curl -i https://elim.example.com/api/<module>/v1/memento -u "lab-api:<password>"
+curl -i https://vap.example.com/api/<module>/v1/memento -u "lab-api:<password>"
 ```
 
 You should get an HTTP 4xx response (the call is malformed — no
@@ -384,6 +390,7 @@ shutdown).
 | Requests return 400 `coercion_failed`                                | A typed parameter (date, boolean) was substituted by the KIS with an unacceptable value. Reproduce with the V.ap URL-builder live-test panel. |
 | Requests return 422                                                  | V.ap validation rejected the payload. The response body carries V.ap's `errors[]` — read it for the field-level cause.                        |
 | Browser follows the 303 but lands on the V.ap login page             | The `magicLink` token has expired or the API user is no longer authorised. Generate a fresh request.                                          |
+| Browser follows the 303 but cannot reach the destination             | The `Location` header points at a hostname the browser cannot resolve. Common cause: the component reaches V.ap by an internal hostname (inside a container, behind a load balancer, split-DNS) that isn't reachable from where the browser is. Set `vap_redirect_url` to the URL the browser must use; leave `vap_base_url` as the component's view. |
 
 For deeper diagnosis, increase log level to `debug`
 (`log.level = "debug"` in config, or
