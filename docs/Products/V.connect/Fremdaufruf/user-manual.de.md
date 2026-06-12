@@ -1,5 +1,7 @@
 # V.connect Fremdaufruf — Benutzerhandbuch
 
+*Dieses Dokument ist derzeit nur in deutscher Sprache verfügbar.*
+
 Dieses Handbuch richtet sich an KIS-Integratoren, die ein Krankenhaus-
 Informationssystem (KIS) an ein V.ap-Produktmodul (DUBA, ELIM+, …) anbinden
 und dafür den **V.connect Fremdaufruf** einsetzen. Es beschreibt, wie Sie

@@ -1,5 +1,7 @@
 # V.connect Fremdaufruf Service — Solution Outline
 
+*This document is currently available in English only.*
+
 **Working title:** V.connect Fremdaufruf Service
 **Status:** Solution outline, iteration 1, for internal alignment ahead of implementation
 **Audience:** Vertama engineering and product
