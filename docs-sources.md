@@ -38,7 +38,7 @@ and falls back to the default language when a translation is missing.
 | Fremdaufruf Overview (EN) | `Products/V.connect/Fremdaufruf/overview.md` | this repo | canonical | n/a |
 | Fremdaufruf Übersicht (DE) | `Products/V.connect/Fremdaufruf/overview.de.md` | this repo | canonical | n/a |
 | Fremdaufruf Architecture | `Products/V.connect/Fremdaufruf/solution-outline.md` | `mcp-health/V.connect` → `fremdaufruf/solution-outline.md` | yes | manual copy |
-| Fremdaufruf URL-Builder (DE) | `Products/V.connect/Fremdaufruf/url-builder.de.md` | `Vertama-GmbH/v.ap` → `docs/modules/v.connect/fremdaufruf.md` | yes | manual copy |
+| Fremdaufruf URL-Builder (DE) | `Products/V.connect/Fremdaufruf/url-builder.de.md` | `Vertama-GmbH/elim` (historical name; the V.ap repo) → `docs/external/v.connect/fremdaufruf/url-builder.md` | yes | manual copy |
 | Fremdaufruf Betriebshandbuch | — | `mcp-health/V.connect` → `fremdaufruf/betriebshandbuch.html` | **no** — ships with binary; admin dashboard serves at `/admin/help` | n/a |
 
 ## Transition state
