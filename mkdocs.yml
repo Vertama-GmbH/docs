@@ -94,6 +94,7 @@ nav:
        - "What is V.connect": "Products/V.connect/index.md"
        - "Fremdaufruf":
          - "Overview": "Products/V.connect/Fremdaufruf/overview.md"
+         - "Architecture": "Products/V.connect/Fremdaufruf/solution-outline.md"
          - "User Manual (DE)": "Products/V.connect/Fremdaufruf/user-manual.md"
 
   - Guides:
