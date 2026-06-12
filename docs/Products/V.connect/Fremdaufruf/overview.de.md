@@ -13,8 +13,7 @@ Komponente da ist, was sie leistet und was ihre Einführung umfasst.
 Für die tiefergehende Architektur und Designentscheidungen siehe
 [Architecture](solution-outline.md) (englischsprachig). Für den
 Arbeitsablauf des KIS-Integrators beim Erzeugen von URL-Vorlagen
-mit dem V.ap-URL-Vorlagen-Werkzeug siehe das
-[Benutzerhandbuch](user-manual.md).
+siehe den [V.ap Fremdaufruf URL-Builder](url-builder.md).
 
 ---
 
@@ -269,8 +268,8 @@ Was bewusst nicht im aktuellen Umfang ist, mit Begründung, siehe
 - [Architecture](solution-outline.md) — vollständige
   Design-Begründung, Bereitstellungs-Details, Sicherheits-Posture,
   Umfang und Roadmap (englisch).
-- [Benutzerhandbuch](user-manual.md) — KIS-Integrator-Anleitung
-  für das V.ap-URL-Vorlagen-Werkzeug.
+- [V.ap Fremdaufruf URL-Builder](url-builder.md) —
+  KIS-Integrator-Anleitung zum Erzeugen von URL-Vorlagen.
 - **Betriebshandbuch** — Betriebsanleitung; wird mit dem Binary
   ausgeliefert und ist nach der Installation über das Admin-Dashboard
   erreichbar.

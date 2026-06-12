@@ -1,12 +1,14 @@
-# V.connect Fremdaufruf — Benutzerhandbuch
+# V.ap Fremdaufruf URL-Builder
+
+Erzeugt URL-Vorlagen, die V.ap-Formulare aus dem KIS heraus vorausfüllen.
 
 *Dieses Dokument ist derzeit nur in deutscher Sprache verfügbar.*
 
-Dieses Handbuch richtet sich an KIS-Integratoren, die ein Krankenhaus-
+Diese Anleitung richtet sich an KIS-Integratoren, die ein Krankenhaus-
 Informationssystem (KIS) an ein V.ap-Produktmodul (DUBA, ELIM+, …) anbinden
-und dafür den **V.connect Fremdaufruf** einsetzen. Es beschreibt, wie Sie
-mit dem URL-Vorlagen-Werkzeug in V.ap eine fertige Aufruf-URL erzeugen, sie
-testen und in Ihrem KIS hinterlegen.
+und dafür den **V.connect Fremdaufruf** einsetzen. Sie beschreibt, wie Sie
+mit dem URL-Builder in V.ap eine fertige Aufruf-URL erzeugen, sie testen
+und in Ihrem KIS hinterlegen.
 
 Die Beispiele in diesem Handbuch verwenden durchgehend das Modul **DUBA**.
 Das Werkzeug arbeitet jedoch modul-unabhängig — die Schritte sind für
@@ -62,7 +64,7 @@ Eine ausführliche Architektur-Erklärung finden Sie im
 
 ## 2. Voraussetzungen
 
-Bevor Sie mit dem URL-Vorlagen-Werkzeug arbeiten, sollten folgende
+Bevor Sie mit dem URL-Builder arbeiten, sollten folgende
 Voraussetzungen erfüllt sein:
 
 | Komponente | Was Sie brauchen |

@@ -531,7 +531,7 @@ scoping is visible rather than implicit:
 ---
 
 **Companion documents.** The customer-facing companion is the
-[Overview](overview.md). Integrators using the V.ap URL-builder
-tooling read the [Benutzerhandbuch](user-manual.md). The full
-operations manual ships with the binary as the **Betriebshandbuch**
-and is reachable from the component's admin dashboard once installed.
+[Overview](overview.md). Integrators generating URL templates read the
+[V.ap Fremdaufruf URL-Builder](url-builder.md). The full operations
+manual ships with the binary as the **Betriebshandbuch** and is
+reachable from the component's admin dashboard once installed.

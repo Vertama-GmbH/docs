@@ -11,8 +11,8 @@ This document is the customer-direction overview: what the component
 is for, what it gives you, and what adopting it involves. For the
 deeper architecture and design rationale, see the
 [Architecture](solution-outline.md). For the KIS-integrator workflow
-of generating URL templates with V.ap's URL-builder tooling, see the
-[Benutzerhandbuch](user-manual.md).
+of generating URL templates, see the
+[V.ap Fremdaufruf URL-Builder](url-builder.md).
 
 ---
 
@@ -245,8 +245,8 @@ For what is deliberately not in scope today, with rationale, see
 
 - [Architecture](solution-outline.md) — full design rationale,
   deployment-shape detail, security posture, scope and roadmap.
-- [Benutzerhandbuch](user-manual.md) — KIS-integrator guide to the
-  V.ap URL-builder tooling.
+- [V.ap Fremdaufruf URL-Builder](url-builder.md) — KIS-integrator
+  guide to generating URL templates.
 - **Betriebshandbuch** — operations manual; ships with the binary,
   reachable from the admin dashboard after install.
 
