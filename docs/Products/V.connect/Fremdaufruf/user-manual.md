@@ -66,7 +66,7 @@ Voraussetzungen erfüllt sein:
 | Komponente | Was Sie brauchen |
 |------------|------------------|
 | **V.ap-Zugang** | Ein gültiger API-User mit Berechtigung für das Zielmodul (z.&nbsp;B. DUBA). |
-| **V.connect Fremdaufruf** | Installiert und gestartet auf dem KIS-Arbeitsplatz. Standardmäßig auf `http://127.0.0.1:8810` erreichbar. Siehe [Installation Manual](installation.md). |
+| **V.connect Fremdaufruf** | Installiert und gestartet auf dem KIS-Arbeitsplatz. Standardmäßig auf `http://127.0.0.1:8810` erreichbar. |
 | **KIS-Konfiguration** | Berechtigung, im KIS einen "Externer Aufruf"-Eintrag mit Platzhaltern anzulegen. Die genaue Syntax hängt vom KIS ab. |
 | **Browser** | Aktueller Browser am Arbeitsplatz, der vom V.connect Fremdaufruf zurückgegebene 303-Antworten verfolgt (alle gängigen Browser tun dies). |
 
@@ -263,16 +263,18 @@ in V.ap landen.
 | **Formular wird geöffnet, ist aber leer** | Pflichtfelder fehlen oder Platzhalter werden vom KIS nicht ersetzt. Beispielwerte im Werkzeug abgleichen. |
 
 Für tiefergehende Diagnose lesen Sie das Audit-Log des V.connect
-Fremdaufrufs (Standardpfad siehe [Installation Manual](installation.md)).
-Die Protokoll-Einträge enthalten Pfad, Parameter-Anzahl und HTTP-Statuscode
-— Werte werden aus Datenschutzgründen nie protokolliert.
+Fremdaufrufs. Die Protokoll-Einträge enthalten Pfad,
+Parameter-Anzahl und HTTP-Statuscode — Werte werden aus
+Datenschutzgründen nie protokolliert. Den Standardpfad und die
+Konfiguration des Audit-Logs entnehmen Sie dem Betriebshandbuch,
+das mit der Komponente ausgeliefert wird.
 
 ---
 
 ## 8. Weiterführende Dokumente
 
-- [Solution Outline](overview.md) — Architektur, Designentscheidungen, Sicherheitsaspekte
-- [Installation Manual](installation.md) — Installation, Konfiguration und Betrieb des V.connect Fremdaufrufs auf dem KIS-Arbeitsplatz
+- [Overview](overview.md) — Architektur, Designentscheidungen, Sicherheitsaspekte
+- **Betriebshandbuch** — Installation, Konfiguration und Betrieb auf dem KIS-Arbeitsplatz. Wird mit der Komponente ausgeliefert und ist nach der Installation über das Admin-Dashboard erreichbar; Vertama stellt es auf Anfrage vor der Bereitstellung zur Verfügung.
 - Modul-spezifische API-Tutorials: [DUBA](../../../Products/DUBA/api-tutorial.md), [ELIM+](../../../Products/ELIMPLUS/integration-guide.md)
 
 ---

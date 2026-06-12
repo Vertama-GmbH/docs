@@ -7,11 +7,14 @@ even when the KIS cannot issue an HTTP POST. It runs adjacent to the
 KIS, accepts the GET URL the KIS knows how to emit, and bridges to
 V.ap's POST-based session-initialisation flow.
 
-This document describes the architecture and the responsibility
-split. Configuration and operations live in the
-[Installation Manual](installation.md); KIS integrators configuring
-their first integration start with the
-[Benutzerhandbuch](user-manual.md).
+This document is the product overview: what Fremdaufruf is for, how
+it fits into a hospital's existing KIS + V.ap landscape, and what
+adopting it involves. KIS integrators configuring their first
+integration start with the [Benutzerhandbuch](user-manual.md). The
+full operations manual — installation procedure, configuration
+reference, troubleshooting — ships with the binary as the
+**Betriebshandbuch** and is reachable from the component's admin
+dashboard once installed.
 
 ---
 
@@ -206,58 +209,7 @@ code.
 
 ---
 
-## 3. Component contract — summary
-
-The component is a single executable exposing one HTTP listener
-and one forwarding rule. It is module-agnostic: adding a new
-product module to V.ap requires no change to the component. The
-sections below describe the customer-visible surface; the protocol
-between the component and V.ap is a Vertama-internal contract and
-is not documented here.
-
-### 3.1 URL scheme
-
-```
-GET http://127.0.0.1:PORT/l/<vap-endpoint-path>?<query>
-```
-
-- `/l/` is a fixed prefix reserved by the component. All requests
-  not matching the prefix return 404.
-- `<vap-endpoint-path>` is used verbatim as the path of the V.ap
-  POST request.
-- `<query>` carries data parameters and two optional reserved meta
-  parameters:
-    - `_a` — a path-segment alias map that compacts repeated
-      dotted prefixes (e.g. `P:Patient,S:Standard`) so URLs stay
-      short.
-    - `_t` — a type manifest declaring which parameters are
-      booleans, integers, numbers, dates, or datetimes (everything
-      else is a string).
-
-The V.ap URL-builder tooling emits all of this automatically for
-the integrator; the
-[Benutzerhandbuch §3](user-manual.md#3-schritt-fur-schritt-url-vorlage-erstellen)
-walks through it step by step.
-
-### 3.2 Response semantics
-
-| Trigger                                      | Component response                                            |
-|----------------------------------------------|---------------------------------------------------------------|
-| Successful POST, V.ap returns 200            | **303 See Other** with `Location: <vap-base><magicLink>`      |
-| Caller fails the access-secret check (intranet deployment, §6) | 403 Forbidden                            |
-| Caller's path is not on the configured allowlist (§6)          | 404 Not Found                            |
-| Malformed URL, coercion failure, …           | 400 Bad Request                                               |
-| V.ap returns 400 (validation)                | 422 Unprocessable Entity, with V.ap's `errors[]` propagated   |
-| V.ap returns 401 / 403 / 5xx, or unreachable | 502 Bad Gateway                                               |
-
-The component never returns 401 itself. Upstream auth failures
-(401/403 from V.ap) surface as 502; a 403 from the component
-itself indicates the caller failed the access-secret check (§6),
-not an upstream auth failure.
-
----
-
-## 4. Deployment model
+## 3. Deployment model
 
 V1 supports two deployment shapes; both run from the same binary
 with different configuration.
@@ -266,40 +218,37 @@ with different configuration.
 own instance bound to `127.0.0.1`. Trust boundary: the workstation
 operating system. Operationally simple — one workstation, one
 install — fits when each workstation is a self-contained
-integration point.
+integration point. Distributed as a signed Windows installer that
+registers a native Windows service.
 
 **Hospital-network-bound (intranet-shared).** A single installation
 inside the hospital network, bound to a routable address, serves
 many KIS workstations. Trust boundary: a configured **access
-secret** that every caller must supply on every request (§6).
+secret** that every caller must supply on every request (§5).
 Operationally lighter when many workstations need the same
-integration.
+integration. Distributed as a container image at
+`ghcr.io/mcp-health/v.connect/fremdaufruf` (linux/amd64), with a
+Docker Compose example as a starting point.
 
 Both shapes use the same binary, the same configuration schema,
 and the same upstream contract with V.ap. The choice of shape is a
-deployment decision, not a product decision. The
-[Installation Manual](installation.md) covers both.
-
-**Future: container packaging** — formal container distribution
-with signed image, deployment guide, and operations runbook for
-hospital IT. The binary itself supports both deployment shapes
-today; only the formal container distribution surface is deferred.
+deployment decision, not a product decision.
 
 ---
 
-## 5. Tech stack
+## 4. Tech stack
 
 The component is a **single static binary** (~10 MB), no runtime
 dependency on the workstation. Standard-library HTTP server and
 client, JSON, TLS — minimal third-party surface. Cross-compiled
 from one source tree for Windows, Linux, and macOS. Operates as a
-Windows service via `sc.exe` / NSSM, or as a systemd unit on
-Linux, without any additional runtime supervisor. Sub-second
-startup, single-digit MB resident memory.
+Windows service, as a Linux container, or as a foreground process
+during development, without any additional runtime supervisor.
+Sub-second startup, single-digit MB resident memory.
 
 ---
 
-## 6. Security posture
+## 5. Security posture
 
 ### Authority model
 
@@ -329,9 +278,9 @@ for remain reachable.
 configured access secret on every request (`_s` URL parameter). On
 mismatch the component returns 403 before any upstream call. The
 secret is the trust-boundary control for non-loopback deployments,
-playing the role the workstation OS plays for loopback ones.
-Configuration is covered in the
-[Installation Manual](installation.md).
+playing the role the workstation OS plays for loopback ones. The
+specific configuration is covered in the **Betriebshandbuch**
+shipped with the binary.
 
 ### Wire-level guarantees
 
@@ -369,22 +318,25 @@ Configuration is covered in the
 
 ---
 
-## 7. V1 scope — what's in and what's deferred
+## 6. V1 scope — what's in and what's deferred
 
 **In V1:**
 
-- The component as described above, in the per-workstation
-  loopback deployment.
+- The component as described above, in both deployment shapes
+  (per-workstation loopback and hospital-network intranet).
 - TOML configuration with environment variable overrides.
+- Signed Windows installer with native Windows service registration.
+- Container distribution for Linux deployments at
+  `ghcr.io/mcp-health/v.connect/fremdaufruf` (linux/amd64).
 - Stderr and file audit-log destinations.
+- Browser-based admin dashboard for status, configuration reload,
+  and V.ap-connectivity testing.
 - The V.ap URL-builder tooling for one or more product modules
   (DUBA available at V1 launch; further modules follow the same
   pattern).
 
 **Deferred to a later iteration:**
 
-- Hospital-network central deployment and the corresponding
-  container packaging.
 - Array-typed parameters in the POST body. No currently shipping
   V.ap module needs them; revisited when one does.
 - Signed URL templates (V.ap-issued signature the component
@@ -395,5 +347,66 @@ Configuration is covered in the
 
 ---
 
-**Last updated:** 2026-05-15
+## 7. Adopting Fremdaufruf
+
+### 7.1 Prerequisites
+
+| Item | Requirement |
+|------|-------------|
+| **Platform** | Windows 10 or later (x64) for per-workstation deployments; Linux x86-64 via container (Docker / Podman) for intranet deployments. macOS is development-only. |
+| **Outbound network** | HTTPS reachability from the workstation (or LAN host) to the V.ap base URL. |
+| **V.ap API user** | Provisioned by your Vertama contact, with the module scopes the integration requires. |
+| **Service-installation rights** | Administrator (Windows) or root (Linux) for service registration. Day-to-day operation runs as an unprivileged service account. |
+| **Disk** | Less than 50 MB for the binary, configuration, and audit log. Plan additional capacity if you direct the audit log to a file and operate at high request volume. |
+
+The component is a single static binary with no runtime
+dependencies on the workstation — no JRE, no .NET runtime, no
+shared libraries beyond the OS itself.
+
+### 7.2 Installation paths
+
+- **Windows.** Signed installer (Vertama-supplied) registers the
+  Windows service, drops the binary in `%PROGRAMFILES%`, and writes
+  a configuration template to `%PROGRAMDATA%\Vertama\fremdaufruf\`.
+  Authenticode signature is verifiable from the file's *Digital
+  Signatures* tab before install. Total install time: a few minutes.
+- **Linux / container.** Container image at
+  `ghcr.io/mcp-health/v.connect/fremdaufruf` (linux/amd64). A
+  Docker Compose example is included as a starting point.
+  Configuration is supplied via environment variables (12-factor)
+  or a mounted config file.
+- **macOS.** Development only. No supported production deployment
+  channel.
+
+### 7.3 What's involved operationally
+
+Once installed, the component runs as a long-running service and
+exposes a browser-based **admin dashboard** at
+`http://127.0.0.1:8811/admin` on the host. The administrator sets
+the admin access code on first visit, edits the configuration to
+point at the customer's V.ap instance, reloads the configuration
+from the dashboard, and confirms the V.ap connectivity test passes.
+The KIS may then issue requests against the data port.
+
+Day-to-day operation is hands-off. The dashboard shows live activity
+counters, a redacted view of the effective configuration, and the
+recent request history. Hospital-IT monitoring uses standard service
+liveness checks.
+
+The complete operations manual — installation procedure, full
+configuration schema, troubleshooting, audit-log details — ships
+with the binary as `betriebshandbuch.html` and is reachable from
+the admin dashboard. Vertama supplies it on request prior to
+deployment for IT-security review.
+
+---
+
+**Companion documents:**
+
+- [Benutzerhandbuch](user-manual.md) — KIS-integrator guide to the
+  V.ap URL-builder tooling.
+
+---
+
+**Last updated:** 2026-06-11
 **Applies to:** V.connect Fremdaufruf V1

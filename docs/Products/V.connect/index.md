@@ -31,5 +31,6 @@ would have reached on its own.
 Start with the [Fremdaufruf overview](Fremdaufruf/overview.md). KIS
 integrators looking to configure their first integration go straight
 to the [Benutzerhandbuch](Fremdaufruf/user-manual.md); system
-administrators installing and operating the binary go to the
-[Installation Manual](Fremdaufruf/installation.md).
+administrators installing and operating the binary receive the
+**Betriebshandbuch** shipped with the binary itself, reachable from
+the component's admin dashboard once installed.
