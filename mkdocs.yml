@@ -52,6 +52,19 @@ plugins:
   - search
   - mermaid2:
       javascript: https://unpkg.com/mermaid@11.4.0/dist/mermaid.esm.min.mjs
+  # Multi-language support via file suffix convention.
+  # Default language: English. German alternate: `<name>.de.md` alongside `<name>.md`.
+  # Material Theme renders a language switcher in the header.
+  - i18n:
+      docs_structure: suffix
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+        - locale: de
+          name: Deutsch
+          build: true
 nav:
   - Home: index.md
   - Products:
@@ -95,7 +108,7 @@ nav:
        - "Fremdaufruf":
          - "Overview": "Products/V.connect/Fremdaufruf/overview.md"
          - "Architecture": "Products/V.connect/Fremdaufruf/solution-outline.md"
-         - "User Manual (DE)": "Products/V.connect/Fremdaufruf/user-manual.md"
+         - "User Manual": "Products/V.connect/Fremdaufruf/user-manual.md"
 
   - Guides:
     - "Folder Sync Handbook": "how-to/folder-sync-handbuch.md"
