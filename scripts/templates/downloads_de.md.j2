@@ -1,0 +1,93 @@
+# Downloads
+
+Direkte Downloads für VERTAMA-Produkte. Der Anwendungs-Quellcode liegt
+in eigenen (in der Regel privaten) Repositories; diese Seite verlinkt
+auf die öffentlich verteilten Binärdateien, die in
+[`Vertama-GmbH/releases`](https://github.com/Vertama-GmbH/releases)
+gesammelt werden.
+
+{% for block in products %}
+## {{ block.info.title }}
+
+{{ block.info.summary_de }}
+
+{% if block.headliner %}
+{% set h = block.headliner %}
+**Aktuelle Version:** `{{ h.tag }}`{% if h.prerelease %} (Vorabversion){% endif %} · **Veröffentlicht am:** {{ h.published }}
+
+### Windows-Installer
+
+{% if h.zip_asset %}
+**ZIP-Paket** — bei Versand über E-Mail / Teams / SharePoint zu
+empfehlen, da diese Kanäle reine `.exe`-Anhänge häufig blockieren.
+
+- Datei: [`{{ h.zip_asset.name }}`]({{ h.zip_asset.browser_download_url }}) ({{ h.zip_asset.size_human }})
+{% if h.zip_asset.sha256 %}
+- SHA-256: `{{ h.zip_asset.sha256 }}`
+{% endif %}
+
+{% endif %}
+{% if h.exe_asset %}
+**Direkte `.exe`** — für Doppelklick-Installation auf dem Zielsystem.
+
+- Datei: [`{{ h.exe_asset.name }}`]({{ h.exe_asset.browser_download_url }}) ({{ h.exe_asset.size_human }})
+{% if h.exe_asset.sha256 %}
+- SHA-256: `{{ h.exe_asset.sha256 }}`
+{% endif %}
+
+{% endif %}
+### Download verifizieren
+
+PowerShell:
+
+```
+Get-FileHash {{ (h.zip_asset or h.exe_asset).name }} -Algorithm SHA256
+```
+
+macOS / Linux:
+
+```
+shasum -a 256 {{ (h.zip_asset or h.exe_asset).name }}
+```
+
+Vergleichen Sie das Ergebnis mit dem oben angegebenen SHA-256-Wert.
+
+### Container-Image
+
+```
+{{ block.info.container_image }}:{{ h.version }}
+```
+
+### Quelle
+
+Gebaut aus `{{ block.info.source_repo }}` ({{ block.info.source_visibility_de }}).
+
+{% if block.prereleases %}
+<details>
+<summary><strong>Vorabversionen</strong></summary>
+<ul>
+{% for p in block.prereleases %}
+<li><a href="{{ p.html_url }}"><code>{{ p.tag }}</code></a> — {{ p.published }}</li>
+{% endfor %}
+</ul>
+</details>
+
+{% endif %}
+{% if block.older_stable %}
+<details>
+<summary><strong>Frühere stabile Versionen</strong></summary>
+<ul>
+{% for p in block.older_stable %}
+<li><a href="{{ p.html_url }}"><code>{{ p.tag }}</code></a> — {{ p.published }}</li>
+{% endfor %}
+</ul>
+</details>
+
+{% endif %}
+[Vollständige Release-Notes auf GitHub →]({{ h.html_url }})
+
+{% else %}
+*Noch keine Version veröffentlicht.*
+
+{% endif %}
+{% endfor %}

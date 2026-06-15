@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - main
+  # Triggered by Vertama-GmbH/releases when a new release lands, so the
+  # Downloads page picks up the new version without a docs commit. The
+  # sending workflow is .github/workflows/notify-docs.yml on the
+  # releases repo, dispatched via fine-grained PAT (DOCS_REPO_TOKEN).
+  repository_dispatch:
+    types:
+      - release-updated
 
 jobs:
   build-and-deploy:
@@ -25,5 +32,14 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
+      # Generates docs/Downloads/{index.md,index.de.md} from the public
+      # Vertama-GmbH/releases API. The auto-injected GITHUB_TOKEN lifts
+      # the unauthenticated rate limit from 60 to 1000 req/hr — not
+      # strictly required for one build, but cheap insurance.
+      - name: Generate Downloads page
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: uv run python scripts/generate-downloads.py
+
       - name: Deploy to GitHub Pages
-        run: uv run mkdocs gh-deploy --force 
+        run: uv run mkdocs gh-deploy --force

@@ -6,6 +6,11 @@ notes.md
 # MkDocs build output
 site/
 
+# Downloads page is generated at build time by scripts/generate-downloads.py
+# from the public Vertama-GmbH/releases API. Never commit it.
+/docs/Downloads/index.md
+/docs/Downloads/index.de.md
+
 # Python cache files
 __pycache__/
 *.pyc

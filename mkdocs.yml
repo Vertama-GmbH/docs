@@ -126,4 +126,5 @@ nav:
   - Authentication:
     - "Basic Auth Login (BAL)": "Authentication/basic-auth-login.md"
     - "Magic Token Link (MTL)": "Authentication/magic-token-link.md"
+  - Downloads: Downloads/index.md
   - About: about.md
