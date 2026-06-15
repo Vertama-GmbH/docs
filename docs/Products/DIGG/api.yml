@@ -213,6 +213,7 @@ components:
           description: |-
             Unique identifier for this report.
             Required to track and correlate this report throughout the workflow.
+            When using HL7 to receive reports, please use the format <UUID>|<Fallnummer>|<PatientenID>
           example: "DIGG-2024-00123"
         standortId:
           type: string

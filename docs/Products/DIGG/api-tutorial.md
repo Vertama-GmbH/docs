@@ -102,7 +102,7 @@ curl -u "api-username:api-password" \
 
 The main data structure for birth registration reporting. Key fields include:
 
-- **id** (required): Unique report identifier for tracking
+- **id** (required): Unique report identifier for tracking. (When using HL7 to receive reports, please use the format <UUID>|<Fallnummer>|<PatientenID>)
 - **standortId**: ID of the reporting hospital
 - **nameEinrichtung**: Name of the hospital
 - **ansprechpartner**: Contact name
