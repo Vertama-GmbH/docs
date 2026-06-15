@@ -527,6 +527,21 @@ scoping is visible rather than implicit:
   recorded in §8.3; future consumers (e.g. V.connect 2FA) work
   this out V.ap-side and rely on the component's verbatim relay
   of data parameters. Not a component workstream.
+- Remote-from-Vertama support / monitoring channel. Off the table
+  while we have no standing network reach into hospital intranets;
+  revisits iff a future tunnel (V.c VPN work) provides one and the
+  operator opts in.
+- Multiple admin access codes with capability tags. Single access
+  code today; the `access_code_hash` field name (not `password_hash`)
+  reserves room for `[[admin.codes]]` later without a schema break.
+- Metrics export (Prometheus / OpenTelemetry). Audit-log entries
+  cover the per-request observability we need today.
+- Log viewer / download from the admin UI. Audit log is a file on
+  disk; operator handles shipping externally when needed.
+- TLS on the admin listener. Only relevant if the loopback-only
+  rule ever lifts; while admin is loopback-only, plaintext is fine.
+- Auto-update. Install/update remains the operator's responsibility;
+  installer signing comes with Authenticode in V2.
 
 ---
 
