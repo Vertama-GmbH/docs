@@ -542,6 +542,10 @@ scoping is visible rather than implicit:
   rule ever lifts; while admin is loopback-only, plaintext is fine.
 - Auto-update. Install/update remains the operator's responsibility;
   installer signing comes with Authenticode in V2.
+- Audit-log retention / rotation policy. The file grows unbounded
+  today; operator handles archival externally. Decide on rotation
+  size / age / total-cap before first production deployment if the
+  footprint becomes an issue.
 
 ---
 
