@@ -102,7 +102,7 @@ curl -u "api-username:api-password" \
 
 The main data structure for birth registration reporting. Key fields include:
 
-- **id** (required): Unique report identifier for tracking. (When using HL7 to receive reports, please use the format \<UUID\>|\<Fallnummer\>|\<PatientenID\>)
+- **id** (required): Unique report identifier for tracking. (When using HL7 to receive reports, please use the format `{UUID}|{Fallnummer}|{PatientenID}`)
 - **standortId**: ID of the reporting hospital
 - **nameEinrichtung**: Name of the hospital
 - **ansprechpartner**: Contact name
@@ -149,7 +149,7 @@ The `id` field must be unique per API user. It serves multiple purposes:
 
 1. **Form pre-fill and correlation**: Correlates the hospital data to the form
 2. **Status retrieval key**: After submission, used to retrieve delivery status via `GET /api/digg/v1/status/{id}`
-3. **HL7 reports**: When using HL7 to receive reports, please use the format \<UUID\>|\<Fallnummer\>|\<PatientenID\>
+3. **HL7 reports**: When using HL7 to receive reports, please use the format `{UUID}|{Fallnummer}|{PatientenID}`
 
 ---
 
