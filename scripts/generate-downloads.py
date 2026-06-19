@@ -24,6 +24,7 @@ import json
 import os
 import re
 import sys
+import time
 import urllib.error
 import urllib.request
 from collections import defaultdict
@@ -79,6 +80,52 @@ def http_get(url: str, accept: str = "application/vnd.github+json") -> bytes:
 def fetch_releases() -> list[dict]:
     raw = http_get(f"{API_BASE}/releases?per_page=100")
     return json.loads(raw)
+
+
+def fetch_releases_until_visible(expected_tag: str) -> list[dict]:
+    """Fetch the release list, retrying with backoff until expected_tag
+    appears in the response (or a 60-second budget is exhausted). Works
+    around the race where the docs publish workflow fires within
+    seconds of release creation, while GitHub's list-releases endpoint
+    sometimes takes 5–15 seconds to reflect a brand-new release.
+
+    expected_tag is the tag the source-repo release.yml just published
+    and is passed through the repository_dispatch client_payload. When
+    empty (manual dispatch, push trigger, etc.) the function makes a
+    single non-retrying call — there's no specific tag to wait for.
+    """
+    deadline = time.monotonic() + 60.0
+    delay = 2.0
+    attempt = 0
+    last_releases: list[dict] = []
+    while True:
+        attempt += 1
+        last_releases = fetch_releases()
+        if not expected_tag:
+            return last_releases
+        if any(r.get("tag_name") == expected_tag for r in last_releases):
+            if attempt > 1:
+                print(
+                    f"  expected tag {expected_tag!r} visible on attempt {attempt}",
+                    file=sys.stderr,
+                )
+            return last_releases
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            print(
+                f"WARNING: expected tag {expected_tag!r} not visible after "
+                f"{attempt} attempts in 60s; proceeding with the last response",
+                file=sys.stderr,
+            )
+            return last_releases
+        sleep_for = min(delay, remaining)
+        print(
+            f"  expected tag {expected_tag!r} not yet visible "
+            f"(attempt {attempt}); retrying in {sleep_for:.1f}s…",
+            file=sys.stderr,
+        )
+        time.sleep(sleep_for)
+        delay = min(delay * 1.5, 8.0)
 
 
 def fetch_sha256(asset_url: str) -> str | None:
@@ -195,8 +242,11 @@ def build_product_blocks(releases: list[dict]) -> list[dict]:
 
 
 def render() -> None:
+    expected_tag = os.environ.get("EXPECTED_RELEASE_TAG", "").strip()
     print(f"Fetching releases from {REPO}…", file=sys.stderr)
-    releases = fetch_releases()
+    if expected_tag:
+        print(f"  expecting tag {expected_tag!r} to be present", file=sys.stderr)
+    releases = fetch_releases_until_visible(expected_tag)
     print(f"  got {len(releases)} releases", file=sys.stderr)
 
     blocks = build_product_blocks(releases)

@@ -36,9 +36,17 @@ jobs:
       # Vertama-GmbH/releases API. The auto-injected GITHUB_TOKEN lifts
       # the unauthenticated rate limit from 60 to 1000 req/hr — not
       # strictly required for one build, but cheap insurance.
+      #
+      # EXPECTED_RELEASE_TAG, when this workflow was triggered via
+      # release-updated dispatch from the source-repo release.yml,
+      # carries the tag that was just published. The generator polls
+      # the GitHub API (with a 60s budget) until that tag appears,
+      # working around the eventual-consistency gap between release
+      # creation and list-releases visibility.
       - name: Generate Downloads page
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EXPECTED_RELEASE_TAG: ${{ github.event.client_payload.release_tag }}
         run: uv run python scripts/generate-downloads.py
 
       - name: Deploy to GitHub Pages
