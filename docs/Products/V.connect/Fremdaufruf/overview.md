@@ -190,6 +190,22 @@ deployment for IT-security review.
 
 ## 6. Security & compliance — summary
 
+**Operator sovereignty.** Once installed, the Fremdaufruf component
+runs entirely within your control. Vertama has no remote admin
+surface, no phone-home, no inbound channel into your deployment. All
+configuration is local. The component's network footprint is exactly
+what you configure: outbound only to the V.ap base URL you set (it
+does not reach into your intranet even if your network would permit
+it), and inbound only on the bind address and port you choose.
+
+What Vertama provides and where it runs:
+
+| Artifact | Where it runs | Controlled by |
+|---|---|---|
+| Fremdaufruf component (Windows native service) | KIS workstation | Hospital admin |
+| Fremdaufruf component (Linux container) | Hospital-managed host | Hospital admin |
+| V.ap product modules + URL-builder | Vertama cloud | Vertama operates; hospital admin provisions and consumes via API user |
+
 Three independent controls govern what can be done through
 Fremdaufruf:
 

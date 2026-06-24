@@ -205,6 +205,25 @@ vor der Bereitstellung für die IT-Sicherheits-Prüfung zur Verfügung.
 
 ## 6. Sicherheit & Compliance — Zusammenfassung
 
+**Betreiber-Souveränität.** Nach der Installation läuft die
+Fremdaufruf-Komponente vollständig unter Ihrer Kontrolle. Vertama
+betreibt keine Fernwartungs-Oberfläche, keinen Phone-Home-Kanal,
+keinen eingehenden Zugang in Ihre Bereitstellung. Die gesamte
+Konfiguration ist lokal. Das Netzwerk-Verhalten der Komponente
+entspricht genau dem, was Sie konfigurieren: ausgehend ausschließlich
+zur konfigurierten V.ap-Basis-URL (die Komponente greift nicht in
+Ihr Intranet hinein, selbst wenn Ihr Netzwerk dies zulassen würde),
+und eingehend nur an der von Ihnen gewählten Bind-Adresse und dem
+Port.
+
+Was Vertama bereitstellt und wo es läuft:
+
+| Artefakt | Läuft wo | Kontrolliert von |
+|---|---|---|
+| Fremdaufruf-Komponente (Windows-Dienst) | KIS-Arbeitsplatz | Krankenhaus-Administrator |
+| Fremdaufruf-Komponente (Linux-Container) | Im Krankenhaus betriebener Host | Krankenhaus-Administrator |
+| V.ap-Produktmodule + URL-Builder | Vertama-Cloud | Vertama betreibt; Krankenhaus-Administrator richtet API-Benutzer ein und nutzt diese |
+
 Drei unabhängige Steuerungen regeln, was über Fremdaufruf möglich
 ist:
 

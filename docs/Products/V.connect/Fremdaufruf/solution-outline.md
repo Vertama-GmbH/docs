@@ -412,6 +412,30 @@ is unchanged.
 
 ## 8. Security posture
 
+**Operator sovereignty.** Once installed, the component runs entirely
+within the operating party's control. Vertama has no remote admin
+surface, no phone-home, no inbound channel into the deployment. All
+configuration is local. Updates are applied by the operator pulling a
+new artifact and replacing the previous one; no auto-update mechanism.
+
+The component's network footprint is exactly what the operator
+configures:
+
+- **Outbound** is restricted to the configured V.ap base URL. The
+  component does not reach into the operator's intranet, even if the
+  surrounding network would permit it. No service discovery, no
+  opportunistic probing.
+- **Inbound** is restricted to the operator-configured bind address
+  and port. No other listeners are opened.
+
+What Vertama provides and where it runs:
+
+| Artifact | Where it runs | Controlled by |
+|---|---|---|
+| Fremdaufruf component (Windows native service) | KIS workstation | Hospital admin |
+| Fremdaufruf component (Linux container) | Hospital-managed host | Hospital admin |
+| V.ap product modules + URL-builder | Vertama cloud | Vertama operates; hospital admin provisions and consumes via API user |
+
 ### 8.1 Authority model
 
 Five distinct controls govern who can do what through the
