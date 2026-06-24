@@ -343,46 +343,39 @@ Two deployment shapes are supported in V1; both run the same single
 binary, configured differently.
 
 **Per-workstation, loopback-bound.** The binary installs on each
-KIS workstation, runs as a Windows service (or a systemd unit on
-Linux endpoints), and binds to `127.0.0.1` on a configurable port.
-Reachable only from processes on the same workstation. Trust
+KIS workstation, runs as a native Windows service (installed via a
+signed Windows installer), and binds to `127.0.0.1` on a configurable
+port. Reachable only from processes on the same workstation. Trust
 boundary: the workstation operating system. No additional caller
 authentication is required on the loopback listener.
 
 **Hospital-network-bound (intranet shared deployment).** The binary
-installs on a single host inside the hospital network, runs as a
-service, and binds to a routable address reachable by all KIS
-workstations that need it. One installation serves many
-workstations — operationally lighter for hospital IT. Trust
-boundary: a configured **access secret** that every caller must
-supply on every request (see §8). Without a matching secret, the
-component returns 403 before any upstream call.
-
-**Out of scope for V1.** Container packaging with formal hospital-IT
-handoff (signed image, deployment guide, operations runbook). The
-binary itself works in both deployment shapes today; the container
-distribution surface is what's deferred.
+installs on a single host inside the hospital network, bound to a
+routable address reachable by all KIS workstations that need it. One
+installation serves many workstations — operationally lighter for
+hospital IT. Runtime is platform-agnostic: the same binary runs as a
+native Windows service on a Windows host, as a systemd unit on a
+Linux host, or as a Linux container (image at
+`ghcr.io/mcp-health/v.connect/fremdaufruf`, linux/amd64, with a
+Docker Compose example as a starting point). Trust boundary: a
+configured **access secret** that every caller must supply on every
+request (see §8). Without a matching secret, the component returns
+403 before any upstream call.
 
 ## 6. Tech stack
 
-**Recommended: Go.**
+**Go.**
 
 - Single static binary, ~10 MB, no runtime dependency on the
   workstation.
 - Standard-library HTTP server and client, JSON, TLS — no third-party
   surface to vet beyond the toolchain.
 - Cross-compiles to Windows, Linux, macOS from one source tree.
-- Operates as a Windows service via `sc.exe` / NSSM, or as a systemd
-  unit on Linux, without any additional runtime supervisor.
+- Operates as a native Windows service (via
+  `golang.org/x/sys/windows/svc`) or as a Linux container, without
+  any additional runtime supervisor.
 - Fast startup (sub-second), small memory footprint (single-digit MB
   resident).
-
-**Fallback: .NET (C#) Windows service.** If hospital IT signed-software
-policy strongly favours .NET or requires installer-signing chains that
-the Go toolchain does not naturally produce, a .NET reimplementation
-is the documented fallback. The contract above (URL scheme, types,
-responses) is language-independent. Decision deferred to first
-deployment encounter.
 
 ## 7. Configuration and credentials
 
