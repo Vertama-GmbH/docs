@@ -3,6 +3,9 @@
 
 VENV_DIR := .venv
 
+IP ?= localhost
+PORT ?= 7999
+
 setup: uv-sync
 
 uv-sync:
@@ -25,11 +28,11 @@ build: uv-sync downloads
 
 serve: uv-sync downloads
 	@echo "Starting MkDocs development server..."
-	uv run mkdocs serve
+	uv run mkdocs serve --dev-addr $(IP):$(PORT)
 
 dev: uv-sync downloads
 	@echo "Starting MkDocs development server..."
-	uv run mkdocs serve
+	uv run mkdocs serve --dev-addr $(IP):$(PORT)
 
 publish: downloads
 	@echo "Publishing MkDocs documentation to GitHub Pages..."
