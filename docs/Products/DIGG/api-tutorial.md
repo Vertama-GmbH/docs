@@ -300,6 +300,14 @@ curl -u "api-user:api-pass" \
 
 **Note:** By default, reading a SUCCESS or FAILURE report is destructive (it is marked as polled and disappears from future calls unless `?peek=true` is used).
 
+**Testing**
+
+The following mock IDs are reserved for testing to simulate different delivery outcomes without triggering real backend lookups or network requests:
+
+- `DIGG-TEST-SUCCESS`: Always returns a SUCCESS response with a mock PDF receipt.
+- `DIGG-TEST-PENDING`: Always returns a PENDING response.
+- `DIGG-TEST-FAILURE`: Always returns a FAILURE response with a simulated failure reason.
+
 ---
 
 ## Error Handling
