@@ -108,6 +108,12 @@ paths:
         By default this is a destructive read for SUCCESS/FAILURE reports: once retrieved,
         the report is marked as polled and will no longer appear. Use ?peek=true for
         a non-destructive read. PENDING reports are never marked as polled.
+
+        **Testing:**
+        The following mock IDs are reserved for testing to simulate different delivery outcomes without triggering real backend lookups or network requests:
+        - `DIGG-TEST-SUCCESS`: Always returns a SUCCESS response with a mock PDF receipt.
+        - `DIGG-TEST-PENDING`: Always returns a PENDING response.
+        - `DIGG-TEST-FAILURE`: Always returns a FAILURE response with a simulated failure reason.
       tags:
         - DIGG
       security:
@@ -117,7 +123,9 @@ paths:
         - name: id
           in: path
           required: true
-          description: The report ID from the original DIGG report submission
+          description: |-
+            The report ID from the original DIGG report submission.
+            Can also be one of the reserved test IDs: `DIGG-TEST-SUCCESS`, `DIGG-TEST-PENDING`, or `DIGG-TEST-FAILURE`.
           schema:
             type: string
           example: "DIGG-2024-00123"
