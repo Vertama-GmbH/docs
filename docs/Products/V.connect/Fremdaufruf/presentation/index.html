@@ -192,6 +192,7 @@
   .two-col ul { list-style: none; padding: 0; margin: 0; }
   .two-col li { font-size: 1em; margin: 6px 0; line-height: 1.4; }
   .two-col li::before { content: "— "; color: var(--muted); }
+  .two-col .col p { font-size: 1em; margin: 0; line-height: 1.45; }
 
   /* Highlight box for the strategic-effect slide */
   .pull {
@@ -333,9 +334,9 @@
         <h2 class="eyebrow">Das Hindernis</h2>
         <h2 class="headline">Manche KIS können das nicht direkt</h2>
 
-        <p>V.ap-Module erwarten einen HTTPS-POST-Aufruf mit strukturierten Daten im Request-Body.</p>
+        <p>V.ap-Module bieten eine offene, dokumentierte und verschlüsselte API für die direkte Anbindung an Ihre Systeme.</p>
 
-        <p>Viele KIS-Konfigurationen können das nicht. Die einzige Integrations-Schnittstelle, die sie anbieten: <em>"Öffne diese URL mit den angegebenen Parametern."</em></p>
+        <p>Viele KIS-Konfigurationen können diese API nicht direkt nutzen. Die einzige Integrations-Schnittstelle, die sie anbieten: <em>"Öffne diese URL mit den angegebenen Parametern."</em></p>
 
         <p>Der naheliegende Umweg — Patientendaten als URL-Parameter mitzugeben — ist nicht zulässig. URLs hinterlassen Spuren in Browser-Verläufen, in Proxy-Protokollen, in Server-Zugriffslogs. <strong>Patientendaten dürfen das Krankenhaus auf diesem Weg nicht verlassen.</strong></p>
 
@@ -348,14 +349,15 @@
       <!-- 4 · Was bereits da ist — the reframe -->
       <section>
         <h2 class="eyebrow">Was bereits da ist</h2>
-        <h2 class="headline">Was Sie brauchen, <span class="accent">haben Sie</span></h2>
+        <h2 class="headline">Sie haben die Nachricht. Wir den <span class="accent">sicheren Boten</span>.</h2>
 
         <p>"URL öffnen" ist eine der am weitesten verbreiteten KIS-Funktionen. Sie ist älter als jede modulspezifische Integrations-API. Praktisch jedes KIS unterstützt sie.</p>
 
-        <p>Es fehlt nur ein kleines Stück, das diese Funktion mit den modernen V.ap-Modulen verbindet.</p>
+        <p>Hinzu kommt das Bindeglied zwischen dieser Funktion und den modernen V.ap-Modulen.</p>
 
         <aside class="notes">
-          <p><strong>Der Schlüsselmoment der Präsentation.</strong> Audience soll ein Klicken der Wiedererkennung erleben — die Beschränkung von Slide 3 ist gleichzeitig die Öffnung.</p>
+          <p><strong>Der Schlüsselmoment der Präsentation.</strong> Audience soll erkennen: die Lösung ist eine Partnerschaft. Das Krankenhaus bringt die vorhandene Funktion ("URL öffnen" — die Nachricht), Vertama bringt das sichere Bindeglied (den Boten).</p>
+          <p>Die Metapher Nachricht/Bote knüpft an Folie 3 an: dort war der "URL-Umweg" der unsichere Versand; hier ist Fremdaufruf der sichere Bote.</p>
           <p>Nicht überverkaufen. Den Moment landen lassen. Kurze Pause nach dem Headline-Satz, bevor zum Body.</p>
         </aside>
       </section>
@@ -464,17 +466,28 @@
         <!-- 8.1 · Hauptfolie -->
         <section>
           <h2 class="eyebrow">Strategisch</h2>
-          <h2 class="headline"><span class="accent">Integrations</span>freiheit</h2>
+          <h2 class="headline">Zweifach <span class="accent">unabhängig</span></h2>
 
-          <p>Die Funktion "URL öffnen" ist Teil jedes KIS. Sie braucht <strong>keine modulspezifische Erweiterung</strong> Ihres KIS-Anbieters.</p>
+          <div class="two-col">
+            <div class="col">
+              <h3>Vom KIS-Anbieter</h3>
+              <p>"URL öffnen" ist eine universale KIS-Funktion — praktisch jedes KIS unterstützt sie, seit Jahren. Keine modulspezifische Erweiterung Ihres KIS-Anbieters nötig.</p>
+            </div>
+            <div class="col">
+              <h3>Vom V.ap-Modul</h3>
+              <p>Eine einzige Komponente bedient alle V.ap-Module. DUBA heute, weitere morgen — ohne zusätzliche Installation, ohne zusätzliche Komponentenkosten.</p>
+            </div>
+          </div>
 
-          <div class="pull">
+          <div class="pull" style="margin-top: 28px;">
             Welche V.ap-Module Sie integrieren und wann Sie das tun, <strong>entscheiden Sie selbst</strong> — nicht auf der Zeitachse Ihres KIS-Anbieters.
           </div>
 
           <aside class="notes">
-            <p>Hier landet die strategische Implikation der Slide-4-Einsicht. <strong>Subtil bleiben</strong> — nicht gegen KIS-Anbieter polemisieren. Tonlage: nüchterne Feststellung, nicht Vorwurf.</p>
-            <p>Wenn die Audience nachfragt ("aber unser KIS-Anbieter sagt, wir brauchen XYZ Custom-Integration") — geduldig zurückkehren auf die Tatsache: die "URL öffnen"-Funktion existiert seit Jahren. Was Fremdaufruf neu macht, ist die Brücke auf der anderen Seite.</p>
+            <p>Strategische Landung zweier Punkte: Unabhängigkeit vom KIS-Anbieter (linke Säule) UND vom konkreten V.ap-Modul (rechte Säule). Decision-Maker sollen beide mitnehmen — das sind die zwei wichtigsten De-Risking-Aussagen der Präsentation.</p>
+            <p><strong>Subtil bleiben</strong> — nicht gegen KIS-Anbieter polemisieren. Tonlage: nüchterne Feststellung, nicht Vorwurf. Beide Säulen sind Erleichterung für den Kunden, nicht Angriff auf Dritte.</p>
+            <p>Wenn nachgefragt wird ("aber unser KIS-Anbieter sagt, wir brauchen XYZ Custom-Integration"): geduldig zurückkehren auf die linke Säule — die "URL öffnen"-Funktion existiert seit Jahren.</p>
+            <p>Wenn nachgefragt wird ("aber für jedes Modul brauchen wir doch eine eigene Komponente"): rechte Säule — eine Komponente, alle Module; neue Module sind eine Konfigurationssache, keine Installation.</p>
             <p><strong>Pfeil-runter (↓):</strong> zwei optionale Sub-Folien zeigen den V.ap URL-Builder konkret. Nur einblenden, wenn Audience nach "wie geht das praktisch?" fragt. Sonst direkt mit → zu Folie 9 weiter.</p>
           </aside>
         </section>
