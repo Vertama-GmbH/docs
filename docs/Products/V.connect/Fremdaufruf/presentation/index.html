@@ -128,6 +128,52 @@
   .diagram svg { max-width: 100%; height: auto; max-height: 380px; }
   .diagram .caption { font-size: 0.55em; color: var(--muted); margin-top: 6px; }
 
+  /* Form-field mockup — slide 2's "data arrived" visual.
+   * Shaped to read like the actual V.ap form: collapsible section header
+   * with light-blue bar, 4-column field row, required asterisks, italic
+   * helper text, sub-section header, second field row. System font
+   * fallback handles Arabic / other scripts in the input values
+   * automatically. */
+  .form-mockup {
+    background: #fff; border: 1px solid #d0d7de; border-radius: 6px;
+    margin: 40px auto 0; max-width: 860px; font-size: 0.5em;
+    overflow: hidden; color: #1f2230;
+  }
+  .form-mockup .section-header {
+    background: #e8f4f8; border-top: 1px solid #b3d4dd;
+    padding: 10px 18px; font-weight: 600; font-size: 1em;
+  }
+  .form-mockup .section-header::before {
+    content: "▾ "; font-size: 0.8em; color: #6b7280; margin-right: 4px;
+  }
+  .form-mockup .form-body { padding: 16px 18px 18px; }
+  .form-mockup .sub-header {
+    font-weight: 700; font-size: 1em; margin: 16px 0 10px;
+  }
+  .form-mockup .helper {
+    font-style: italic; color: var(--muted); font-size: 0.92em;
+    margin: 14px 0 0;
+  }
+  .form-mockup .field-row { display: flex; gap: 16px; }
+  .form-mockup .field-row + .field-row { margin-top: 12px; }
+  .form-mockup .field { flex: 1; min-width: 0; }
+  .form-mockup .field label {
+    display: block; font-size: 0.9em; color: #4a5568;
+    margin-bottom: 5px; font-weight: 400;
+  }
+  .form-mockup .field label .req { color: #d52a2a; margin-left: 2px; font-weight: 600; }
+  .form-mockup .field .input {
+    background: #fff; border: 1px solid #cbd5e1; border-radius: 4px;
+    padding: 7px 11px; font-size: 1em; min-height: 1.5em;
+    display: flex; align-items: center; justify-content: space-between;
+    color: #1f2230;
+  }
+  .form-mockup .field .input .icon {
+    color: #6b7280; margin-left: 10px; flex-shrink: 0;
+    display: inline-flex; align-items: center;
+  }
+  .form-mockup .field .input .icon svg { display: block; }
+
   /* Screenshot container — sub-slide drill-downs */
   .screenshot { text-align: center; margin: 12px 0; }
   .screenshot img {
@@ -230,9 +276,55 @@
 
         <p>Prüfen, absenden, fertig. <strong>Keine doppelte Eingabe</strong>, keine Übertragungsfehler, keine Wartezeit.</p>
 
+        <div class="form-mockup">
+          <div class="section-header">Betroffener</div>
+          <div class="form-body">
+            <div class="field-row">
+              <div class="field">
+                <label>Vorname <span class="req">*</span></label>
+                <div class="input"><span>محمد</span></div>
+              </div>
+              <div class="field">
+                <label>Nachname <span class="req">*</span></label>
+                <div class="input"><span>العامري</span></div>
+              </div>
+              <div class="field">
+                <label>Geburtsdatum <span class="req">*</span></label>
+                <div class="input"><span>15.03.1985</span><span class="icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="2.5" width="12" height="10" rx="1"/><line x1="1" y1="5.5" x2="13" y2="5.5"/><line x1="4" y1="1" x2="4" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/></svg></span></div>
+              </div>
+              <div class="field">
+                <label>Familienstand</label>
+                <div class="input"><span>verheiratet</span><span class="icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><path d="M2 3.5 L5 7 L8 3.5 Z"/></svg></span></div>
+              </div>
+            </div>
+
+            <div class="helper">wie im Krankenhaus-Informations-System hinterlegt:</div>
+            <div class="sub-header">Anschrift</div>
+            <div class="field-row">
+              <div class="field">
+                <label>Straße</label>
+                <div class="input"><span>Beispielstraße 5</span></div>
+              </div>
+              <div class="field">
+                <label>PLZ</label>
+                <div class="input"><span>10115</span></div>
+              </div>
+              <div class="field">
+                <label>Stadt</label>
+                <div class="input"><span>Berlin</span></div>
+              </div>
+              <div class="field">
+                <label>Telefon</label>
+                <div class="input"><span>030-12345678</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <aside class="notes">
           <p>Dies ist das <em>Ergebnis</em>, nicht der Mechanismus. Decision-Maker interessieren sich für Workflow-Qualität und Zeit-bis-Aufgabe.</p>
           <p>Konkret an das Modul anknüpfen, das die Audience kennt. Wenn DUBA-Krankenhaus: bei DUBA bleiben. Wenn ELIM+-Krankenhaus: ELIM+ als Beispiel.</p>
+          <p>Form-Mockup rechts: arabischer Name (محمد العامري) demonstriert beiläufig zwei Punkte gleichzeitig — die Datenübergabe ist <em>real</em> (kein Platzhalter) und <em>zeichensatzunabhängig</em> (beliebige Skripte funktionieren). Nur erwähnen, wenn jemand darauf zeigt; sonst still wirken lassen.</p>
         </aside>
       </section>
 
