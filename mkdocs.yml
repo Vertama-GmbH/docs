@@ -109,6 +109,7 @@ nav:
          - "Overview": "Products/V.connect/Fremdaufruf/overview.md"
          - "Architecture": "Products/V.connect/Fremdaufruf/solution-outline.md"
          - "URL-Builder": "Products/V.connect/Fremdaufruf/url-builder.md"
+         - "Präsentation (DE)": "Products/V.connect/Fremdaufruf/presentation/index.html"
 
   - Guides:
     - "Folder Sync Handbook": "how-to/folder-sync-handbuch.md"
