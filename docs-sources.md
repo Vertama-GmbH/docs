@@ -41,6 +41,15 @@ and falls back to the default language when a translation is missing.
 | Fremdaufruf URL-Builder (DE) | `Products/V.connect/Fremdaufruf/url-builder.de.md` | `Vertama-GmbH/elim` (historical name; the V.ap repo) → `docs/external/v.connect/fremdaufruf/url-builder.md` | yes | manual copy |
 | Fremdaufruf Betriebshandbuch | — | `mcp-health/V.connect` → `fremdaufruf/betriebshandbuch.html` | **no** — ships with binary; admin dashboard serves at `/admin/help` | n/a |
 
+## Internal mirror points
+
+Not published here, but tracked because the cross-repo dependency is real
+and the next sync needs to know what to preserve:
+
+| Artifact | Path | Canonical source | Sync mechanism |
+|---|---|---|---|
+| Fremdaufruf Presentationsfolien — URL-Builder Screenshots | `mcp-health/V.connect` → `fremdaufruf/presentation/images/{04-platzhalter-edit, 05-aktuelle-vorlage}.png` | `Vertama-GmbH/elim` → `docs/external/v.connect/fremdaufruf/images/` | manual copy; refresh when V.ap URL-Builder UI changes |
+
 ## Transition state
 
 The current mirror-by-manual-copy state is intentional V1 behavior, not the
