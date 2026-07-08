@@ -1,10 +1,16 @@
 
-.PHONY: setup build publish clean downloads
+.PHONY: setup build publish clean downloads sync-fremdaufruf-deck sync-all
 
 VENV_DIR := .venv
 
 IP ?= localhost
 PORT ?= 7999
+
+# Local checkout paths for the canonical source repos. Override on the
+# command line if your working copies live elsewhere:
+#   make sync-fremdaufruf-deck V_C=~/somewhere/V.c
+V_C  ?= ../V.c
+ELIM ?= ../elim
 
 setup: uv-sync
 
@@ -42,3 +48,20 @@ clean:
 	@echo "Cleaning up build artifacts and virtual environment..."
 	rm -rf site
 	rm -rf $(VENV_DIR)
+
+# ---------------------------------------------------------------------------
+# Mirror-sync targets — pull authored content from its canonical source repo
+# into this docs tree. Each target corresponds to a row in docs-sources.md.
+# Makefile is orchestration only; scripts/ contains the per-type processors.
+# ---------------------------------------------------------------------------
+
+# Pull the Fremdaufruf presentation deck from V.c, stripping speaker notes
+# on the way in (they contain presenter-only guidance not intended for
+# the public site).
+sync-fremdaufruf-deck: uv-sync
+	@scripts/sync-reveal-deck.sh \
+		$(V_C)/fremdaufruf/presentation \
+		docs/Products/V.connect/Fremdaufruf/presentation
+
+# Aggregator — extend as more sync targets land.
+sync-all: sync-fremdaufruf-deck

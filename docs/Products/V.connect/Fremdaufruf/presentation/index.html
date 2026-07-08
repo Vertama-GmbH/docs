@@ -1,13 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="de">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8"/>
 <title>Fremdaufruf · V.connect</title>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css" id="theme">
-
+<link href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css" id="theme" rel="stylesheet"/>
 <style>
   :root {
     --bg:         #ffffff;
@@ -250,425 +249,297 @@
 </style>
 </head>
 <body>
-  <div class="reveal">
-    <img class="brand-mark" src="Vertama-Icon.svg" alt="">
-    <div class="slides">
+<div class="reveal">
+<img alt="" class="brand-mark" src="Vertama-Icon.svg"/>
+<div class="slides">
+<!-- 1 · Title -->
+<section class="title-slide">
+<div class="eyebrow brand">V.connect</div>
+<h1>Fremdaufruf</h1>
+<div class="subtitle">V.ap-Formulare in jedem KIS</div>
+<img alt="Vertama" class="brand-logo" src="Vertama-Logo.svg"/>
 
-      <!-- 1 · Title -->
-      <section class="title-slide">
-        <div class="eyebrow brand">V.connect</div>
-        <h1>Fremdaufruf</h1>
-        <div class="subtitle">V.ap-Formulare in jedem KIS</div>
-        <img class="brand-logo" src="Vertama-Logo.svg" alt="Vertama">
+</section>
+<!-- 2 · Unser Versprechen -->
+<section>
+<h2 class="eyebrow">Unser Versprechen</h2>
+<h2 class="headline">Vom KIS <span class="muted">ins</span> <span class="accent">ausgefüllte Formular</span></h2>
+<p>Eine Mitarbeiterin öffnet aus dem KIS heraus ein V.ap-Modul — DUBA, ELIM+, oder ein anderes. Das Formular ist bereits vorausgefüllt mit den Daten, die das KIS zum Fall bereithält.</p>
+<p>Prüfen, absenden, fertig. <strong>Keine doppelte Eingabe</strong>, keine Übertragungsfehler, keine Wartezeit.</p>
+<div class="form-mockup">
+<div class="section-header">Betroffener</div>
+<div class="form-body">
+<div class="field-row">
+<div class="field">
+<label>Vorname <span class="req">*</span></label>
+<div class="input"><span>محمد</span></div>
+</div>
+<div class="field">
+<label>Nachname <span class="req">*</span></label>
+<div class="input"><span>العامري</span></div>
+</div>
+<div class="field">
+<label>Geburtsdatum <span class="req">*</span></label>
+<div class="input"><span>15.03.1985</span><span class="icon"><svg fill="none" height="13" stroke="currentColor" stroke-width="1.3" viewbox="0 0 14 14" width="13"><rect height="10" rx="1" width="12" x="1" y="2.5"></rect><line x1="1" x2="13" y1="5.5" y2="5.5"></line><line x1="4" x2="4" y1="1" y2="4"></line><line x1="10" x2="10" y1="1" y2="4"></line></svg></span></div>
+</div>
+<div class="field">
+<label>Familienstand</label>
+<div class="input"><span>verheiratet</span><span class="icon"><svg fill="currentColor" height="10" viewbox="0 0 10 10" width="10"><path d="M2 3.5 L5 7 L8 3.5 Z"></path></svg></span></div>
+</div>
+</div>
+<div class="helper">wie im Krankenhaus-Informations-System hinterlegt:</div>
+<div class="sub-header">Anschrift</div>
+<div class="field-row">
+<div class="field">
+<label>Straße</label>
+<div class="input"><span>Beispielstraße 5</span></div>
+</div>
+<div class="field">
+<label>PLZ</label>
+<div class="input"><span>10115</span></div>
+</div>
+<div class="field">
+<label>Stadt</label>
+<div class="input"><span>Berlin</span></div>
+</div>
+<div class="field">
+<label>Telefon</label>
+<div class="input"><span>030-12345678</span></div>
+</div>
+</div>
+</div>
+</div>
 
-        <aside class="notes">
-          <p><strong>Audience:</strong> Krankenhaus-Entscheidungsträger. Ziel: in etwa 10 Minuten verstehen, was Fremdaufruf leistet und warum es relevant ist.</p>
-          <p><strong>Tonlage:</strong> ruhig, präzise, keine Marketing-Übertreibung. Dichte Folien, eine Idee pro Slide.</p>
-          <p><strong>Tasten:</strong> ← → zum Navigieren, S für Sprecher-Notizen, F für Vollbild, E für PDF-Export.</p>
-        </aside>
-      </section>
+</section>
+<!-- 3 · Das Hindernis -->
+<section>
+<h2 class="eyebrow">Das Hindernis</h2>
+<h2 class="headline">Manche KIS können das nicht direkt</h2>
+<p>V.ap-Module bieten eine offene, dokumentierte und verschlüsselte API für die direkte Anbindung an Ihre Systeme.</p>
+<p>Viele KIS-Konfigurationen können diese API nicht direkt nutzen. Die einzige Integrations-Schnittstelle, die sie anbieten: <em>"Öffne diese URL mit den angegebenen Parametern."</em></p>
+<p>Der naheliegende Umweg — Patientendaten als URL-Parameter mitzugeben — ist nicht zulässig. URLs hinterlassen Spuren in Browser-Verläufen, in Proxy-Protokollen, in Server-Zugriffslogs. <strong>Patientendaten dürfen das Krankenhaus auf diesem Weg nicht verlassen.</strong></p>
 
-      <!-- 2 · Unser Versprechen -->
-      <section>
-        <h2 class="eyebrow">Unser Versprechen</h2>
-        <h2 class="headline">Vom KIS <span class="muted">ins</span> <span class="accent">ausgefüllte Formular</span></h2>
+</section>
+<!-- 4 · Was bereits da ist — the reframe -->
+<section>
+<h2 class="eyebrow">Was bereits da ist</h2>
+<h2 class="headline">Sie haben die Nachricht. Wir den <span class="accent">sicheren Boten</span>.</h2>
+<p>"URL öffnen" ist eine der am weitesten verbreiteten KIS-Funktionen. Sie ist älter als jede modulspezifische Integrations-API. Praktisch jedes KIS unterstützt sie.</p>
+<p>Hinzu kommt das Bindeglied zwischen dieser Funktion und den modernen V.ap-Modulen.</p>
 
-        <p>Eine Mitarbeiterin öffnet aus dem KIS heraus ein V.ap-Modul — DUBA, ELIM+, oder ein anderes. Das Formular ist bereits vorausgefüllt mit den Daten, die das KIS zum Fall bereithält.</p>
+</section>
+<!-- 5 · Unser Angebot (mit SVG) -->
+<section>
+<h2 class="eyebrow">Unser Angebot</h2>
+<h2 class="headline">Fremdaufruf</h2>
+<div class="diagram">
+<svg aria-labelledby="bridgeTitle" role="img" viewbox="0 0 720 280" xmlns="http://www.w3.org/2000/svg">
+<title id="bridgeTitle">Wo Fremdaufruf läuft — auf dem Arbeitsplatz, zwischen KIS und V.ap</title>
+<defs>
+<marker id="bArrow" markerheight="7" markerwidth="7" orient="auto" refx="9" refy="5" viewbox="0 0 10 10">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#1565c0"></path>
+</marker>
+</defs>
+<!-- Krankenhausnetz -->
+<rect fill="#fafafa" height="220" rx="14" stroke="#bdbdbd" stroke-dasharray="4,3" width="460" x="20" y="40"></rect>
+<text fill="#757575" font-family="system-ui, sans-serif" font-size="12" font-style="italic" font-weight="500" x="38" y="62">Krankenhausnetz · KIS-Arbeitsplatz</text>
+<!-- KIS -->
+<rect fill="#ffffff" height="130" rx="10" stroke="#9e9e9e" stroke-width="1.5" width="170" x="50" y="100"></rect>
+<text fill="#424242" font-family="system-ui, sans-serif" font-size="16" font-weight="600" text-anchor="middle" x="135" y="135">KIS</text>
+<text fill="#757575" font-family="system-ui, sans-serif" font-size="11" text-anchor="middle" x="135" y="160">Anwendung +</text>
+<text fill="#757575" font-family="system-ui, sans-serif" font-size="11" text-anchor="middle" x="135" y="176">eingebetteter Browser</text>
+<!-- Fremdaufruf (hervorgehoben) -->
+<rect fill="#fff3e0" height="100" rx="10" stroke="#ef6c00" stroke-width="2.5" width="170" x="285" y="115"></rect>
+<text fill="#3e2723" font-family="system-ui, sans-serif" font-size="11" font-weight="500" text-anchor="middle" x="370" y="145">V.connect</text>
+<text fill="#3e2723" font-family="system-ui, sans-serif" font-size="17" font-weight="700" text-anchor="middle" x="370" y="170">Fremdaufruf</text>
+<text fill="#5d4037" font-family="system-ui, sans-serif" font-size="10" font-style="italic" text-anchor="middle" x="370" y="192">einzelnes, statisches Binary</text>
+<!-- Vertama-Cloud -->
+<rect fill="#e3f2fd" height="220" rx="14" stroke="#1565c0" stroke-dasharray="4,3" width="200" x="510" y="40"></rect>
+<text fill="#0d47a1" font-family="system-ui, sans-serif" font-size="12" font-style="italic" font-weight="500" x="530" y="62">Vertama-Cloud</text>
+<!-- V.ap -->
+<rect fill="#bbdefb" height="100" rx="10" stroke="#1565c0" stroke-width="2" width="130" x="545" y="115"></rect>
+<text fill="#0d47a1" font-family="system-ui, sans-serif" font-size="22" font-weight="700" text-anchor="middle" x="610" y="175">V.ap</text>
+<!-- Pfeile -->
+<line marker-end="url(#bArrow)" stroke="#1565c0" stroke-width="2" x1="220" x2="283" y1="165" y2="165"></line>
+<text fill="#1565c0" font-family="system-ui, sans-serif" font-size="11" font-weight="500" text-anchor="middle" x="251" y="156">GET-URL</text>
+<line marker-end="url(#bArrow)" stroke="#1565c0" stroke-width="2" x1="455" x2="543" y1="165" y2="165"></line>
+<text fill="#1565c0" font-family="system-ui, sans-serif" font-size="11" font-weight="500" text-anchor="middle" x="499" y="156">HTTPS POST</text>
+</svg>
+</div>
+<p>Eine kleine, lokal installierte Komponente. Sie nimmt die GET-URL des KIS entgegen, übernimmt die Datenaufbereitung, die authentifizierte Anmeldung und den verschlüsselten Aufruf der V.ap-API, und leitet den Browser zur vorausgefüllten Antwort weiter.</p>
 
-        <p>Prüfen, absenden, fertig. <strong>Keine doppelte Eingabe</strong>, keine Übertragungsfehler, keine Wartezeit.</p>
-
-        <div class="form-mockup">
-          <div class="section-header">Betroffener</div>
-          <div class="form-body">
-            <div class="field-row">
-              <div class="field">
-                <label>Vorname <span class="req">*</span></label>
-                <div class="input"><span>محمد</span></div>
-              </div>
-              <div class="field">
-                <label>Nachname <span class="req">*</span></label>
-                <div class="input"><span>العامري</span></div>
-              </div>
-              <div class="field">
-                <label>Geburtsdatum <span class="req">*</span></label>
-                <div class="input"><span>15.03.1985</span><span class="icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="2.5" width="12" height="10" rx="1"/><line x1="1" y1="5.5" x2="13" y2="5.5"/><line x1="4" y1="1" x2="4" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/></svg></span></div>
-              </div>
-              <div class="field">
-                <label>Familienstand</label>
-                <div class="input"><span>verheiratet</span><span class="icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><path d="M2 3.5 L5 7 L8 3.5 Z"/></svg></span></div>
-              </div>
-            </div>
-
-            <div class="helper">wie im Krankenhaus-Informations-System hinterlegt:</div>
-            <div class="sub-header">Anschrift</div>
-            <div class="field-row">
-              <div class="field">
-                <label>Straße</label>
-                <div class="input"><span>Beispielstraße 5</span></div>
-              </div>
-              <div class="field">
-                <label>PLZ</label>
-                <div class="input"><span>10115</span></div>
-              </div>
-              <div class="field">
-                <label>Stadt</label>
-                <div class="input"><span>Berlin</span></div>
-              </div>
-              <div class="field">
-                <label>Telefon</label>
-                <div class="input"><span>030-12345678</span></div>
-              </div>
-            </div>
-          </div>
+</section>
+<!-- 6 · Was Ihr Team sieht -->
+<section>
+<h2 class="eyebrow">Für die Mitarbeitenden</h2>
+<h2 class="headline">Was Ihr Team sieht</h2>
+<p>Das vorausgefüllte V.ap-Formular erscheint im <strong>KIS-eigenen Browser</strong>. Kein Fensterwechsel, keine separate Anmeldung, kein zweiter Bildschirm.</p>
+<p>Der gewohnte Arbeitsablauf bleibt. Was sich ändert: das Formular ist schon ausgefüllt.</p>
+<div class="bridge">
+<strong>Kein Schulungsbedarf.</strong> Wer das KIS bedienen kann, bedient die V.ap-Integration ohne weiteres Wissen.
         </div>
 
-        <aside class="notes">
-          <p>Dies ist das <em>Ergebnis</em>, nicht der Mechanismus. Decision-Maker interessieren sich für Workflow-Qualität und Zeit-bis-Aufgabe.</p>
-          <p>Konkret an das Modul anknüpfen, das die Audience kennt. Wenn DUBA-Krankenhaus: bei DUBA bleiben. Wenn ELIM+-Krankenhaus: ELIM+ als Beispiel.</p>
-          <p>Form-Mockup rechts: arabischer Name (محمد العامري) demonstriert beiläufig zwei Punkte gleichzeitig — die Datenübergabe ist <em>real</em> (kein Platzhalter) und <em>zeichensatzunabhängig</em> (beliebige Skripte funktionieren). Nur erwähnen, wenn jemand darauf zeigt; sonst still wirken lassen.</p>
-        </aside>
-      </section>
+</section>
+<!-- 7 · Souveränität -->
+<section>
+<h2 class="eyebrow">Was unter Ihrer Kontrolle bleibt</h2>
+<h2 class="headline">Was <span class="accent">Sie steuern</span>, was <span class="muted">wir betreiben</span></h2>
+<p>Nach der Installation läuft die Komponente vollständig unter Ihrer Kontrolle: keine Fernwartung, kein Phone-Home, keine eingehende Verbindung von außen. Ausgehend ausschließlich zur konfigurierten V.ap-Adresse, eingehend nur auf dem von Ihnen gewählten Port.</p>
+<table>
+<thead>
+<tr><th>Artefakt</th><th>Läuft wo</th><th>Kontrolliert von</th></tr>
+</thead>
+<tbody>
+<tr><td>Fremdaufruf (Windows-Dienst)</td><td>KIS-Arbeitsplatz</td><td>Krankenhaus-Administrator</td></tr>
+<tr><td>Fremdaufruf (Linux-Container)</td><td>Krankenhaus-Host</td><td>Krankenhaus-Administrator</td></tr>
+<tr><td>V.ap-Module + URL-Builder</td><td>Vertama-Cloud</td><td>Vertama betreibt; Sie greifen über API-Benutzer zu</td></tr>
+</tbody>
+</table>
 
-      <!-- 3 · Das Hindernis -->
-      <section>
-        <h2 class="eyebrow">Das Hindernis</h2>
-        <h2 class="headline">Manche KIS können das nicht direkt</h2>
-
-        <p>V.ap-Module bieten eine offene, dokumentierte und verschlüsselte API für die direkte Anbindung an Ihre Systeme.</p>
-
-        <p>Viele KIS-Konfigurationen können diese API nicht direkt nutzen. Die einzige Integrations-Schnittstelle, die sie anbieten: <em>"Öffne diese URL mit den angegebenen Parametern."</em></p>
-
-        <p>Der naheliegende Umweg — Patientendaten als URL-Parameter mitzugeben — ist nicht zulässig. URLs hinterlassen Spuren in Browser-Verläufen, in Proxy-Protokollen, in Server-Zugriffslogs. <strong>Patientendaten dürfen das Krankenhaus auf diesem Weg nicht verlassen.</strong></p>
-
-        <aside class="notes">
-          <p>Audience soll spüren "ah, da sitzen wir fest". Schmerzpunkt landet, ohne dass wir KIS-Anbieter explizit angreifen müssen.</p>
-          <p>Wenn jemand fragt: "warum nicht Daten verschlüsselt in URL?" — Antwort: die Leakage-Pfade (Browser-History, Proxy-Logs) sind unabhängig davon, ob die Daten verschlüsselt sind. Die Spuren bleiben.</p>
-        </aside>
-      </section>
-
-      <!-- 4 · Was bereits da ist — the reframe -->
-      <section>
-        <h2 class="eyebrow">Was bereits da ist</h2>
-        <h2 class="headline">Sie haben die Nachricht. Wir den <span class="accent">sicheren Boten</span>.</h2>
-
-        <p>"URL öffnen" ist eine der am weitesten verbreiteten KIS-Funktionen. Sie ist älter als jede modulspezifische Integrations-API. Praktisch jedes KIS unterstützt sie.</p>
-
-        <p>Hinzu kommt das Bindeglied zwischen dieser Funktion und den modernen V.ap-Modulen.</p>
-
-        <aside class="notes">
-          <p><strong>Der Schlüsselmoment der Präsentation.</strong> Audience soll erkennen: die Lösung ist eine Partnerschaft. Das Krankenhaus bringt die vorhandene Funktion ("URL öffnen" — die Nachricht), Vertama bringt das sichere Bindeglied (den Boten).</p>
-          <p>Die Metapher Nachricht/Bote knüpft an Folie 3 an: dort war der "URL-Umweg" der unsichere Versand; hier ist Fremdaufruf der sichere Bote.</p>
-          <p>Nicht überverkaufen. Den Moment landen lassen. Kurze Pause nach dem Headline-Satz, bevor zum Body.</p>
-        </aside>
-      </section>
-
-      <!-- 5 · Unser Angebot (mit SVG) -->
-      <section>
-        <h2 class="eyebrow">Unser Angebot</h2>
-        <h2 class="headline">Fremdaufruf</h2>
-
-        <div class="diagram">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" role="img" aria-labelledby="bridgeTitle">
-            <title id="bridgeTitle">Wo Fremdaufruf läuft — auf dem Arbeitsplatz, zwischen KIS und V.ap</title>
-            <defs>
-              <marker id="bArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-                <path d="M 0 0 L 10 5 L 0 10 z" fill="#1565c0"/>
-              </marker>
-            </defs>
-
-            <!-- Krankenhausnetz -->
-            <rect x="20" y="40" width="460" height="220" rx="14" fill="#fafafa" stroke="#bdbdbd" stroke-dasharray="4,3"/>
-            <text x="38" y="62" font-family="system-ui, sans-serif" font-size="12" fill="#757575" font-weight="500" font-style="italic">Krankenhausnetz · KIS-Arbeitsplatz</text>
-
-            <!-- KIS -->
-            <rect x="50" y="100" width="170" height="130" rx="10" fill="#ffffff" stroke="#9e9e9e" stroke-width="1.5"/>
-            <text x="135" y="135" font-family="system-ui, sans-serif" font-size="16" fill="#424242" font-weight="600" text-anchor="middle">KIS</text>
-            <text x="135" y="160" font-family="system-ui, sans-serif" font-size="11" fill="#757575" text-anchor="middle">Anwendung +</text>
-            <text x="135" y="176" font-family="system-ui, sans-serif" font-size="11" fill="#757575" text-anchor="middle">eingebetteter Browser</text>
-
-            <!-- Fremdaufruf (hervorgehoben) -->
-            <rect x="285" y="115" width="170" height="100" rx="10" fill="#fff3e0" stroke="#ef6c00" stroke-width="2.5"/>
-            <text x="370" y="145" font-family="system-ui, sans-serif" font-size="11" fill="#3e2723" font-weight="500" text-anchor="middle">V.connect</text>
-            <text x="370" y="170" font-family="system-ui, sans-serif" font-size="17" fill="#3e2723" font-weight="700" text-anchor="middle">Fremdaufruf</text>
-            <text x="370" y="192" font-family="system-ui, sans-serif" font-size="10" fill="#5d4037" font-style="italic" text-anchor="middle">einzelnes, statisches Binary</text>
-
-            <!-- Vertama-Cloud -->
-            <rect x="510" y="40" width="200" height="220" rx="14" fill="#e3f2fd" stroke="#1565c0" stroke-dasharray="4,3"/>
-            <text x="530" y="62" font-family="system-ui, sans-serif" font-size="12" fill="#0d47a1" font-weight="500" font-style="italic">Vertama-Cloud</text>
-
-            <!-- V.ap -->
-            <rect x="545" y="115" width="130" height="100" rx="10" fill="#bbdefb" stroke="#1565c0" stroke-width="2"/>
-            <text x="610" y="175" font-family="system-ui, sans-serif" font-size="22" fill="#0d47a1" font-weight="700" text-anchor="middle">V.ap</text>
-
-            <!-- Pfeile -->
-            <line x1="220" y1="165" x2="283" y2="165" stroke="#1565c0" stroke-width="2" marker-end="url(#bArrow)"/>
-            <text x="251" y="156" font-family="system-ui, sans-serif" font-size="11" fill="#1565c0" font-weight="500" text-anchor="middle">GET-URL</text>
-
-            <line x1="455" y1="165" x2="543" y2="165" stroke="#1565c0" stroke-width="2" marker-end="url(#bArrow)"/>
-            <text x="499" y="156" font-family="system-ui, sans-serif" font-size="11" fill="#1565c0" font-weight="500" text-anchor="middle">HTTPS POST</text>
-          </svg>
-        </div>
-
-        <p>Eine kleine, lokal installierte Komponente. Sie nimmt die GET-URL des KIS entgegen, übernimmt die Datenaufbereitung, die authentifizierte Anmeldung und den verschlüsselten Aufruf der V.ap-API, und leitet den Browser zur vorausgefüllten Antwort weiter.</p>
-
-        <aside class="notes">
-          <p>Ein Satz, drei Verben. Das Diagramm trägt die Erklärung. Nicht zerreden.</p>
-          <p>Wer mehr wissen will: "die Datenaufbereitung übersetzt die URL-Parameter in das JSON-Format, das V.ap erwartet. Die Authentifizierung läuft über einen fest konfigurierten API-Benutzer, dessen Zugangsdaten lokal in der Komponente liegen — nicht im KIS."</p>
-        </aside>
-      </section>
-
-      <!-- 6 · Was Ihr Team sieht -->
-      <section>
-        <h2 class="eyebrow">Für die Mitarbeitenden</h2>
-        <h2 class="headline">Was Ihr Team sieht</h2>
-
-        <p>Das vorausgefüllte V.ap-Formular erscheint im <strong>KIS-eigenen Browser</strong>. Kein Fensterwechsel, keine separate Anmeldung, kein zweiter Bildschirm.</p>
-
-        <p>Der gewohnte Arbeitsablauf bleibt. Was sich ändert: das Formular ist schon ausgefüllt.</p>
-
-        <div class="bridge">
-          <strong>Kein Schulungsbedarf.</strong> Wer das KIS bedienen kann, bedient die V.ap-Integration ohne weiteres Wissen.
-        </div>
-
-        <aside class="notes">
-          <p>Schließt slide 5's mechanische Beschreibung mit dem Erleben der Endnutzerin. Decision-Maker hört: "kein Schulungsbedarf, keine UI-Umgewöhnung".</p>
-          <p>Wenn nach Browser-Kompatibilität gefragt wird: jeder Browser, der 303-Redirects folgt (alle gängigen).</p>
-        </aside>
-      </section>
-
-      <!-- 7 · Souveränität -->
-      <section>
-        <h2 class="eyebrow">Was unter Ihrer Kontrolle bleibt</h2>
-        <h2 class="headline">Was <span class="accent">Sie steuern</span>, was <span class="muted">wir betreiben</span></h2>
-
-        <p>Nach der Installation läuft die Komponente vollständig unter Ihrer Kontrolle: keine Fernwartung, kein Phone-Home, keine eingehende Verbindung von außen. Ausgehend ausschließlich zur konfigurierten V.ap-Adresse, eingehend nur auf dem von Ihnen gewählten Port.</p>
-
-        <table>
-          <thead>
-            <tr><th>Artefakt</th><th>Läuft wo</th><th>Kontrolliert von</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Fremdaufruf (Windows-Dienst)</td><td>KIS-Arbeitsplatz</td><td>Krankenhaus-Administrator</td></tr>
-            <tr><td>Fremdaufruf (Linux-Container)</td><td>Krankenhaus-Host</td><td>Krankenhaus-Administrator</td></tr>
-            <tr><td>V.ap-Module + URL-Builder</td><td>Vertama-Cloud</td><td>Vertama betreibt; Sie greifen über API-Benutzer zu</td></tr>
-          </tbody>
-        </table>
-
-        <aside class="notes">
-          <p>Die Tabelle zieht die Trennlinie sichtbar: "Ihres" links, "unseres" rechts.</p>
-          <p>Für die IT-Security im Raum: vollständige Beschreibung in der Architektur-Dokumentation auf docs.vertama.com — Slide 12 verweist darauf.</p>
-          <p>Häufige Frage: "Können Sie auf unseren Server zugreifen?" → Antwort: technisch nein. Kein eingehender Kanal von außen, kein automatisches Update, kein versteckter Admin-Zugang. Updates erfolgen, wenn <em>Sie</em> eine neue Version installieren.</p>
-        </aside>
-      </section>
-
-      <!-- 8 · Integrationsfreiheit (mit Drill-down) -->
-      <section>
-        <!-- 8.1 · Hauptfolie -->
-        <section>
-          <h2 class="eyebrow">Strategisch</h2>
-          <h2 class="headline">Zweifach <span class="accent">unabhängig</span></h2>
-
-          <div class="two-col">
-            <div class="col">
-              <h3>Vom KIS-Anbieter</h3>
-              <p>"URL öffnen" ist eine universale KIS-Funktion — praktisch jedes KIS unterstützt sie, seit Jahren. Keine modulspezifische Erweiterung Ihres KIS-Anbieters nötig.</p>
-            </div>
-            <div class="col">
-              <h3>Vom V.ap-Modul</h3>
-              <p>Eine einzige Komponente bedient alle V.ap-Module. DUBA heute, weitere morgen — ohne zusätzliche Installation, ohne zusätzliche Komponentenkosten.</p>
-            </div>
-          </div>
-
-          <div class="pull" style="margin-top: 28px;">
+</section>
+<!-- 8 · Integrationsfreiheit (mit Drill-down) -->
+<section>
+<!-- 8.1 · Hauptfolie -->
+<section>
+<h2 class="eyebrow">Strategisch</h2>
+<h2 class="headline">Zweifach <span class="accent">unabhängig</span></h2>
+<div class="two-col">
+<div class="col">
+<h3>Vom KIS-Anbieter</h3>
+<p>"URL öffnen" ist eine universale KIS-Funktion — praktisch jedes KIS unterstützt sie, seit Jahren. Keine modulspezifische Erweiterung Ihres KIS-Anbieters nötig.</p>
+</div>
+<div class="col">
+<h3>Vom V.ap-Modul</h3>
+<p>Eine einzige Komponente bedient alle V.ap-Module. DUBA heute, weitere morgen — ohne zusätzliche Installation, ohne zusätzliche Komponentenkosten.</p>
+</div>
+</div>
+<div class="pull" style="margin-top: 28px;">
             Welche V.ap-Module Sie integrieren und wann Sie das tun, <strong>entscheiden Sie selbst</strong> — nicht auf der Zeitachse Ihres KIS-Anbieters.
           </div>
 
-          <aside class="notes">
-            <p>Strategische Landung zweier Punkte: Unabhängigkeit vom KIS-Anbieter (linke Säule) UND vom konkreten V.ap-Modul (rechte Säule). Decision-Maker sollen beide mitnehmen — das sind die zwei wichtigsten De-Risking-Aussagen der Präsentation.</p>
-            <p><strong>Subtil bleiben</strong> — nicht gegen KIS-Anbieter polemisieren. Tonlage: nüchterne Feststellung, nicht Vorwurf. Beide Säulen sind Erleichterung für den Kunden, nicht Angriff auf Dritte.</p>
-            <p>Wenn nachgefragt wird ("aber unser KIS-Anbieter sagt, wir brauchen XYZ Custom-Integration"): geduldig zurückkehren auf die linke Säule — die "URL öffnen"-Funktion existiert seit Jahren.</p>
-            <p>Wenn nachgefragt wird ("aber für jedes Modul brauchen wir doch eine eigene Komponente"): rechte Säule — eine Komponente, alle Module; neue Module sind eine Konfigurationssache, keine Installation.</p>
-            <p><strong>Pfeil-runter (↓):</strong> zwei optionale Sub-Folien zeigen den V.ap URL-Builder konkret. Nur einblenden, wenn Audience nach "wie geht das praktisch?" fragt. Sonst direkt mit → zu Folie 9 weiter.</p>
-          </aside>
-        </section>
+</section>
+<!-- 8.2 · Sub-Folie: URL-Builder, Felder wählen -->
+<section>
+<h2 class="eyebrow">URL-Builder</h2>
+<h2 class="headline">Felder wählen, Platzhalter eintragen</h2>
+<div class="screenshot">
+<img alt="V.ap URL-Builder mit Feldauswahl und Platzhaltern" src="images/04-platzhalter-edit.png"/>
+</div>
+<p>Im V.ap URL-Builder: gewünschte Felder aus der Modul-Spezifikation auswählen, KIS-spezifische Platzhalter eintragen. Das Werkzeug kennt die V.ap-Felder; der Integrator bringt die KIS-Syntax mit.</p>
 
-        <!-- 8.2 · Sub-Folie: URL-Builder, Felder wählen -->
-        <section>
-          <h2 class="eyebrow">URL-Builder</h2>
-          <h2 class="headline">Felder wählen, Platzhalter eintragen</h2>
+</section>
+<!-- 8.3 · Sub-Folie: Fertige URL-Vorlage -->
+<section>
+<h2 class="eyebrow">URL-Builder</h2>
+<h2 class="headline">Fertige URL-Vorlage</h2>
+<div class="screenshot">
+<img alt="Generierte URL-Vorlage zum Kopieren" src="images/05-aktuelle-vorlage.png"/>
+</div>
+<p>Generierte URL-Vorlage. Einmal in die Zwischenablage kopieren, im KIS hinterlegen, fertig. <strong>Eine Vorlage gilt arbeitsplatzübergreifend</strong> für alle KIS, die diese Integration anbieten sollen.</p>
 
-          <div class="screenshot">
-            <img src="images/04-platzhalter-edit.png" alt="V.ap URL-Builder mit Feldauswahl und Platzhaltern">
-          </div>
+</section>
+</section>
+<!-- 9 · Bereitstellung -->
+<section>
+<h2 class="eyebrow">Bereitstellung</h2>
+<h2 class="headline">Pro Arbeitsplatz oder zentral</h2>
+<div class="two-col">
+<div class="col">
+<h3>Pro Arbeitsplatz</h3>
+<ul>
+<li>Native Windows-Dienst</li>
+<li>Loopback (<code>127.0.0.1</code>)</li>
+<li>Eine Installation pro Arbeitsplatz</li>
+<li>Vertrauensgrenze: Betriebssystem</li>
+</ul>
+</div>
+<div class="col">
+<h3>Zentral im Krankenhausnetz</h3>
+<ul>
+<li>Windows-Dienst, systemd oder Linux-Container</li>
+<li>Routbare Adresse + Access Secret</li>
+<li>Eine Installation für viele Arbeitsplätze</li>
+<li>Vertrauensgrenze: Netzwerk + Secret</li>
+</ul>
+</div>
+</div>
+<p style="margin-top: 24px; text-align: center;"><strong>Dieselbe Binärdatei für beide Varianten.</strong> <span class="muted">Die Wahl ist eine Betriebsfrage, keine Produktfrage.</span></p>
 
-          <p>Im V.ap URL-Builder: gewünschte Felder aus der Modul-Spezifikation auswählen, KIS-spezifische Platzhalter eintragen. Das Werkzeug kennt die V.ap-Felder; der Integrator bringt die KIS-Syntax mit.</p>
+</section>
+<!-- 10 · Heute schon verfügbar -->
+<section>
+<h2 class="eyebrow">Heute schon verfügbar</h2>
+<h2 class="headline">Was V1 leistet</h2>
+<ul>
+<li>Komponente in beiden Bereitstellungs-Varianten — <strong>produktiv</strong></li>
+<li>Signierter Windows-Installer, Linux-Container-Image</li>
+<li>Browser-basiertes Admin-Dashboard für Status, Konfiguration und V.ap-Verbindungstest</li>
+<li>Audit-Log mit Datenschutz-Garantie: <strong>Parameter-Werte und -Schlüssel werden nie protokolliert</strong></li>
+<li>V.ap URL-Builder für DUBA zum Start — weitere Module nutzen denselben Workflow, keine zusätzlichen Komponentenkosten</li>
+</ul>
 
-          <aside class="notes">
-            <p>Screenshot zeigt das Feldtabelle-Editing aus dem V.ap URL-Builder (DUBA-Beispiel). Felder oben: Pflicht-Felder (jobId), darunter optionale wie betroffener.name.vorname. In der rechten Spalte sind KIS-Platzhalter wie <code>%vorname%</code> eingetragen.</p>
-            <p>Wer es ausprobieren will: das Werkzeug läuft im V.ap-Admin-Bereich; volle Schritt-für-Schritt-Anleitung im <em>V.ap Fremdaufruf URL-Builder</em>-Dokument (Folie 12).</p>
-          </aside>
-        </section>
+</section>
+<!-- 11 · V.connect Familie -->
+<section>
+<h2 class="eyebrow brand">V.connect</h2>
+<h2 class="headline">Fremdaufruf ist <span class="accent">der Anfang</span></h2>
+<p>Fremdaufruf ist das erste Mitglied der V.connect-Familie — der Bereich unseres Portfolios, der die sichere Anbindung Ihrer Systeme an die V.ap-Module zur Aufgabe hat.</p>
+<p>Wichtige Themen:</p>
+<ul>
+<li><strong>Sichere Tunnel</strong> für eingehende Datenflüsse — VPN-unabhängig, vornehmlich für HL7-Push-Benachrichtigungen. In aktiver Entwicklung.</li>
+<li><strong>Identitätssicherung</strong> auf Benutzerebene — eingebettet in unsere laufende Arbeit zu EUDI Wallet, eID, BundId und GesundheitsID.</li>
+<li><strong>Werkzeuge für die hauseigene IT</strong> — Diagnostik, Konfiguration, weitere Hilfsmittel rund um die Integration.</li>
+</ul>
 
-        <!-- 8.3 · Sub-Folie: Fertige URL-Vorlage -->
-        <section>
-          <h2 class="eyebrow">URL-Builder</h2>
-          <h2 class="headline">Fertige URL-Vorlage</h2>
-
-          <div class="screenshot">
-            <img src="images/05-aktuelle-vorlage.png" alt="Generierte URL-Vorlage zum Kopieren">
-          </div>
-
-          <p>Generierte URL-Vorlage. Einmal in die Zwischenablage kopieren, im KIS hinterlegen, fertig. <strong>Eine Vorlage gilt arbeitsplatzübergreifend</strong> für alle KIS, die diese Integration anbieten sollen.</p>
-
-          <aside class="notes">
-            <p>Screenshot zeigt das "Aktuelle Vorlage"-Panel mit der fertig erzeugten URL. Audience sieht: konkret, kurz, sofort einsetzbar.</p>
-            <p>Wenn jemand fragt: "muss jede Workstation einzeln konfiguriert werden?" → Antwort: nein, die Vorlage ist arbeitsplatzunabhängig. Die KIS-Administratoren rollen sie über ihre normalen KIS-Konfigurations-Werkzeuge aus.</p>
-          </aside>
-        </section>
-      </section>
-
-      <!-- 9 · Bereitstellung -->
-      <section>
-        <h2 class="eyebrow">Bereitstellung</h2>
-        <h2 class="headline">Pro Arbeitsplatz oder zentral</h2>
-
-        <div class="two-col">
-          <div class="col">
-            <h3>Pro Arbeitsplatz</h3>
-            <ul>
-              <li>Native Windows-Dienst</li>
-              <li>Loopback (<code>127.0.0.1</code>)</li>
-              <li>Eine Installation pro Arbeitsplatz</li>
-              <li>Vertrauensgrenze: Betriebssystem</li>
-            </ul>
-          </div>
-          <div class="col">
-            <h3>Zentral im Krankenhausnetz</h3>
-            <ul>
-              <li>Windows-Dienst, systemd oder Linux-Container</li>
-              <li>Routbare Adresse + Access Secret</li>
-              <li>Eine Installation für viele Arbeitsplätze</li>
-              <li>Vertrauensgrenze: Netzwerk + Secret</li>
-            </ul>
-          </div>
-        </div>
-
-        <p style="margin-top: 24px; text-align: center;"><strong>Dieselbe Binärdatei für beide Varianten.</strong> <span class="muted">Die Wahl ist eine Betriebsfrage, keine Produktfrage.</span></p>
-
-        <aside class="notes">
-          <p>Decision-Maker und IT entscheiden, welche Variante zur eigenen Infrastruktur passt. Keine Empfehlung von uns; beide sind gleichwertig unterstützt.</p>
-          <p>Pro Arbeitsplatz: einfacher zu denken, mehr Installationen zu pflegen. Zentral: weniger Installationen, dafür ein zusätzlicher Sicherheits-Mechanismus (Access Secret) erforderlich.</p>
-        </aside>
-      </section>
-
-      <!-- 10 · Heute schon verfügbar -->
-      <section>
-        <h2 class="eyebrow">Heute schon verfügbar</h2>
-        <h2 class="headline">Was V1 leistet</h2>
-
-        <ul>
-          <li>Komponente in beiden Bereitstellungs-Varianten — <strong>produktiv</strong></li>
-          <li>Signierter Windows-Installer, Linux-Container-Image</li>
-          <li>Browser-basiertes Admin-Dashboard für Status, Konfiguration und V.ap-Verbindungstest</li>
-          <li>Audit-Log mit Datenschutz-Garantie: <strong>Parameter-Werte und -Schlüssel werden nie protokolliert</strong></li>
-          <li>V.ap URL-Builder für DUBA zum Start — weitere Module nutzen denselben Workflow, keine zusätzlichen Komponentenkosten</li>
-        </ul>
-
-        <aside class="notes">
-          <p>Konkret und nüchtern. "Produktiv" einmal sagen — Decision-Maker hört "es läuft schon", nicht "Versprechen für später".</p>
-          <p>Wenn nach genauer Modulliste gefragt wird: DUBA zum Launch produktiv, weitere folgen — Reihenfolge richtet sich nach Kundenbedarf. Keine festen Termine zusagen.</p>
-        </aside>
-      </section>
-
-      <!-- 11 · V.connect Familie -->
-      <section>
-        <h2 class="eyebrow brand">V.connect</h2>
-        <h2 class="headline">Fremdaufruf ist <span class="accent">der Anfang</span></h2>
-
-        <p>Fremdaufruf ist das erste Mitglied der V.connect-Familie — der Bereich unseres Portfolios, der die sichere Anbindung Ihrer Systeme an die V.ap-Module zur Aufgabe hat.</p>
-
-        <p>Wichtige Themen:</p>
-
-        <ul>
-          <li><strong>Sichere Tunnel</strong> für eingehende Datenflüsse — VPN-unabhängig, vornehmlich für HL7-Push-Benachrichtigungen. In aktiver Entwicklung.</li>
-          <li><strong>Identitätssicherung</strong> auf Benutzerebene — eingebettet in unsere laufende Arbeit zu EUDI Wallet, eID, BundId und GesundheitsID.</li>
-          <li><strong>Werkzeuge für die hauseigene IT</strong> — Diagnostik, Konfiguration, weitere Hilfsmittel rund um die Integration.</li>
-        </ul>
-
-        <aside class="notes">
-          <p>Hinweis auf Familie und Portfolio. <strong>Keine konkreten Termine</strong> — auch auf Nachfrage kein Quartal nennen.</p>
-          <p>"Wichtige Themen" signalisiert eine Auswahl, keine vollständige Liste — andere Bausteine können auf Nachfrage angedeutet werden ("weitere Themen befinden sich in der Konzeptphase").</p>
-          <p><strong>Tunnel:</strong> handfeste Arbeit, in aktiver Entwicklung. Vornehmlich für HL7-Push-Benachrichtigungen — V.ap-seitige Nachrichten zurück ins KIS, ohne dass jede Klinik einen eigenen VPN aufbauen muss.</p>
-          <p><strong>Identitätssicherung:</strong> Anschluss an die nationale und europäische Identitäts-Diskussion (EUDI Wallet, eID, BundId, GesundheitsID). Wenn nach Konkretem gefragt: "wir beobachten und beteiligen uns aktiv; Implementierungen folgen dem Marktreifegrad."</p>
-        </aside>
-      </section>
-
-      <!-- 12 · Closing (mit ruhigem Alternativ-Schluss) -->
-      <section>
-        <!-- 12.1 · Conversational close — drei konkrete Wege -->
-        <section>
-          <h2 class="eyebrow">Nächster Schritt</h2>
-          <h2 class="headline">Sprechen wir.</h2>
-
-          <div class="paths">
-            <div class="path">
-              <h3>Pilotinstallation</h3>
-              <p>Wir richten Fremdaufruf bei Ihnen ein und begleiten den ersten KIS-Aufruf.</p>
-            </div>
-            <div class="path">
-              <h3>Tieferer Blick</h3>
-              <p>Architektur und Sicherheits-Posture im Detail — für Ihre IT-Sicherheits-Prüfung.</p>
-            </div>
-            <div class="path">
-              <h3>URL-Builder-Demo</h3>
-              <p>Wir bauen mit Ihnen eine erste URL-Vorlage für Ihr Wunsch-Modul.</p>
-            </div>
-          </div>
-
-          <div class="contact">
-            <span class="tag">info@vertama.com</span>
+</section>
+<!-- 12 · Closing (mit ruhigem Alternativ-Schluss) -->
+<section>
+<!-- 12.1 · Conversational close — drei konkrete Wege -->
+<section>
+<h2 class="eyebrow">Nächster Schritt</h2>
+<h2 class="headline">Sprechen wir.</h2>
+<div class="paths">
+<div class="path">
+<h3>Pilotinstallation</h3>
+<p>Wir richten Fremdaufruf bei Ihnen ein und begleiten den ersten KIS-Aufruf.</p>
+</div>
+<div class="path">
+<h3>Tieferer Blick</h3>
+<p>Architektur und Sicherheits-Posture im Detail — für Ihre IT-Sicherheits-Prüfung.</p>
+</div>
+<div class="path">
+<h3>URL-Builder-Demo</h3>
+<p>Wir bauen mit Ihnen eine erste URL-Vorlage für Ihr Wunsch-Modul.</p>
+</div>
+</div>
+<div class="contact">
+<span class="tag">info@vertama.com</span>
             ·
             <span class="tag">docs.vertama.com/Products/V.connect/</span>
-          </div>
+</div>
 
-          <aside class="notes">
-            <p>Konversations-Schluss statt "Fragen?". Audience hat drei konkrete Optionen vor Augen — jede ist ein realer nächster Schritt, kein offenes "irgendwer was?".</p>
-            <p>Als Präsentierende:r das Gespräch eröffnen mit: "Welcher dieser drei Wege passt am besten zu Ihrer Situation?" — viel produktiver als "Gibt es Fragen?".</p>
-            <p>Wenn nichts kommt: kurz pausieren, dann mit ↓ zur Alt-Schlussfolie wechseln (ruhigerer Abschluss). Oder direkt mit konkreten Gesprächs-Themen aus den drei Pfaden weitermachen.</p>
-            <p>Kontaktdaten ggf. mit der für diese Audience richtigen Adresse ersetzen.</p>
-          </aside>
-        </section>
+</section>
+<!-- 12.2 · Quiet distillation — ruhiger Alt-Schluss (Pfeil-runter) -->
+<section>
+<div class="quiet-close">
+<h2 class="headline">Fremdaufruf ist da.<br/><span class="muted">Sie entscheiden, wann.</span></h2>
+<div class="docs-row">
+<a class="tag" href="https://docs.vertama.com/de/Products/V.connect/Fremdaufruf/overview/">Übersicht</a>
+<a class="tag" href="https://docs.vertama.com/Products/V.connect/Fremdaufruf/solution-outline/">Architektur</a>
+<a class="tag" href="https://docs.vertama.com/de/Products/V.connect/Fremdaufruf/url-builder/">URL-Builder</a>
+</div>
+<div class="contact">
+<span class="tag">info@vertama.com</span>
+</div>
+</div>
 
-        <!-- 12.2 · Quiet distillation — ruhiger Alt-Schluss (Pfeil-runter) -->
-        <section>
-          <div class="quiet-close">
-            <h2 class="headline">Fremdaufruf ist da.<br><span class="muted">Sie entscheiden, wann.</span></h2>
-
-            <div class="docs-row">
-              <a class="tag" href="https://docs.vertama.com/de/Products/V.connect/Fremdaufruf/overview/">Übersicht</a>
-              <a class="tag" href="https://docs.vertama.com/Products/V.connect/Fremdaufruf/solution-outline/">Architektur</a>
-              <a class="tag" href="https://docs.vertama.com/de/Products/V.connect/Fremdaufruf/url-builder/">URL-Builder</a>
-            </div>
-
-            <div class="contact">
-              <span class="tag">info@vertama.com</span>
-            </div>
-          </div>
-
-          <aside class="notes">
-            <p>Alternative ruhige Schlussfolie. Verwenden, wenn die Gruppe schon überzeugt ist und es um einen würdigen Schlusspunkt geht — nicht um Diskussions-Eröffnung.</p>
-            <p>Oder als bewusstes Ende nach lebhafter Q&amp;A: kurzer Schlussakkord, dann ist die Präsentation visuell abgeschlossen.</p>
-          </aside>
-        </section>
-      </section>
-
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
-
-  <script>
+</section>
+</section>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script>
     Reveal.initialize({
       hash: true,
       width: 1280,

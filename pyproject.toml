@@ -9,6 +9,10 @@ dependencies = [
     "mkdocs-mermaid2-plugin>=1.2.3",
     "mkdocs-static-i18n>=1.3.0",
     "click<8.3.0",
+    # Used by scripts/strip-notes.py during the reveal.js deck sync
+    # (make sync-*-deck) to remove <aside class="notes"> blocks before
+    # the deck lands in the public docs tree.
+    "beautifulsoup4>=4.12",
 ]
 
 [tool.uv]

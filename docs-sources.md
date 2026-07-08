@@ -40,7 +40,7 @@ and falls back to the default language when a translation is missing.
 | Fremdaufruf Architecture | `Products/V.connect/Fremdaufruf/solution-outline.md` | `mcp-health/V.connect` → `fremdaufruf/solution-outline.md` | yes | manual copy |
 | Fremdaufruf URL-Builder (DE) | `Products/V.connect/Fremdaufruf/url-builder.de.md` | `Vertama-GmbH/elim` (historical name; the V.ap repo) → `docs/external/v.connect/fremdaufruf/url-builder.md` | yes | manual copy |
 | Fremdaufruf Betriebshandbuch | — | `mcp-health/V.connect` → `fremdaufruf/betriebshandbuch.html` | **no** — ships with binary; admin dashboard serves at `/admin/help` | n/a |
-| Fremdaufruf Präsentation (DE) | `Products/V.connect/Fremdaufruf/presentation/` | `mcp-health/V.connect` → `fremdaufruf/presentation/` | yes | manual copy of folder (self-contained reveal.js deck — HTML, CSS, SVG, PNG screenshots) |
+| Fremdaufruf Präsentation (DE) | `Products/V.connect/Fremdaufruf/presentation/` | `mcp-health/V.connect` → `fremdaufruf/presentation/` | yes | `make sync-fremdaufruf-deck` — pulls the self-contained reveal.js deck from V.c, strips `<aside class="notes">` speaker-note blocks (presenter guidance not intended for the public site) via `scripts/strip-notes.py`, copies brand assets and images unchanged |
 
 ## Internal mirror points
 
