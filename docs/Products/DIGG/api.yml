@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: DIGG API
-  version: "0.4.0"
+  version: "0.5.0"
   description: API for DIGG birth registration reporting (Geburtsmeldung) - xPersonenstand integration
 servers:
   - url: /api/digg/v1
@@ -221,7 +221,6 @@ components:
           description: |-
             Unique identifier for this report.
             Required to track and correlate this report throughout the workflow.
-            When using HL7 to receive reports, please use the format <UUID>|<Fallnummer>|<PatientenID>
           example: "DIGG-2024-00123"
         standortId:
           type: string
@@ -269,6 +268,16 @@ components:
           nullable: true
           description: Consists of the prefix 'psw' and the Standesamt-Nummer, e.g. psw:01002110. See https://www.xrepository.de/details/urn:xoev-de:bund:bmi:bit:codeliste:dvdv.praefix and https://www.xrepository.de/details/urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:standesamtsnummern
           example: 'psw:01002110'
+        clientReference:
+          type: string
+          nullable: true
+          description: |-
+            Arbitrary, opaque reference string of the calling client. It is stored verbatim
+            and echoed back unchanged when the report is fetched (see ReportResult.clientReference).
+
+            A common convention is to communicate the KIS PatientenID and Fallnummer as
+            "<PatientenID>|<Fallnummer>", when HL7 is used for receiving reports.
+          example: "12345|67890"
     Geburtsangaben:
       type: object
       nullable: true
@@ -534,6 +543,14 @@ components:
           nullable: true
           description: The portal used for delivery (e.g. GOVCONNECT, AKDB)
           example: "GOVCONNECT"
+        clientReference:
+          type: string
+          nullable: true
+          description: |-
+            The opaque client reference supplied on submission (see DiggMementoRequest.clientReference),
+            echoed back verbatim. Lets the client map this report to its corresponding case
+            (e.g. "<PatientenID>|<Fallnummer>"). Null if none was supplied.
+          example: "12345|67890"
         receiptPdf:
           type: string
           nullable: true

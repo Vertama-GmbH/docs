@@ -2,8 +2,8 @@
 
 A practical guide for integration partners using the DIGG (Digitale Geburtsanzeige) API.
 
-**Version:** 0.3.0
-**Last Updated:** 2026-05-21
+**Version:** 0.5.0
+**Last Updated:** 2026-07-15
 
 ---
 
@@ -102,7 +102,7 @@ curl -u "api-username:api-password" \
 
 The main data structure for birth registration reporting. Key fields include:
 
-- **id** (required): Unique report identifier for tracking. (When using HL7 to receive reports, please use the format `{UUID}|{Fallnummer}|{PatientenID}`)
+- **id** (required): Unique report identifier for tracking
 - **standortId**: ID of the reporting hospital
 - **nameEinrichtung**: Name of the hospital
 - **ansprechpartner**: Contact name
@@ -114,6 +114,7 @@ The main data structure for birth registration reporting. Key fields include:
 - **elternteil2**: Optional secondary parent data
 - **standesamtKennung**: Optional Standesamtkennung if multiple Standesämter are applicable (and configured)
 - **zuordnungGeburtsanzeige**: Identifier for further official references
+- **clientReference**: Optional opaque reference string that is echoed back verbatim in the report result — useful for correlating a report to a KIS case (see [Client Reference](#client-reference))
 
 ### Digital Signature (Siegel / Signatur)
 
@@ -148,8 +149,20 @@ See [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) for secur
 The `id` field must be unique per API user. It serves multiple purposes:
 
 1. **Form pre-fill and correlation**: Correlates the hospital data to the form
-2. **Status retrieval key**: After submission, used to retrieve delivery status via `GET /api/digg/v1/status/{id}`
-3. **HL7 reports**: When using HL7 to receive reports, please use the format `{UUID}|{Fallnummer}|{PatientenID}`
+2. **Status retrieval key**: After submission, used to retrieve delivery status via `GET /api/digg/v1/reports/{id}`
+
+### Client Reference
+
+The optional `clientReference` field is an arbitrary, opaque string of your choosing. DIGG stores it verbatim and echoes it back unchanged in the report result (`ReportResult.clientReference`), letting you map a retrieved report back to its originating case in your system.
+
+Unlike `id`, `clientReference` carries no uniqueness or format requirements and is not interpreted by DIGG by default. A common convention — when HL7 is used to receive reports — is to combine the KIS PatientenID and Fallnummer as `{PatientenID}|{Fallnummer}`:
+
+```json
+{
+  "id": "DIGG-2026-00123",
+  "clientReference": "12345|67890"
+}
+```
 
 ---
 
@@ -174,6 +187,7 @@ Only `id` is required; all other fields are optional to allow partial pre-fillin
 ```json
 {
   "id": "DIGG-2026-00123",
+  "clientReference": "12345|67890",
   "standortId": "770001",
   "nameEinrichtung": "Universitätsklinikum Musterstadt",
   "anschriftAutor": {
@@ -287,10 +301,13 @@ curl -u "api-user:api-pass" \
   "module": "DIGG",
   "submittedAt": "2026-02-23T14:32:00Z",
   "portal": "StandesamtPortal",
+  "clientReference": "12345|67890",
   "receiptPdf": "JVBERi0xLjQK...",
   "failureReason": null
 }
 ```
+
+The `clientReference` field echoes back verbatim whatever was supplied on submission (or `null` if none was supplied), letting you correlate the result to its originating case. See [Client Reference](#client-reference).
 
 **Status semantics:**
 
@@ -354,6 +371,6 @@ If the request data is invalid (e.g. missing `id`), a 400 Bad Request is returne
 
 ---
 
-**Document Version:** 0.3.0
-**Last Updated:** 2026-05-21
+**Document Version:** 0.5.0
+**Last Updated:** 2026-07-15
 **API Version:** v1
