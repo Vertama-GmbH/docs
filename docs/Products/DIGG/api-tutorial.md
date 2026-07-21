@@ -2,8 +2,8 @@
 
 A practical guide for integration partners using the DIGG (Digitale Geburtsanzeige) API.
 
-**Version:** 0.5.0
-**Last Updated:** 2026-07-15
+**Version:** 0.5.1
+**Last Updated:** 2026-07-21
 
 ---
 
@@ -371,6 +371,6 @@ If the request data is invalid (e.g. missing `id`), a 400 Bad Request is returne
 
 ---
 
-**Document Version:** 0.5.0
-**Last Updated:** 2026-07-15
+**Document Version:** 0.5.1
+**Last Updated:** 2026-07-21
 **API Version:** v1

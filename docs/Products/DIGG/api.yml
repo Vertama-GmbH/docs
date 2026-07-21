@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: DIGG API
-  version: "0.5.0"
+  version: "0.5.1"
   description: API for DIGG birth registration reporting (Geburtsmeldung) - xPersonenstand integration
 servers:
   - url: /api/digg/v1
@@ -342,9 +342,10 @@ components:
           nullable: true
           description: Gender of the child
           enum:
+            - KEINE_ANGABE
             - MAENNLICH
             - WEIBLICH
-            - UNBESTIMMT
+            - DIVERS
           example: "WEIBLICH"
         name:
           $ref: '#/components/schemas/PersonNameVeraenderung'
