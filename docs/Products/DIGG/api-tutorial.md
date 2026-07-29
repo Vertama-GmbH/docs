@@ -43,7 +43,7 @@ KIS / Hospital System
     ↓
 [1] POST /api/digg/v1/memento  (API user credentials)
     ↓
-[2] Receives { "memento": "...", "magicLink": "/mtl/.../digg/Geburtsbescheinigung?m=..." }
+[2] Receives { "memento": "...", "magicLink": "/mtl/...?m=..." }
     ↓
 [3] Constructs absolute URL: https://elim.vertamob.de + magicLink
     ↓
@@ -136,10 +136,12 @@ The `magicLink` field in the API response is a server-issued, time-limited URL t
 - Redirects to `/digg/Geburtsbescheinigung?m={memento}` on success
 - Is a **relative path** — prepend your instance host to make it absolute
 
-```
-magicLink: "/mtl/eyJ...token.../digg/Geburtsbescheinigung?m=eyJ...memento..."
+The link itself is `/mtl/{token}?m={memento}`. The redirect target (`/digg/Geburtsbescheinigung`) is encrypted inside the opaque token — it is **not** a readable path segment.
 
-Full URL: https://elim.vertamob.de/mtl/eyJ...token.../digg/Geburtsbescheinigung?m=eyJ...memento..."
+```
+magicLink: "/mtl/eyJ...token...?m=eyJ...memento..."
+
+Full URL: https://elim.vertamob.de/mtl/eyJ...token...?m=eyJ...memento..."
 ```
 
 See [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) for security details and token lifetime.
@@ -242,7 +244,7 @@ Returns a JSON object containing the encrypted memento and a ready-to-use magic 
 ```json
 {
   "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..DGG5lQvJC8OpYrCt.Xm8YR...",
-  "magicLink": "/mtl/eyJ...token.../digg/Geburtsbescheinigung?m=eyJ...memento..."
+  "magicLink": "/mtl/eyJ...token...?m=eyJ...memento..."
 }
 ```
 

@@ -1,0 +1,1427 @@
+openapi: 3.0.3
+info:
+  title: XPersonenstand - DIGT Sterbefall API
+  description: |
+    API fuer die Sterbefall-Meldungen nach xPersonenstand.
+    Umfasst Nachrichtentyp 084020 (Einrichtung), 084021 (Bestatter)
+    und 084040 (Todesbescheinigung).
+  version: 0.1.0
+
+servers:
+  - url: /api/digt/v1
+    description: DIGT API Version 1
+
+tags:
+  - name: SterbefallEinrichtung
+    description: Sterbefall-Meldung (xPersonenstand - Nachrichtentyp 084020 - Einrichtung)
+  - name: SterbefallBestatter
+    description: Sterbefall-Meldung (xPersonenstand - Nachrichtentyp 084021 - Bestatter)
+  - name: Todesbescheinigung
+    description: Sterbefall-Meldung (xPersonenstand - Nachrichtentyp 084040 - Todesbescheinigung)
+
+paths:
+  /memento:
+    post:
+      summary: Create encrypted memento string from DIGT report data
+      description: |-
+        Accepts DIGT report data (Sterbefall-Meldung) as JSON and returns an encrypted memento string.
+        The memento can be used to pre-fill the corresponding HTML form via URL parameter.
+
+        Use Case:
+        External systems (e.g., KIS, Bestatter-Software) submit form data → receive encrypted string →
+        construct URL with memento parameter → user opens pre-filled form.
+
+        The request body wraps all three DIGT report types — exactly one of the slots
+        `Einrichtung`, `Bestatter`, `Todesbescheinigung` should be populated.
+        The active slot determines which HTML form variant the memento targets:
+          - `Einrichtung` → 084020 (Sterbefallanzeige Einrichtung)
+          - `Bestatter` → 084021 (Sterbefallanzeige Bestatter)
+          - `Todesbescheinigung` → 084040 (Leichenschau-Mitteilung)
+
+        Only `id` is required; all other fields (including the slots themselves and their
+        inner fields) are optional to allow partial pre-filling. Full validation happens
+        at form-submission time downstream.
+
+        Note: This endpoint does NOT submit the report. It only creates a pre-fill token
+        for the interactive HTML form.
+      tags:
+        - DIGT
+      security:
+        - basicAuth: []
+      operationId: createMemento
+      requestBody:
+        required: true
+        description: DIGT report data to encrypt into a memento string.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DigtMementoRequest'
+      responses:
+        '200':
+          description: Memento successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MementoResponse'
+              example:
+                memento: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                magicLink: "/mtl/eyJ...token...?m=eyJ...memento..."
+        '400':
+          description: Bad Request - invalid form data (validation errors)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+              example:
+                errors: ["id must not be null"]
+        '401':
+          description: |-
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
+
+  /reports:
+    get:
+      summary: List pending report IDs for the authenticated API user
+      description: |-
+          Returns the list of report IDs that have been submitted by the authenticated
+          API user but not yet retrieved (unpolled). These are reports waiting for
+          the caller to fetch the full result.
+
+          Use GET /reports/{id} to retrieve the full result for each ID.
+
+          The list contains only unpolled report IDs — once a report has been
+          retrieved without ?peek=true it will no longer appear here.
+      tags:
+        - DIGT
+      security:
+        - basicAuth: []
+      operationId: listPendingReports
+      responses:
+        '200':
+          description: List of pending report IDs (may be empty)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example:
+                - "DIGT-2026-00123"
+                - "DIGT-2026-00124"
+        '401':
+          description: |-
+              Unauthorized - invalid or missing authentication.
+              Returns 401 status with WWW-Authenticate header.
+              Response body is empty.
+
+  /reports/{id}:
+    get:
+      summary: Retrieve the status of a previously submitted DIGT report
+      description: |-
+        Returns the current status of a DIGT Sterbefall report identified by its id.
+
+        DIGT reports have asynchronous delivery via xPersonenstand/XTA2 transport.
+        The status reflects the transport state:
+        - PENDING: Report was sent but transport acknowledgement has not yet been received.
+        - SUCCESS: Report was successfully delivered.
+          receiptPdf contains the signed confirmation PDF (base64).
+        - FAILURE: Transport failed.
+
+        By default this is a destructive read for SUCCESS/FAILURE reports: once retrieved,
+        the report is marked as polled and will no longer appear. Use ?peek=true for
+        a non-destructive read. PENDING reports are never marked as polled.
+      tags:
+        - DIGT
+      security:
+        - basicAuth: []
+      operationId: getReport
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The report ID from the original DIGT report submission
+          schema:
+            type: string
+          example: "DIGT-2026-00123"
+        - name: peek
+          in: query
+          required: false
+          description: |-
+            If true, retrieve the result without marking it as polled.
+            The report remains available for future retrieval.
+            Default: false (destructive read).
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Report status found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportResult'
+              example:
+                id: "DIGT-2026-00123"
+                status: "SUCCESS"
+                module: "DIGT"
+                submittedAt: "2026-04-12T14:32:00Z"
+                portal: "GOVCONNECT"
+                receiptPdf: "JVBERi0xLjQK..."
+                failureReason: null
+        '401':
+          description: |-
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
+        '404':
+          description: |-
+            Report not found. No DIGT report with this ID exists for the
+            authenticated API user.
+        '410':
+          description: |-
+            Gone. The report was previously retrieved (polled) and is no longer
+            available. Use ?peek=true on future requests to avoid consuming reports.
+
+components:
+  schemas:
+
+    # =========================================================================
+    # Memento API (Pre-Fill Token)
+    # =========================================================================
+
+    MementoResponse:
+      type: object
+      required:
+        - memento
+      properties:
+        memento:
+          type: string
+          description: |-
+            Encrypted, URL-safe memento string containing the form data.
+            Use as query parameter to pre-fill forms: ?m=<string>
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        magicLink:
+          type: string
+          nullable: true
+          description: |-
+            Ready-to-use Magic Token Link URL (relative path).
+            Combines authentication and form pre-fill in a single click:
+            the authenticated API user can forward this URL to a browser
+            session that has no existing login — it will authenticate and
+            open the pre-filled form directly.
+            The redirect target (e.g. /digt/084020) is encrypted inside the token,
+            not a URL path segment — the link is /mtl/{token}?m={memento}.
+            Prepend your host to make it absolute: https://host + magicLink
+          example: "/mtl/eyJ...token...?m=eyJ...memento..."
+
+    ValidationErrorResponse:
+      type: object
+      required:
+        - errors
+      description: |-
+        Validation error response returned by Spring's ControllerAdvice.
+        Contains a list of validation error messages.
+      properties:
+        errors:
+          type: array
+          description: List of validation error messages
+          items:
+            type: string
+          example: ["id must not be null"]
+
+    ReportResult:
+      type: object
+      required:
+        - id
+        - status
+        - module
+        - submittedAt
+      description: |-
+        Result of a DIGT report submission.
+
+        Status semantics:
+        - SUCCESS: Report was successfully delivered to the Standesamt.
+        - FAILURE: Transport failed.
+        - PENDING: Report was sent but delivery has not been confirmed yet.
+      properties:
+        id:
+          type: string
+          description: The report identifier
+          example: "DIGT-2026-00123"
+        status:
+          type: string
+          enum:
+            - SUCCESS
+            - FAILURE
+            - PENDING
+          description: Current status of the report
+          example: "SUCCESS"
+        module:
+          type: string
+          description: Module that processed the report
+          example: "DIGT"
+        submittedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the report was submitted
+          example: "2026-04-12T14:32:00Z"
+        portal:
+          type: string
+          nullable: true
+          description: The portal used for delivery (e.g. GOVCONNECT, AKDB)
+          example: "GOVCONNECT"
+        receiptPdf:
+          type: string
+          nullable: true
+          description: |-
+            Base64-encoded PDF receipt / confirmation.
+            Available only for successful reports.
+          example: null
+        failureReason:
+          type: string
+          nullable: true
+          description: Reason for failure, null on success or pending
+          example: null
+
+    DigtMementoRequest:
+      type: object
+      description: |-
+        Wrapper for all DIGT report types. Exactly one of the three slots
+        (`Einrichtung`, `Bestatter`, `Todesbescheinigung`) should be populated;
+        that slot determines which HTML form variant the memento targets.
+
+        Mirrors `de.vertama.digt.DigtForm` server-side: nullable slots, only the
+        active one is set per memento. Only `id` is required; all inner fields
+        are optional to allow partial pre-filling. Full validation happens at
+        form-submission time downstream.
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: |-
+            Correlation ID supplied by the calling system.
+            Used to track and correlate this report throughout the workflow.
+          example: "DIGT-2026-00123"
+        Einrichtung:
+          $ref: '#/components/schemas/SterbefallEinrichtung'
+        Bestatter:
+          $ref: '#/components/schemas/SterbefallBestatter'
+        Todesbescheinigung:
+          $ref: '#/components/schemas/Todesbescheinigung'
+
+    # =========================================================================
+    # Sterbefall 084020 (Hauptobjekt)
+    # =========================================================================
+
+    SterbefallEinrichtung:
+      type: object
+      description: |-
+        Sterbefall-Meldung 084020 (Einrichtung).
+        All fields are optional for lenient memento creation; full validation
+        happens at form-submission time downstream.
+      properties:
+        meldeId:
+          type: string
+          format: uuid
+          description: Eindeutige ID der Meldung (wird vom Server vergeben)
+          readOnly: true
+          example: "a3bb189e-8bf9-3888-9912-ace4e6543002"
+        sterbefall:
+          $ref: '#/components/schemas/Sterbefall'
+        verstorbener:
+          $ref: '#/components/schemas/Verstorbener'
+        anzeigender:
+          $ref: '#/components/schemas/AnzeigenderOrganisation'
+        leichenID:
+          type: string
+          description: Identifikationsnummer der Leiche (optional)
+          example: "L-2026-04-001"
+        anhaenge:
+          type: array
+          description: Angehaegte Dokumente (z.B. Todesbescheinigung)
+          items:
+            $ref: '#/components/schemas/Anhang'
+
+    # =========================================================================
+    # Verstorbener (084020 - Einrichtung)
+    # =========================================================================
+
+    Verstorbener:
+      type: object
+      description: Angaben zum Verstorbenen (Portal2StASterbefallVerstorbenerEinrichtung)
+      properties:
+        vorname:
+          type: string
+          description: Vorname(n) des Verstorbenen (optional)
+          example: "Hans Wilhelm"
+        familienname:
+          type: string
+          description: Familienname des Verstorbenen
+          example: "Mueller"
+        geburtsname:
+          type: string
+          description: Geburtsname, falls abweichend vom Familiennamen (optional)
+          example: "Schmidt"
+        geburtstag:
+          type: string
+          format: date
+          description: Geburtsdatum des Verstorbenen (optional)
+          example: "1945-03-22"
+        geburtsort:
+          $ref: '#/components/schemas/Ereignisort'
+        geschlecht:
+          $ref: '#/components/schemas/CodeGeschlecht'
+        letzterWohnsitz:
+          $ref: '#/components/schemas/Anschrift'
+
+    # =========================================================================
+    # Sterbefall 084021 (Hauptobjekt)
+    # =========================================================================
+
+    SterbefallBestatter:
+      type: object
+      description: |-
+        Sterbefall-Meldung 084021 (Bestatter).
+        All fields are optional for lenient memento creation; full validation
+        happens at form-submission time downstream.
+      properties:
+        meldeId:
+          type: string
+          format: uuid
+          description: Eindeutige ID der Meldung (wird vom Server vergeben)
+          readOnly: true
+          example: "b4cc290f-9cf0-4999-aa23-bdf5f7654113"
+        sterbefall:
+          $ref: '#/components/schemas/Sterbefall'
+        verstorbener:
+          $ref: '#/components/schemas/VerstorbenerBestatter'
+        partnerVerstorbener:
+          $ref: '#/components/schemas/PartnerVerstorbener'
+        anzeigender:
+          $ref: '#/components/schemas/AnzeigenderOrganisation'
+        auskunftsgeber:
+          $ref: '#/components/schemas/Auskunftsgeber'
+        anzahlKinderVolljaehrig:
+          type: integer
+          minimum: 0
+          description: Anzahl volljaehriger Kinder (optional)
+          example: 2
+        volljaehrigeKinder:
+          type: array
+          description: Angaben zu volljaehrigen Kindern (optional)
+          items:
+            $ref: '#/components/schemas/VolljaehrigesKind'
+        anzahlKinderMinderjaehrig:
+          type: integer
+          minimum: 0
+          description: Anzahl minderjaehriger Kinder (optional)
+          example: 1
+        minderjaehrigeKinder:
+          type: array
+          description: Angaben zu minderjaehrigen Kindern (optional)
+          items:
+            $ref: '#/components/schemas/MinderjaehrigesKind'
+        artDerBestattung:
+          $ref: '#/components/schemas/Bestattungsart'
+        urkundenAnforderung:
+          $ref: '#/components/schemas/Urkundenanforderung'
+        letzteEheVerstorbener:
+          $ref: '#/components/schemas/EheVerstorbener'
+        letzteLpVerstorbener:
+          $ref: '#/components/schemas/EheLpVerstorbener'
+        aufloesungEheVerstorbener:
+          $ref: '#/components/schemas/AufloesungEheLpVerstorbener'
+        aufloesungLpVerstorbener:
+          $ref: '#/components/schemas/AufloesungEheLpVerstorbener'
+        bescheinigungBeiZurueckstellung:
+          type: boolean
+          description: Bescheinigung bei Zurueckstellung angefordert? (optional)
+          example: false
+        leichenID:
+          type: string
+          description: Identifikationsnummer der Leiche (optional)
+          example: "L-2026-04-002"
+        anhaenge:
+          type: array
+          description: Angehaegte Dokumente (z.B. Todesbescheinigung)
+          items:
+            $ref: '#/components/schemas/Anhang'
+
+    # =========================================================================
+    # Verstorbener (084021 - Bestatter, erweitert)
+    # =========================================================================
+
+    VerstorbenerBestatter:
+      type: object
+      description: |
+        Angaben zum Verstorbenen (Portal2StASterbefallVerstorbenerBestatter).
+        Erweitert die Einrichtungs-Variante um Staatsangehoerigkeit,
+        Familienstand, Geburtseintrag und Vollwaise-Kennzeichen.
+      properties:
+        vorname:
+          type: string
+          description: Vorname(n) des Verstorbenen (optional)
+          example: "Hans Wilhelm"
+        familienname:
+          type: string
+          description: Familienname des Verstorbenen
+          example: "Mueller"
+        geburtsname:
+          type: string
+          description: Geburtsname, falls abweichend (optional)
+          example: "Schmidt"
+        geburtstag:
+          type: string
+          format: date
+          description: Geburtsdatum des Verstorbenen (optional)
+          example: "1945-03-22"
+        geburtsort:
+          $ref: '#/components/schemas/Ereignisort'
+        geschlecht:
+          $ref: '#/components/schemas/CodeGeschlecht'
+        letzterWohnsitz:
+          $ref: '#/components/schemas/Anschrift'
+        staatsangehoerigkeit:
+          type: array
+          description: Staatsangehoerigkeit(en) des Verstorbenen (max. 2, optional)
+          maxItems: 2
+          items:
+            type: string
+        familienstand:
+          $ref: '#/components/schemas/CodeFamilienstand'
+        geburtseintrag:
+          $ref: '#/components/schemas/Registereintrag'
+        vollwaise:
+          type: boolean
+          description: War der Verstorbene Vollwaise? (optional)
+          example: false
+
+    # =========================================================================
+    # Partner des Verstorbenen
+    # =========================================================================
+
+    PartnerVerstorbener:
+      type: object
+      description: |
+        Angaben zum Ehe-/Lebenspartner des Verstorbenen
+        (Portal2StASterbefallVerstorbenerPartnerBestatter).
+      properties:
+        vorname:
+          type: string
+          description: Vorname(n) des Partners (optional)
+          example: "Maria"
+        familienname:
+          type: string
+          description: Familienname des Partners
+          example: "Mueller"
+        geburtsname:
+          type: string
+          description: Geburtsname des Partners (optional)
+          example: "Schneider"
+        geburtstag:
+          type: string
+          format: date
+          description: Geburtsdatum des Partners (optional)
+          example: "1948-07-15"
+        geburtsort:
+          $ref: '#/components/schemas/Ereignisort'
+        geschlecht:
+          $ref: '#/components/schemas/CodeGeschlecht'
+        istAuskunftsgeber:
+          type: boolean
+          description: Ist der Partner der Auskunftsgeber? (optional)
+          example: true
+
+    # =========================================================================
+    # Auskunftsgeber
+    # =========================================================================
+
+    Auskunftsgeber:
+      type: object
+      description: |
+        Person, die Auskunft ueber den Verstorbenen gibt
+        (z.B. Angehoeriger). Optional.
+      properties:
+        vorname:
+          type: string
+          description: Vorname des Auskunftsgebers (optional)
+          example: "Elisabeth"
+        familienname:
+          type: string
+          description: Familienname des Auskunftsgebers (optional)
+          example: "Mueller"
+        geburtsname:
+          type: string
+          description: Geburtsname des Auskunftsgebers (optional)
+          example: "Weber"
+        anschrift:
+          $ref: '#/components/schemas/Anschrift'
+        kontaktdaten:
+          type: array
+          # No minItems: the Auskunftsgeber is an optional sub-object that the HTML form
+          # always instantiates empty, so a Bean-Validation @Size(min=1) would reject every
+          # submission where no Auskunftsgeber was entered. The "at least one Kontakt" rule
+          # is enforced downstream (service-layer placeholder + xPersonenstand schema).
+          description: Kontaktdaten des Auskunftsgebers
+          items:
+            $ref: '#/components/schemas/Kontakt'
+        verhaeltnisVerstorbener:
+          type: string
+          description: Verhaeltnis zum Verstorbenen (z.B. Tochter, Sohn, Nachbar)
+          example: "Tochter"
+
+    # =========================================================================
+    # Kinder
+    # =========================================================================
+
+    VolljaehrigesKind:
+      type: object
+      description: Angaben zu einem volljaehrigen Kind des Verstorbenen
+      properties:
+        familienname:
+          type: string
+          description: Familienname (optional)
+          example: "Mueller"
+        geburtsname:
+          type: string
+          description: Geburtsname (optional)
+          example: "Mueller"
+        vornamen:
+          type: string
+          description: Vorname(n) (optional)
+          example: "Thomas"
+        anschrift:
+          $ref: '#/components/schemas/Anschrift'
+        istAuskunftsgeber:
+          type: boolean
+          description: Ist dieses Kind der Auskunftsgeber? (optional)
+          example: false
+
+    MinderjaehrigesKind:
+      type: object
+      description: Angaben zu einem minderjaehrigen Kind des Verstorbenen
+      properties:
+        familienname:
+          type: string
+          description: Familienname (optional)
+          example: "Mueller"
+        vornamen:
+          type: string
+          description: Vorname(n) (optional)
+          example: "Lisa"
+        geburtstag:
+          type: string
+          format: date
+          description: Geburtsdatum (optional)
+          example: "2015-09-03"
+        geburtsort:
+          $ref: '#/components/schemas/Ereignisort'
+        geburtseintrag:
+          $ref: '#/components/schemas/Registereintrag'
+        anschrift:
+          $ref: '#/components/schemas/Anschrift'
+        vollwaise:
+          type: boolean
+          description: Ist das Kind nun Vollwaise? (optional)
+          example: true
+        istAuskunftsgeber:
+          type: boolean
+          description: Ist dieses Kind der Auskunftsgeber? (optional)
+          example: false
+
+    # =========================================================================
+    # Ehe / Lebenspartnerschaft
+    # =========================================================================
+
+    EheLpVerstorbener:
+      type: object
+      description: |
+        Letzte Ehe oder Lebenspartnerschaft des Verstorbenen.
+        Entspricht Anz2StAEheVerstorbener.
+      properties:
+        tagEheLpVerstorbener:
+          type: string
+          format: date
+          description: Tag der Eheschliessung / Begruendung der Lebenspartnerschaft
+          example: "2005-10-01"
+        ortEheLpVerstorbener:
+          $ref: '#/components/schemas/Ereignisort'
+        eheLpeintragBehoerde:
+          type: string
+          description: Name der Behoerde, bei der der Ehe-/LP-Eintrag registriert ist (optional)
+          example: "Standesamt Hamburg-Mitte"
+        eheLpeintragNummer:
+          type: string
+          description: Registernummer des Ehe-/LP-Eintrags (optional)
+          example: "45/2005"
+        erstbeurkundungsjahrEheLp:
+          type: string
+          format: date
+          description: Erstbeurkundungsjahr (optional, nur Jahr relevant)
+          example: "2005-01-01"
+
+    EheVerstorbener:
+      description: |
+        Letzte Ehe des Verstorbenen, inkl. Familienbuch (relevant fuer Ehen vor 2009).
+        Entspricht Anz2StAEheVerstorbenerErweitert.
+      allOf:
+        - $ref: '#/components/schemas/EheLpVerstorbener'
+        - type: object
+          properties:
+            familienbuch:
+              $ref: '#/components/schemas/Familienbuch'
+
+    Familienbuch:
+      type: object
+      description: Familienbuch-Angaben (entweder Fuehrungsort oder Hinweis)
+      properties:
+        fuehrungsort:
+          type: string
+          description: Fuehrungsort des Familienbuchs (optional)
+          example: "Berlin"
+        hinweis:
+          type: boolean
+          description: Hinweis auf Familienbuch vorhanden? (optional)
+          example: true
+
+    AufloesungEheLpVerstorbener:
+      type: object
+      description: |
+        Aufloesung einer frueheren Ehe/Lebenspartnerschaft des Verstorbenen
+        (durch Tod des Partners oder durch Gericht).
+        Entspricht Anz2StAAufloesungEheLPVerstorbener.
+      properties:
+        todestagPartner:
+          type: string
+          format: date
+          description: Todestag des frueheren Partners (optional)
+          example: "2018-03-10"
+        sterbeortPartner:
+          $ref: '#/components/schemas/Ereignisort'
+        sterbeeintragPartnerBehoerde:
+          type: string
+          description: Name der Behoerde, bei der der Sterbeeintrag des Partners registriert ist (optional)
+          example: "Standesamt Hamburg-Mitte"
+        erstbeurkundungsjahrTodPartner:
+          type: string
+          format: date
+          description: Erstbeurkundungsjahr des Sterbefalls des Partners (optional)
+          example: "2018-01-01"
+        sterbeeintragNummerPartner:
+          type: string
+          description: Registernummer des Sterbeeintrags des Partners (optional)
+          example: "567/2018"
+        tagAufloesungGerichtEheLp:
+          type: string
+          format: date
+          description: Tag der gerichtlichen Aufloesung der Ehe/LP (optional)
+          example: "2019-05-15"
+        aufloesungBehoerde:
+          type: string
+          description: Name der Behoerde, die die Aufloesung der Ehe/LP veranlasst hat (optional)
+          example: "Amtsgericht Hamburg-Mitte"
+
+    # =========================================================================
+    # Urkundenanforderung
+    # =========================================================================
+
+    Urkundenanforderung:
+      type: object
+      description: |
+        Anforderung von Urkunden (UrkundenanforderungArtDerUrkundeErweitert).
+        Alle Felder sind optional - nur die gewuenschten Anzahlen angeben.
+      properties:
+        anzahlStandardformat:
+          type: integer
+          minimum: 0
+          description: Anzahl Urkunden im Standardformat
+          example: 3
+        anzahlStammbuchformat:
+          type: integer
+          minimum: 0
+          description: Anzahl Urkunden im Stammbuchformat
+          example: 0
+        anzahlMehrsprachig:
+          type: integer
+          minimum: 0
+          description: Anzahl mehrsprachiger Urkunden
+          example: 0
+        anzahlRegisterausdruck:
+          type: integer
+          minimum: 0
+          description: Anzahl Registerausdrucke
+          example: 1
+        anzahlRegisterausdruckMitHinweisen:
+          type: integer
+          minimum: 0
+          description: Anzahl Registerausdrucke mit Hinweisen
+          example: 0
+        anzahlSozialversicherung:
+          type: integer
+          minimum: 0
+          description: Anzahl Bescheinigungen fuer Sozialversicherung
+          example: 1
+        uebersetzungshilfen:
+          type: array
+          description: Uebersetzungshilfen in verschiedenen Sprachen (optional)
+          items:
+            $ref: '#/components/schemas/Uebersetzungshilfe'
+
+    Uebersetzungshilfe:
+      type: object
+      description: Anforderung einer Uebersetzungshilfe in einer bestimmten Sprache
+      properties:
+        anzahl:
+          type: integer
+          minimum: 1
+          description: Anzahl der Uebersetzungshilfen
+          example: 2
+        sprache:
+          type: string
+          description: Sprache der Uebersetzungshilfe (Codeliste)
+          example: "englisch"
+
+    # =========================================================================
+    # Registereintrag
+    # =========================================================================
+
+    Registereintrag:
+      type: object
+      description: Verweis auf einen Personenstandsregistereintrag
+      properties:
+        behoerde:
+          type: string
+          description: Name der zustaendigen Behoerde (optional)
+          example: "Standesamt Hamburg-Mitte"
+        nummer:
+          type: string
+          description: Registernummer (optional)
+          example: "456/1945"
+        erstbeurkundungsjahr:
+          type: string
+          format: date
+          description: Erstbeurkundungsjahr (optional, nur Jahr relevant)
+          example: "1945-01-01"
+
+    # =========================================================================
+    # Anzeigender (Organisation)
+    # =========================================================================
+
+    AnzeigenderOrganisation:
+      type: object
+      description: |
+        Angaben zum Anzeigenden. Der Anzeigende ist eine Organisation
+        (Einrichtung wie Krankenhaus/Pflegeheim oder Bestattungsunternehmen).
+      properties:
+        nameOrganisation:
+          type: string
+          description: Name der Organisation / Einrichtung
+          example: "Klinikum Berlin-Mitte"
+        ansprechpartner:
+          $ref: '#/components/schemas/PersonName'
+        anschrift:
+          $ref: '#/components/schemas/Anschrift'
+        kontaktdaten:
+          type: array
+          description: Mindestens eine Kontaktmoeglichkeit
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/Kontakt'
+
+    # =========================================================================
+    # Sterbefall (gemeinsamer Kern fuer 084020/084021)
+    # =========================================================================
+
+    Sterbefall:
+      type: object
+      description: Angaben zum Sterbefall (Todeszeitpunkt und Sterbeort)
+      properties:
+        todeszeitpunkt:
+          $ref: '#/components/schemas/Todeszeitpunkt'
+        sterbeort:
+          $ref: '#/components/schemas/Sterbeort'
+
+    Sterbeort:
+      type: object
+      description: Ort des Todes
+      properties:
+        strasse:
+          type: string
+          description: Strassenname (optional)
+          example: "Hauptstrasse"
+        hausnummer:
+          type: string
+          description: Hausnummer (optional)
+          example: "42"
+        ort:
+          type: string
+          description: Ortsname
+          example: "Berlin"
+        ortsteil:
+          type: string
+          description: Ortsteil (optional)
+          example: "Mitte"
+        kreisbezeichnung:
+          type: string
+          description: Kreisbezeichnung (optional)
+          example: "Berlin"
+        staat:
+          type: string
+          description: Staat (z.B. ISO 3166-1 Code oder Klartext) (optional)
+          example: "Deutschland"
+
+    # =========================================================================
+    # Sterbefall 084040 (Hauptobjekt)
+    # =========================================================================
+
+    Todesbescheinigung:
+      type: object
+      description: |-
+        Todesbescheinigung (Nachricht 084040).
+        Wird vom leichenschauenden Arzt ausgefuellt und an das Standesamt uebermittelt.
+        All fields are optional for lenient memento creation; full validation
+        happens at form-submission time downstream.
+      properties:
+        meldeId:
+          type: string
+          format: uuid
+          description: Eindeutige ID der Meldung (wird vom Server vergeben)
+          readOnly: true
+          example: "c5dd391f-0de1-5aaa-bb34-cef6g8765224"
+        verstorbener:
+          $ref: '#/components/schemas/TodesbescheinigungVerstorbener'
+        sterbefall:
+          $ref: '#/components/schemas/TodesbescheinigungSterbefall'
+        angabenLeichenschau:
+          $ref: '#/components/schemas/Leichenschau'
+        leichenID:
+          type: string
+          description: Identifikationsnummer der Leiche
+          example: "L-2026-04-003"
+
+    # =========================================================================
+    # Verstorbener (084040 - Todesbescheinigung)
+    # =========================================================================
+
+    TodesbescheinigungVerstorbener:
+      type: object
+      description: Angaben zum Verstorbenen gemaess Todesbescheinigung
+      properties:
+        vorname:
+          type: string
+          description: Vorname(n) des Verstorbenen (optional)
+          example: "Hans Wilhelm"
+        familienname:
+          type: string
+          description: Familienname des Verstorbenen
+          example: "Mueller"
+        geburtsname:
+          type: string
+          description: Geburtsname, falls abweichend (optional)
+          example: "Schmidt"
+        letzterWohnort:
+          $ref: '#/components/schemas/AnschriftInlandAusland'
+        tagDerGeburt:
+          $ref: '#/components/schemas/TeilbekanntesDatum'
+        ortDerGeburt:
+          type: string
+          description: Geburtsort (optional)
+          example: "Hamburg"
+        geschlecht:
+          $ref: '#/components/schemas/CodeGeschlecht'
+        identifizierung:
+          $ref: '#/components/schemas/CodeIdentifizierungsart'
+
+    # =========================================================================
+    # Sterbefall (084040 - Todesbescheinigung)
+    # =========================================================================
+
+    TodesbescheinigungSterbefall:
+      type: object
+      description: Angaben zum Sterbefall gemaess Todesbescheinigung
+      properties:
+        sterbeort:
+          type: boolean
+          description: |
+            Kennzeichen, ob der angegebene Ereignisort der Sterbeort ist (optional).
+            true = Ereignisort ist Sterbeort
+          example: true
+        ereignisort:
+          $ref: '#/components/schemas/Ereignisort'
+        todeszeitpunkt:
+          $ref: '#/components/schemas/Todeszeitpunkt'
+        natuerlicherTod:
+          type: boolean
+          description: Handelt es sich um einen natuerlichen Tod? (optional)
+          example: true
+        totgeburt:
+          type: boolean
+          description: Handelt es sich um eine Totgeburt? (optional)
+          example: false
+
+    # =========================================================================
+    # Leichenschau (084040)
+    # =========================================================================
+
+    Leichenschau:
+      type: object
+      description: |
+        Angaben zur Leichenschau und dem durchfuehrenden Arzt
+        (Todesbescheinigung.Leichenschau).
+      properties:
+        namenArzt:
+          $ref: '#/components/schemas/PersonName'
+        anschriftArzt:
+          $ref: '#/components/schemas/AnschriftInland'
+        kontaktArzt:
+          type: array
+          # No minItems: see Auskunftsgeber.kontaktdaten — the Leichenschau section is
+          # instantiated empty by the form, so the "at least one Kontakt" rule is enforced
+          # downstream (service-layer placeholder + xPersonenstand schema) rather than at bind time.
+          description: Kontaktdaten des Arztes (mindestens eine Angabe)
+          items:
+            $ref: '#/components/schemas/Kontakt'
+        datum:
+          type: string
+          format: date
+          description: Datum der Leichenschau
+          example: "2026-04-12"
+        uhrzeit:
+          $ref: '#/components/schemas/Uhrzeit'
+        ort:
+          type: string
+          description: Ort der Leichenschau
+          example: "Berlin"
+
+    # =========================================================================
+    # Anschrift-Typen
+    # =========================================================================
+
+    Anschrift:
+      type: object
+      description: Postalische Anschrift
+      properties:
+        strasse:
+          type: string
+          description: Strassenname
+          example: "Musterstrasse"
+        plz:
+          type: string
+          pattern: '^\d{5}$'
+          description: Postleitzahl
+          example: "10115"
+        ort:
+          type: string
+          description: Ortsname
+          example: "Berlin"
+        ortsteil:
+          type: string
+          description: Ortsteil (optional)
+          example: "Mitte"
+        staat:
+          type: string
+          description: Staat (optional, ISO 3166-1 alpha-2 oder Klartext)
+          example: "DE"
+
+    AnschriftInlandAusland:
+      type: object
+      description: |
+        Inlaendische oder auslaendische Anschrift (Anschrift.InlandAusland).
+        Genau eine der drei Varianten muss angegeben werden.
+      properties:
+        anschriftInland:
+          $ref: '#/components/schemas/AnschriftInland'
+        anschriftAusland:
+          $ref: '#/components/schemas/AnschriftAuslandDruckbild'
+        anschriftAuslandStrukturiert:
+          $ref: '#/components/schemas/AnschriftAuslandStrukturiert'
+      oneOf:
+        - required: [anschriftInland]
+          title: Inlaendische Anschrift
+        - required: [anschriftAusland]
+          title: Auslaendische Anschrift (Druckbild)
+        - required: [anschriftAuslandStrukturiert]
+          title: Auslaendische Anschrift (strukturiert)
+
+    AnschriftInland:
+      type: object
+      description: Inlaendische Anschrift (Anschrift.Inland / Meldeanschrift)
+      properties:
+        strasse:
+          type: string
+          description: Strassenname (optional)
+          example: "Musterstrasse"
+        hausnummer:
+          type: string
+          description: Hausnummer (optional)
+          example: "12"
+        hausnummerBuchstabeZusatzziffer:
+          type: string
+          description: Buchstabe oder Zusatzziffer zur Hausnummer (optional)
+          example: "a"
+        teilnummerDerHausnummer:
+          type: string
+          description: Teilnummer der Hausnummer (optional)
+          example: "1"
+        postleitzahl:
+          type: string
+          pattern: '^\d{5}$'
+          description: Postleitzahl (optional)
+          example: "10115"
+        wohnort:
+          type: string
+          description: Wohnort (optional)
+          example: "Berlin"
+        wohnortFruehererGemeindename:
+          type: string
+          description: Frueherer Gemeindename des Wohnorts (optional)
+          example: "Ost-Berlin"
+        gemeindeschluessel:
+          type: string
+          description: Amtlicher Gemeindeschluessel (optional)
+          example: "11000000"
+
+    AnschriftAuslandDruckbild:
+      type: object
+      description: Auslaendische Anschrift als Druckbild (freie Textzeilen)
+      properties:
+        adresszeile1:
+          type: string
+          description: Erste Adresszeile
+          example: "123 Main Street"
+        adresszeile2:
+          type: string
+          description: Zweite Adresszeile (optional)
+          example: "Apt 4B"
+        adresszeile3:
+          type: string
+          description: Dritte Adresszeile (optional)
+          example: "New York, NY 10001"
+        staat:
+          type: string
+          description: Staat
+          example: "USA"
+
+    AnschriftAuslandStrukturiert:
+      type: object
+      description: Auslaendische Anschrift (strukturiert)
+      properties:
+        strasse:
+          type: string
+          description: Strassenname (optional)
+          example: "Main Street"
+        hausnummer:
+          type: string
+          description: Hausnummer (optional)
+          example: "123"
+        postleitzahl:
+          type: string
+          description: Postleitzahl (optional)
+          example: "10001"
+        ort:
+          type: string
+          description: Ort (optional)
+          example: "New York"
+        staat:
+          type: string
+          description: Staat
+          example: "USA"
+
+    # =========================================================================
+    # Gemeinsame Typen
+    # =========================================================================
+
+    PersonName:
+      type: object
+      description: Name einer natuerlichen Person
+      properties:
+        familienname:
+          type: string
+          description: Familienname
+          example: "Mueller"
+        geburtsname:
+          type: string
+          description: Geburtsname (optional)
+          example: "Schmidt"
+        vornamen:
+          type: string
+          description: Vorname(n)
+          example: "Maria Elisabeth"
+
+    Kontakt:
+      type: object
+      description: Kontaktinformation (entspricht KommunikationType)
+      properties:
+        kanal:
+          type: string
+          description: Art des Kommunikationskanals
+          enum:
+            - telefon
+            - fax
+            - email
+            - internet
+            - sonstiges
+          example: "telefon"
+        kennung:
+          type: string
+          description: Kennung (Telefonnummer, E-Mail-Adresse etc.)
+          example: "+49 30 123456"
+        zusatz:
+          type: string
+          description: Ergaenzende Angaben (optional)
+          example: "Mo-Fr 8-16 Uhr"
+
+    Ereignisort:
+      type: object
+      description: Ort eines Ereignisses (Geburt, Ehe, Sterbeort bei Todesbescheinigung etc.)
+      properties:
+        strasse:
+          type: string
+          description: Strassenname (optional)
+          example: "Hauptstrasse"
+        hausnummer:
+          type: string
+          description: Hausnummer (optional)
+          example: "42"
+        ort:
+          type: string
+          description: Ortsname
+          example: "Hamburg"
+        ortsteil:
+          type: string
+          description: Ortsteil (optional)
+          example: "Mitte"
+        kreisbezeichnung:
+          type: string
+          description: Kreisbezeichnung (optional)
+          example: "Hamburg"
+        staat:
+          type: string
+          description: Staat (z.B. ISO 3166-1 Code oder Klartext) (optional)
+          example: "Deutschland"
+
+    Anhang:
+      type: object
+      description: Angehaengtes Dokument (entspricht AnhangInformation)
+      properties:
+        dokumentId:
+          type: string
+          description: Eindeutige ID des Dokuments
+          example: "doc-todesbescheinigung-001"
+        dokumentart:
+          type: string
+          description: Art des Dokuments
+          example: "Todesbescheinigung"
+        filesize:
+          type: integer
+          format: int64
+          description: Dateigroesse in Bytes (optional)
+          example: 204800
+        hashValue:
+          type: string
+          description: Hash-Wert der Datei (optional)
+          example: "sha256:a1b2c3..."
+
+    # =========================================================================
+    # Todeszeitpunkt (gemeinsam)
+    # =========================================================================
+
+    Todeszeitpunkt:
+      type: object
+      description: |
+        Zeitpunkt des Todes. Entweder als exakter Todestag mit Uhrzeit
+        ODER als Sterbezeitraum (letzter Tag lebend bis sicher tot).
+        Genau eines der beiden Felder muss angegeben werden.
+      properties:
+        todestag:
+          $ref: '#/components/schemas/ExakterTodestag'
+        sterbezeitraum:
+          $ref: '#/components/schemas/Sterbezeitraum'
+      oneOf:
+        - required: [todestag]
+          title: Exakter Todestag
+        - required: [sterbezeitraum]
+          title: Sterbezeitraum
+
+    ExakterTodestag:
+      type: object
+      description: |
+        Exakter Todestag mit Uhrzeit. Inner fields are intentionally NOT marked
+        required at schema level — the "exactly one of {todestag, sterbezeitraum}"
+        constraint lives on the parent Todeszeitpunkt as `oneOf`, which Bean
+        Validation can't express, so we validate it at the service layer instead
+        of letting `@NotNull` fire on the unused branch.
+      properties:
+        zeitpunkt:
+          type: string
+          format: date-time
+          description: Todeszeitpunkt (Datum und Uhrzeit kombiniert)
+          example: "2026-04-12T14:30:00"
+        uhrzeitExakt:
+          type: boolean
+          description: Ist die Uhrzeit exakt bekannt (true) oder geschaetzt (false)?
+          example: true
+
+    Sterbezeitraum:
+      type: object
+      description: |
+        Sterbezeitraum, wenn der exakte Todeszeitpunkt nicht bekannt ist.
+        Inner fields are intentionally NOT marked required at schema level —
+        see comment on ExakterTodestag.
+      properties:
+        letzterTagLebend:
+          type: string
+          format: date
+          description: Letzter Tag, an dem die Person nachweislich gelebt hat (optional)
+          example: "2026-04-10"
+        letzterTagLebendUhrzeit:
+          type: string
+          pattern: '^\d{2}:\d{2}(:\d{2})?$'
+          description: Uhrzeit des letzten Lebenszeichens (optional)
+          example: "22:00"
+        mitSicherheitTotZeitpunkt:
+          type: string
+          format: date-time
+          description: Zeitpunkt, ab dem der Tod mit Sicherheit festgestellt wurde
+          example: "2026-04-12T08:15:00"
+
+    # =========================================================================
+    # Uhrzeit (084040)
+    # =========================================================================
+
+    Uhrzeit:
+      type: object
+      description: |
+        Uhrzeit der Leichenschau. Entweder als konkrete Uhrzeit mit
+        Exakt-Kennzeichen ODER als "unbekannt".
+      properties:
+        uhrzeit:
+          $ref: '#/components/schemas/UhrzeitMitExakt'
+        unbekannt:
+          type: boolean
+          description: Uhrzeit unbekannt
+          example: false
+      oneOf:
+        - required: [uhrzeit]
+          title: Konkrete Uhrzeit
+        - required: [unbekannt]
+          title: Unbekannte Uhrzeit
+
+    UhrzeitMitExakt:
+      type: object
+      description: Uhrzeit mit Angabe ob exakt oder geschaetzt
+      # Inner fields are intentionally NOT marked required at schema level — same
+      # reasoning as ExakterTodestag/Sterbezeitraum. The "concrete time XOR unbekannt"
+      # constraint lives on the parent Uhrzeit as `oneOf` (not expressible in Bean
+      # Validation) and is enforced at service layer (FormValidator). Marking `wert`
+      # required here would make the form's @Valid cascade reject the auto-grown,
+      # empty UhrzeitMitExakt whenever the user picks "unbekannt".
+      properties:
+        wert:
+          type: string
+          pattern: '^\d{2}:\d{2}(:\d{2})?$'
+          description: Uhrzeit (HH:mm oder HH:mm:ss)
+          example: "14:30"
+        exakt:
+          type: boolean
+          description: true = exakte Uhrzeit, false = Schaetzung
+          example: true
+
+    # =========================================================================
+    # Teilbekanntes Datum (084040)
+    # =========================================================================
+
+    TeilbekanntesDatum:
+      type: object
+      description: |
+        Datum, das nur teilweise bekannt sein kann (z.B. nur Jahr oder
+        nur Jahr und Monat). Fehlende Teile werden weggelassen.
+      properties:
+        datum:
+          type: string
+          format: date
+          description: Vollstaendiges Datum, falls bekannt
+          example: "1945-03-22"
+        jahr:
+          type: integer
+          description: Nur das Jahr, falls Tag/Monat unbekannt
+          example: 1945
+        monat:
+          type: integer
+          minimum: 1
+          maximum: 12
+          description: Monat, falls Tag unbekannt aber Monat bekannt (optional)
+          example: 3
+
+    # =========================================================================
+    # Codelisten
+    # =========================================================================
+
+    CodeGeschlecht:
+      type: string
+      description: |
+        Geschlecht (Codeliste urn:xoev-de:xinneres:codeliste:geschlecht)
+      enum:
+        - maennlich
+        - weiblich
+        - divers
+        - unbestimmt
+      example: "maennlich"
+
+    CodeFamilienstand:
+      type: string
+      description: |
+        Familienstand (Codeliste Familienstand Personenstandswesen).
+      enum:
+        - ledig
+        - verheiratet
+        - geschieden
+        - verwitwet
+        - lebenspartnerschaft
+        - lebenspartnerschaftAufgehoben
+        - lebenspartnerschaftDurchTodAufgeloest
+        - nichtBekannt
+      example: "verheiratet"
+
+    Bestattungsart:
+      type: object
+      description: Art der Bestattung (Codeliste oder Freitext)
+      properties:
+        code:
+          type: string
+          description: "Code der Bestattungsart (Erdbestattung, Feuerbestattung, unbekannte Bestattungsart)"
+          enum:
+            - "Erdbestattung" #1
+            - "Feuerbestattung" #2
+            - "unbekannte Bestattungsart" #3
+          example: "Erdbestattung"
+        nichtGelisteterWert:
+          type: string
+          description: Freitext, falls nicht in Codeliste
+          example: "Seebestattung"
+
+    CodeIdentifizierungsart:
+      type: object
+      description: Art der Identifizierung des Verstorbenen (Codeliste oder Freitext)
+      properties:
+        code:
+          type: string
+          enum:
+            - "Nach Angaben von Angehörigen/Dritten"
+            - "Aufgrund eigener Kenntnis"
+            - "Nach Einsicht in den Personalausweis/Reisepass"
+            - "Nach Einsicht in sonstiges Identifikationsdokument"
+            - "Nicht möglich"
+          example: "Aufgrund eigener Kenntnis"
+        nichtGelisteterWert:
+          type: string
+          description: Freitext, falls nicht in Codeliste
+          example: "Sonstige Identifizierung"
+
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+

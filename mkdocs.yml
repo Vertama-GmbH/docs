@@ -76,7 +76,10 @@ nav:
        - "API Tutorial": "Products/DIGG/api-tutorial.md"
        - "api.yml (OpenAPI)": Products/DIGG/api.yml
        - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIGG"
-     # - DIGT: []
+     - DIGT:
+       - "API Tutorial": "Products/DIGT/api-tutorial.md"
+       - "api.yml (OpenAPI)": Products/DIGT/api.yml
+       - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIGT"
      - DIVI:
        - "API Tutorial": "Products/DIVI/api-tutorial.md"
        - "api.yml (OpenAPI)": Products/DIVI/api.yml

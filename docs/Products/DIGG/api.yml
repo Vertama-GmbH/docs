@@ -44,7 +44,7 @@ paths:
                 $ref: '#/components/schemas/MementoResponse'
               example:
                 memento: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                magicLink: "/mtl/eyJ...token.../digg/Geburtsbescheinigung?m=eyJ...memento..."
+                magicLink: "/mtl/eyJ...token...?m=eyJ...memento..."
         '400':
           description: Bad Request - invalid form data (validation errors)
           content:
@@ -189,8 +189,10 @@ components:
             the authenticated API user can forward this URL to a browser
             session that has no existing login — it will authenticate and
             open the pre-filled form selection page directly.
+            The redirect target (e.g. /digg/Geburtsbescheinigung) is encrypted inside the
+            token, not a URL path segment — the link is /mtl/{token}?m={memento}.
             Prepend your host to make it absolute: https://host + magicLink
-          example: "/mtl/eyJ...token.../digg/Geburtsbescheinigung?m=eyJ...memento..."
+          example: "/mtl/eyJ...token...?m=eyJ...memento..."
     ValidationErrorResponse:
       type: object
       required:
