@@ -91,6 +91,7 @@ nav:
        - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DUBA"
      - ELIM:
        - "API Tutorial": "Products/ELIM/api-tutorial.md"
+       - "FAQ": "Products/ELIM/faq.md"
        - "api.yml (OpenAPI)": Products/ELIM/api.yml
        - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=ELIM"
        - "Flyer":

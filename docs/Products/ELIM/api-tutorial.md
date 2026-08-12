@@ -78,6 +78,20 @@ Before using the API, you need:
 
 That's it. End users do **not** need separate credentials — the `magicLink` in the API response handles their authentication automatically.
 
+### DEMIS registration and certificate (per facility)
+
+For the actual submission to DEMIS, the reporting facility needs its **own
+DEMIS registration**. DEMIS issues a certificate (a PKCS12 file with a
+passphrase) which is deposited in ELIM **per site and per environment** (test
+and production separately). An **SMC-B is not required** — authentication
+towards DEMIS runs exclusively over the DEMIS certificate.
+
+Attribution: on the transport level, each report is cryptographically
+attributed to the **facility** holding the certificate. The reporting doctor
+is transmitted as **content** of the report (name, LANR, contact details) and
+is documented in the report and the RKI receipt, but is not separately
+cryptographically signed.
+
 ### API Versioning
 
 All endpoints are versioned under `/api/elim/v1/`.
@@ -155,7 +169,20 @@ See [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) for secur
 
 ### Report ID
 
-The `MeldeId` field in the Hospitalisierungsmeldung serves to correlate the report later. For checking the report status via `/reports`, the unique identifier string tracking the submission outcome is referred to as `reportId` in the API endpoints.
+The `reportId` in the report retrieval endpoints **is your `MeldeId`** —
+identical value, no re-keying. You correlate results directly against your own
+identifier; no additional correlation key exists or is needed.
+
+Three rules to build on:
+
+- **Always supply your own `MeldeId`.** If it is missing, the form generates
+  a random UUID when opened — which your system can then no longer correlate.
+- **A `MeldeId` is single-use.** After a successfully submitted report, a new
+  submission under the same id is rejected (protection against double
+  reporting). Use a fresh id for each new report.
+- **A retrievable report only exists after successful submission** by the end
+  user. Before that, `GET /reports/{reportId}` returns 404 — see
+  [404 semantics](#404-semantics) below.
 
 ---
 
@@ -242,9 +269,33 @@ Returns a JSON object containing the encrypted memento and a ready-to-use magic 
 
 ---
 
+## Detecting submission success from an embedding client
+
+If you embed the ELIM form in a browser component (KIS container, modal
+plugin, iframe wrapper), you can detect the outcome from the URL alone:
+
+- **Success**: after a successful submission, the server responds with an
+  **HTTP 302 redirect** to `/elim/hospitalisierungsmeldung/success` — a
+  static, parameterless URL.
+- **Failure**: no redirect happens. The form is re-rendered with HTTP 400 and
+  an error message; the URL stays the form URL.
+
+Success and failure are therefore reliably distinguishable from the URL. For
+the full outcome including the RKI receipt PDF, fetch
+`GET /api/elim/v1/reports/{reportId}` after seeing the redirect.
+
 ## Report Retrieval Endpoints
 
 After an end user submits the report via the ELIM form, the submission result is stored and made available for retrieval by the API user that created the original memento.
+
+**Timing**: submission to DEMIS happens **synchronously** when the user sends
+the form — the result including the RKI receipt is retrievable as soon as the
+user sees the success page. There is no window in which a submitted report is
+still "in flight".
+
+**Retention**: unretrieved results are kept for **3 days**; a nightly cleanup
+removes the payload including the RKI receipt after that. Retrieve results
+within this window — typically one fetch right after the success redirect.
 
 ### GET /reports — List pending report IDs
 
@@ -312,9 +363,28 @@ curl -u "api-user:api-pass" \
 }
 ```
 
+### 404 semantics
+
+A `404` from `GET /reports/{reportId}` means one of:
+
+- the report was **not yet submitted** by the end user (the normal state
+  between memento creation and user action — it can last hours or days),
+- the `MeldeId` is unknown,
+- the `MeldeId` belongs to a different API user,
+- the report **expired** (older than the 3-day retention window).
+
+These cases are not distinguishable by the status code alone. In particular:
+a 404 right after creating a memento is **expected**, not an error.
+
 ### Polling pattern
 
-Reports become available asynchronously — the end user must complete and submit the form first. Poll periodically:
+Reports become available when the end user completes and submits the form —
+if your client detects the [success redirect](#detecting-submission-success-from-an-embedding-client),
+fetch the result **event-driven right after it** and polling becomes largely
+unnecessary. As a cyclic safety net, once per minute against `GET /reports`
+is more than sufficient. There are currently no rate limits, but keep the
+cadence moderate. Timeouts of 10–30 seconds are plenty; note the result
+carries the receipt PDF base64-encoded and can be a few hundred kilobytes.
 
 ```bash
 # Poll for new reports every 60 seconds
@@ -405,9 +475,22 @@ echo "3. User reviews and submits to DEMIS"
 | 200 | OK | Request successful |
 | 400 | Bad Request | Invalid JSON or validation error (memento endpoint) |
 | 401 | Unauthorized | Missing or invalid API credentials |
-| 404 | Not Found | Report ID does not exist or belongs to a different user |
+| 404 | Not Found | Not yet submitted by the user, unknown ID, different user's ID, or expired — see [404 semantics](#404-semantics) |
 | 410 | Gone | Report was already retrieved (use `?peek=true` to avoid) |
 | 500 | Internal Server Error | Server error (contact support) |
+
+### Follow-up and correction reports
+
+Discharge, death and intensive care are **fields within the report** and can
+be transmitted there (`Hospitalisierung.EntlassungAm`,
+`KlinischeAngaben.Verstorben`/`Todesdatum`,
+`Hospitalisierung.IntensivBehandlung`/`IntensivBehandlungVon`,
+`Hospitalisierung.ArtDerHospitalisierung`). A "Verlegung" (transfer) field
+does not exist in the data model.
+
+ELIM does **not** currently support a dedicated follow-up or correction
+report with a machine-readable reference to the original report. If facts
+change after submission, submit a **new report with a new `MeldeId`**.
 
 ### Validation Errors
 
@@ -465,6 +548,6 @@ Example: 2026-03-20
 
 ---
 
-**Document Version:** 0.1.0
-**Last Updated:** 2026-03-25
+**Document Version:** 0.2.0
+**Last Updated:** 2026-08-11
 **API Version:** v1
