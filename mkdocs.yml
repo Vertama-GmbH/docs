@@ -80,6 +80,10 @@ nav:
        - "API Tutorial": "Products/DIGT/api-tutorial.md"
        - "api.yml (OpenAPI)": Products/DIGT/api.yml
        - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIGT"
+       - "Problem Types":
+         - "report-not-found": "Products/DIGT/problems/report-not-found.md"
+         - "report-already-retrieved": "Products/DIGT/problems/report-already-retrieved.md"
+         - "report-expired": "Products/DIGT/problems/report-expired.md"
      - DIVI:
        - "API Tutorial": "Products/DIVI/api-tutorial.md"
        - "api.yml (OpenAPI)": Products/DIVI/api.yml
@@ -94,6 +98,9 @@ nav:
        - "FAQ": "Products/ELIM/faq.md"
        - "api.yml (OpenAPI)": Products/ELIM/api.yml
        - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=ELIM"
+       - "Problem Types":
+         - "report-not-found": "Products/ELIM/problems/report-not-found.md"
+         - "report-already-retrieved": "Products/ELIM/problems/report-already-retrieved.md"
        - "Flyer":
          - "Products/ELIM/onepager/OnePager (PNG).md"
          - "Products/ELIM/onepager/OnePager (HTML).md"

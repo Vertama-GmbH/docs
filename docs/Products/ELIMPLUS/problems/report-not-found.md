@@ -13,8 +13,9 @@
 No retrievable report exists under this `reportId` for your API user. This is
 **usually not an error in your integration** — it covers four cases:
 
-1. **Not yet submitted** — the memento was created, but the end user has not
-   (yet) successfully submitted the form. This is the normal state between
+1. **Not yet successfully submitted** — the memento was created, but the end
+   user has not (yet) successfully sent the form. This includes failed
+   attempts the user has not yet retried, and is the normal state between
    memento creation and user action; it can last hours or days.
 2. **Unknown id** — no memento/report with this id was ever created.
 3. **Different API user** — the report exists but belongs to another API user;
