@@ -108,7 +108,6 @@ nav:
          - "report-already-retrieved": "Products/ELIMPLUS/problems/report-already-retrieved.md"
          - "report-id-missing": "Products/ELIMPLUS/problems/report-id-missing.md"
          - "report-id-duplicate": "Products/ELIMPLUS/problems/report-id-duplicate.md"
-         - "rki-uncertain": "Products/ELIMPLUS/problems/rki-uncertain.md"
        - "api.yml (OpenAPI)": Products/ELIMPLUS/api.yml
        - "api-v0.2.0.yml (previous)": Products/ELIMPLUS/api-v0.2.0.yml
        #- "Swagger API Viewer": "https://editor.swagger.io/#/?import=https://vertama-gmbh.github.io/docs/Products/ELIMPLUS/api.yml"

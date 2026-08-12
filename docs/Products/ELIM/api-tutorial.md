@@ -335,7 +335,7 @@ curl -u "api-user:api-pass" \
   "https://elim.example.com/api/elim/v1/reports/ELIM-2026-00123?peek=true"
 ```
 
-**Response (200 — SUCCESS):**
+**Response (200):**
 ```json
 {
   "reportId": "ELIM-2026-00123",
@@ -344,24 +344,15 @@ curl -u "api-user:api-pass" \
   "diseaseCode": "Influenza",
   "description": "Hospitalisierungsmeldung Influenza",
   "submittedAt": "2026-03-20T14:32:00Z",
-  "receiptPdf": "JVBERi0xLjQK...",
-  "failureReason": null
+  "receiptPdf": "JVBERi0xLjQK..."
 }
 ```
 
-**Response (200 — FAILURE):**
-```json
-{
-  "reportId": "ELIM-2026-00456",
-  "status": "FAILURE",
-  "module": "ELIM",
-  "diseaseCode": "Influenza",
-  "description": "Hospitalisierungsmeldung Influenza",
-  "submittedAt": "2026-03-20T15:10:00Z",
-  "receiptPdf": null,
-  "failureReason": "RKI Response Code: 422"
-}
-```
+**Only SUCCESS is ever reported here** — a retrievable report *is* a
+confirmed submission. Failures are never delivered through this API: a
+failed attempt is shown to the user in the form, where it is corrected and
+retried; until a submission succeeds, the id simply has no report and
+answers `404` (see below).
 
 ### 404 semantics
 

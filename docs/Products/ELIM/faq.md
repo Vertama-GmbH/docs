@@ -75,11 +75,17 @@ means a new report with a new `MeldeId`.
 
 ## Errors
 
-**Is there a catalog of `failureReason` values?**
+**Is there a catalog of `failureReason` values? How do I see failed submissions via the API?**
 
-Not today — `failureReason` is free text. A structured, documented error
-catalog is coming as part of the migration of all Vertama REST APIs to
-[RFC 9457 problem details](https://www.rfc-editor.org/rfc/rfc9457)
-(`application/problem+json` with stable, machine-readable problem type URIs
-that resolve to pages in this documentation). The
+You don't — by design. The reports API only ever delivers **SUCCESS**: a
+retrievable report *is* a confirmed submission. A failed attempt is shown
+to the reporting user directly in the form, where it is corrected and
+retried; until a submission succeeds, the id simply has no report and
+answers `404`. The `failureReason` field is retired accordingly.
+
+What *is* coming as machine-readable error catalog: stable
+[RFC 9457 problem details](https://www.rfc-editor.org/rfc/rfc9457) types
+(`application/problem+json`) for the API's own error responses —
+validation errors, unknown report ids, consumed reports — each type URI
+resolving to a page in this documentation. The
 [ELIM+ API](../ELIMPLUS/integration-guide.md) migrates first; ELIM follows.

@@ -102,10 +102,11 @@ paths:
         as polled and will no longer appear in GET /reports. Use ?peek=true for
         a non-destructive read that leaves the report in the pending list.
 
-        Status semantics:
-        - SUCCESS: Report was successfully submitted to DEMIS. receiptPdf contains
-          the RKI-issued receipt PDF encoded as base64.
-        - FAILURE: Submission failed. failureReason describes the error.
+        Only SUCCESS is ever reported here: a retrievable report is a
+        confirmed submission (receiptPdf carries the RKI-issued receipt PDF,
+        base64). Failures are never delivered through this API — failed
+        attempts are handled interactively in the form; an id without a
+        report answers 404.
       tags:
         - ELIM
       security:
@@ -142,7 +143,6 @@ paths:
                 module: "ELIM"
                 submittedAt: "2024-12-08T14:32:00Z"
                 receiptPdf: "JVBERi0xLjQK..."
-                failureReason: null
         '401':
           description: |-
             Unauthorized - invalid or missing authentication.
@@ -775,11 +775,11 @@ components:
           type: string
           enum:
             - SUCCESS
-            - FAILURE
           description: |-
-            Submission outcome.
-            - SUCCESS: Report accepted by DEMIS. receiptPdf is populated.
-            - FAILURE: Submission rejected or error occurred. failureReason is populated.
+            Only SUCCESS is ever reported here: a retrievable report is a
+            confirmed submission. Failures are never delivered through this
+            API — failed attempts are handled interactively in the form; an
+            id without a report answers 404.
           example: "SUCCESS"
         module:
           type: string
@@ -808,15 +808,8 @@ components:
           type: string
           nullable: true
           description: |-
-            Base64-encoded RKI receipt PDF. Populated on SUCCESS, null on FAILURE.
+            Base64-encoded RKI receipt PDF.
           example: "JVBERi0xLjQK..."
-        failureReason:
-          type: string
-          nullable: true
-          description: |-
-            Human-readable error message describing why the submission failed.
-            Populated on FAILURE, null on SUCCESS.
-          example: null
   securitySchemes:
     basicAuth:
       type: http
