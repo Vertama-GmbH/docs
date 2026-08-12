@@ -103,6 +103,12 @@ nav:
        - "Testing & Sandbox": "Products/ELIMPLUS/testing-and-sandbox.md"
        - "Roadmap": "Products/ELIMPLUS/roadmap.md"
        - "Migration v0.2 → v0.3": "Products/ELIMPLUS/migration-v0.2-to-v0.3.md"
+       - "Problem Types":
+         - "report-not-found": "Products/ELIMPLUS/problems/report-not-found.md"
+         - "report-already-retrieved": "Products/ELIMPLUS/problems/report-already-retrieved.md"
+         - "report-id-missing": "Products/ELIMPLUS/problems/report-id-missing.md"
+         - "report-id-duplicate": "Products/ELIMPLUS/problems/report-id-duplicate.md"
+         - "rki-uncertain": "Products/ELIMPLUS/problems/rki-uncertain.md"
        - "api.yml (OpenAPI)": Products/ELIMPLUS/api.yml
        - "api-v0.2.0.yml (previous)": Products/ELIMPLUS/api-v0.2.0.yml
        #- "Swagger API Viewer": "https://editor.swagger.io/#/?import=https://vertama-gmbh.github.io/docs/Products/ELIMPLUS/api.yml"
@@ -128,6 +134,8 @@ nav:
   - Reference:
     - "Systemanforderungen": "Reference/system-requirements.md"
     - "Endpunkte & Infrastruktur": "Reference/endpoints-and-infrastructure.md"
+    - "Problem Types (API-Fehlerkatalog)":
+      - "validation-error": "problems/validation-error.md"
   - Authentication:
     - "Basic Auth Login (BAL)": "Authentication/basic-auth-login.md"
     - "Magic Token Link (MTL)": "Authentication/magic-token-link.md"
