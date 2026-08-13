@@ -119,6 +119,12 @@ nav:
        - "api-v0.2.0.yml (previous)": Products/ELIMPLUS/api-v0.2.0.yml
        #- "Swagger API Viewer": "https://editor.swagger.io/#/?import=https://vertama-gmbh.github.io/docs/Products/ELIMPLUS/api.yml"
        - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=ELIM%2B"
+     - ZEAG:
+       - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=ZEAG"
+       - "Problem Types":
+         - "report-not-found": "Products/ZEAG/problems/report-not-found.md"
+         - "report-already-retrieved": "Products/ZEAG/problems/report-already-retrieved.md"
+         - "report-expired": "Products/ZEAG/problems/report-expired.md"
      - "V.connect":
        - "What is V.connect": "Products/V.connect/index.md"
        - "Fremdaufruf":
