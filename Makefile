@@ -61,7 +61,7 @@ clean:
 sync-fremdaufruf-deck: uv-sync
 	@scripts/sync-reveal-deck.sh \
 		$(V_C)/fremdaufruf/presentation \
-		docs/Products/V.connect/Fremdaufruf/presentation
+		docs/V.connect/Fremdaufruf/presentation
 
 # Aggregator — extend as more sync targets land.
 sync-all: sync-fremdaufruf-deck

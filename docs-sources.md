@@ -34,13 +34,19 @@ and falls back to the default language when a translation is missing.
 
 | Document | Path here | Canonical source | Mirror? | Sync mechanism |
 |---|---|---|---|---|
-| V.connect intro | `Products/V.connect/index.md` | this repo | canonical | n/a |
-| Fremdaufruf Overview (EN) | `Products/V.connect/Fremdaufruf/overview.md` | this repo | canonical | n/a |
-| Fremdaufruf Übersicht (DE) | `Products/V.connect/Fremdaufruf/overview.de.md` | this repo | canonical | n/a |
-| Fremdaufruf Architecture | `Products/V.connect/Fremdaufruf/solution-outline.md` | `mcp-health/V.connect` → `fremdaufruf/solution-outline.md` | yes | manual copy |
-| Fremdaufruf URL-Builder (DE) | `Products/V.connect/Fremdaufruf/url-builder.de.md` | `Vertama-GmbH/elim` (historical name; the V.ap repo) → `docs/external/v.connect/fremdaufruf/url-builder.md` | yes | manual copy |
+| V.connect intro | `V.connect/index.md` | this repo | canonical | n/a |
+| HL7-Anbindung (DE) | `V.connect/HL7/index.de.md` | this repo | canonical | n/a — one-time adoption from `Vertama-GmbH/elim` → `docs/external/hl7/hl7-anbindung.md` @ `37b54dcc5` (drafts-only convention: the elim copy is a handoff draft, removed after adoption; this repo is canonical since) |
+| HL7 Integration (EN notice page) | `V.connect/HL7/index.md` | this repo | canonical | n/a — stub pointing at the German version |
+| Fremdaufruf Overview (EN) | `V.connect/Fremdaufruf/overview.md` | this repo | canonical | n/a |
+| Fremdaufruf Übersicht (DE) | `V.connect/Fremdaufruf/overview.de.md` | this repo | canonical | n/a |
+| Fremdaufruf Architecture | `V.connect/Fremdaufruf/solution-outline.md` | `mcp-health/V.connect` → `fremdaufruf/solution-outline.md` | yes | manual copy |
+| Fremdaufruf URL-Builder (DE) | `V.connect/Fremdaufruf/url-builder.de.md` | `Vertama-GmbH/elim` (historical name; the V.ap repo) → `docs/external/v.connect/fremdaufruf/url-builder.md` | yes | manual copy — note: the mirror's relative links to `Products/…` were re-based here after the V.connect uplift (2026-08); re-apply on next sync |
 | Fremdaufruf Betriebshandbuch | — | `mcp-health/V.connect` → `fremdaufruf/betriebshandbuch.html` | **no** — ships with binary; admin dashboard serves at `/admin/help` | n/a |
-| Fremdaufruf Präsentation (DE) | `Products/V.connect/Fremdaufruf/presentation/` | `mcp-health/V.connect` → `fremdaufruf/presentation/` | yes | `make sync-fremdaufruf-deck` — pulls the self-contained reveal.js deck from V.c, strips `<aside class="notes">` speaker-note blocks (presenter guidance not intended for the public site) via `scripts/strip-notes.py`, copies brand assets and images unchanged |
+| Fremdaufruf Präsentation (DE) | `V.connect/Fremdaufruf/presentation/` | `mcp-health/V.connect` → `fremdaufruf/presentation/` | yes | `make sync-fremdaufruf-deck` — pulls the self-contained reveal.js deck from V.c, strips `<aside class="notes">` speaker-note blocks (presenter guidance not intended for the public site) via `scripts/strip-notes.py`, copies brand assets and images unchanged. Note: the deck links absolute `docs.vertama.com/Products/V.connect/…` URLs — served via redirect stubs since the uplift; fix upstream in V.c at next deck revision |
+
+URL history: `Products/V.connect/*` moved to top-level `V.connect/*` in the
+2026-08 nav restructure (V.connect uplift). Old URLs keep serving through
+redirect stubs written by `scripts/hooks/redirects.py` at build time.
 
 ## Internal mirror points
 

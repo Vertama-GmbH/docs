@@ -65,6 +65,11 @@ plugins:
         - locale: de
           name: Deutsch
           build: true
+# Redirect-on-move discipline: published URLs keep serving. The hook
+# writes meta-refresh stubs for moved pages into the built site (both
+# language trees) — add an entry there whenever a page moves.
+hooks:
+  - scripts/hooks/redirects.py
 nav:
   - Home: index.md
   - Products:
@@ -125,14 +130,14 @@ nav:
          - "report-not-found": "Products/ZEAG/problems/report-not-found.md"
          - "report-already-retrieved": "Products/ZEAG/problems/report-already-retrieved.md"
          - "report-expired": "Products/ZEAG/problems/report-expired.md"
-     - "V.connect":
-       - "What is V.connect": "Products/V.connect/index.md"
-       - "Fremdaufruf":
-         - "Overview": "Products/V.connect/Fremdaufruf/overview.md"
-         - "Architecture": "Products/V.connect/Fremdaufruf/solution-outline.md"
-         - "URL-Builder": "Products/V.connect/Fremdaufruf/url-builder.md"
-         - "Präsentation (DE)": "Products/V.connect/Fremdaufruf/presentation/index.html"
-
+  - "V.connect":
+    - "What is V.connect": "V.connect/index.md"
+    - "HL7-Anbindung (KIS)": "V.connect/HL7/index.md"
+    - "Fremdaufruf":
+      - "Overview": "V.connect/Fremdaufruf/overview.md"
+      - "Architecture": "V.connect/Fremdaufruf/solution-outline.md"
+      - "URL-Builder": "V.connect/Fremdaufruf/url-builder.md"
+      - "Präsentation (DE)": "V.connect/Fremdaufruf/presentation/index.html"
   - Guides:
     - "Folder Sync Handbook": "how-to/folder-sync-handbuch.md"
   # - "Tutorials": []

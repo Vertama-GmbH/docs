@@ -279,7 +279,7 @@ das mit der Komponente ausgeliefert wird.
 
 - [Overview](overview.md) — Architektur, Designentscheidungen, Sicherheitsaspekte
 - **Betriebshandbuch** — Installation, Konfiguration und Betrieb auf dem KIS-Arbeitsplatz. Wird mit der Komponente ausgeliefert und ist nach der Installation über das Admin-Dashboard erreichbar; Vertama stellt es auf Anfrage vor der Bereitstellung zur Verfügung.
-- Modul-spezifische API-Tutorials: [DUBA](../../../Products/DUBA/api-tutorial.md), [ELIM+](../../../Products/ELIMPLUS/integration-guide.md)
+- Modul-spezifische API-Tutorials: [DUBA](../../Products/DUBA/api-tutorial.md), [ELIM+](../../Products/ELIMPLUS/integration-guide.md)
 
 ---
 
