@@ -20,7 +20,8 @@ theme:
   features:
     - navigation.tabs           # Horizontal top-level navigation
     - navigation.tabs.sticky    # Tabs remain visible when scrolling
-    - navigation.expand         # Keep all sidebar sections expanded
+    # navigation.expand disabled deliberately: sidebar sections start
+    # collapsed, only the active page's path unfolds.
     - navigation.instant        # SPA-style page loading (no full reload)
     - navigation.top            # Back to top button
     - navigation.tracking       # Update URL as you scroll
