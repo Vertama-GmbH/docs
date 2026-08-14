@@ -44,6 +44,7 @@ extra_css:
 extra_javascript:
   - js/external-links.js
 markdown_extensions:
+  - admonition                # !!! info "…" call-out boxes (house style)
   - pymdownx.highlight
   - pymdownx.inlinehilite
 plugins:
