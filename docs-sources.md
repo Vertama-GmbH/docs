@@ -42,10 +42,14 @@ and falls back to the default language when a translation is missing.
 | Fremdaufruf Architecture | `V.connect/Fremdaufruf/solution-outline.md` | `mcp-health/V.connect` → `fremdaufruf/solution-outline.md` | yes | manual copy |
 | Fremdaufruf URL-Builder (DE) | `V.connect/Fremdaufruf/url-builder.de.md` | `Vertama-GmbH/elim` (historical name; the V.ap repo) → `docs/external/v.connect/fremdaufruf/url-builder.md` | yes | manual copy — note: the mirror's relative links to `Products/…` were re-based here after the V.connect uplift (2026-08); re-apply on next sync |
 | Fremdaufruf Betriebshandbuch | — | `mcp-health/V.connect` → `fremdaufruf/betriebshandbuch.html` | **no** — ships with binary; admin dashboard serves at `/admin/help` | n/a |
+| Folder-Sync-Handbuch (DE) | `Products/DIVI/folder-sync-handbuch.de.md` | this repo | canonical | n/a |
+| Folder Sync Guide (EN notice page) | `Products/DIVI/folder-sync-handbuch.md` | this repo | canonical | n/a — stub pointing at the German version |
 | Fremdaufruf Präsentation (DE) | `V.connect/Fremdaufruf/presentation/` | `mcp-health/V.connect` → `fremdaufruf/presentation/` | yes | `make sync-fremdaufruf-deck` — pulls the self-contained reveal.js deck from V.c, strips `<aside class="notes">` speaker-note blocks (presenter guidance not intended for the public site) via `scripts/strip-notes.py`, copies brand assets and images unchanged. Note: the deck links absolute `docs.vertama.com/Products/V.connect/…` URLs — served via redirect stubs since the uplift; fix upstream in V.c at next deck revision |
 
 URL history: `Products/V.connect/*` moved to top-level `V.connect/*` in the
-2026-08 nav restructure (V.connect uplift). Old URLs keep serving through
+2026-08 nav restructure (V.connect uplift), and `how-to/folder-sync-handbuch`
+moved into the DIVI vertical (`Products/DIVI/folder-sync-handbuch`, German
+now as `.de.md`) — DIVI is its only user. Old URLs keep serving through
 redirect stubs written by `scripts/hooks/redirects.py` at build time.
 
 ## Internal mirror points

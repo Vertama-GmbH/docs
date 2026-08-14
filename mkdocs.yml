@@ -91,6 +91,7 @@ nav:
          - "report-expired": "Products/DIGT/problems/report-expired.md"
      - DIVI:
        - "API Tutorial": "Products/DIVI/api-tutorial.md"
+       - "Folder-Sync-Handbuch": "Products/DIVI/folder-sync-handbuch.md"
        - "api.yml (OpenAPI)": Products/DIVI/api.yml
        - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIVI"
      - DUBA:
@@ -138,8 +139,6 @@ nav:
       - "Architecture": "V.connect/Fremdaufruf/solution-outline.md"
       - "URL-Builder": "V.connect/Fremdaufruf/url-builder.md"
       - "Präsentation (DE)": "V.connect/Fremdaufruf/presentation/index.html"
-  - Guides:
-    - "Folder Sync Handbook": "how-to/folder-sync-handbuch.md"
   # - "Tutorials": []
   - "Background & Explanations":
     - "Krankenhausstandorte Registry": "background-and-explanations/krankenhausstandorte.md"

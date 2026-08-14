@@ -33,6 +33,12 @@ STUBS = {
     "de/Products/V.connect/Fremdaufruf/overview/index.html": "/de/V.connect/Fremdaufruf/overview/",
     "de/Products/V.connect/Fremdaufruf/solution-outline/index.html": "/de/V.connect/Fremdaufruf/solution-outline/",
     "de/Products/V.connect/Fremdaufruf/url-builder/index.html": "/de/V.connect/Fremdaufruf/url-builder/",
+    # 2026-08: Folder-Sync-Handbuch moved how-to/ -> Products/DIVI/ (DIVI is
+    # its only user). The guide is German; since the move it lives as .de.md,
+    # so BOTH old URLs (the partner-held default-tree one included) point at
+    # the German page — not at the new EN notice stub.
+    "how-to/folder-sync-handbuch/index.html": "/de/Products/DIVI/folder-sync-handbuch/",
+    "de/how-to/folder-sync-handbuch/index.html": "/de/Products/DIVI/folder-sync-handbuch/",
 }
 
 # The marker lets the hook recognize its own output: on_post_build runs
