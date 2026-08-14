@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    <url>
+        <loc>None./</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="None"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/"/>
+    </url>
+    <url>
+        <loc>Noneabout/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneabout/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/about/"/>
+    </url>
+    <url>
+        <loc>NoneAuthentication/basic-auth-login/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneAuthentication/basic-auth-login/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Authentication/basic-auth-login/"/>
+    </url>
+    <url>
+        <loc>NoneAuthentication/magic-token-link/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneAuthentication/magic-token-link/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Authentication/magic-token-link/"/>
+    </url>
+    <url>
+        <loc>NoneDownloads/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneDownloads/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Downloads/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/BELIM/api-tutorial/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/BELIM/api-tutorial/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/BELIM/api-tutorial/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/DIGG/api-tutorial/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/DIGG/api-tutorial/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/DIGG/api-tutorial/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/DIGT/api-tutorial/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/DIGT/api-tutorial/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/DIGT/api-tutorial/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/DIGT/problems/report-already-retrieved/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/DIGT/problems/report-already-retrieved/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/DIGT/problems/report-already-retrieved/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/DIGT/problems/report-expired/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/DIGT/problems/report-expired/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/DIGT/problems/report-expired/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/DIGT/problems/report-not-found/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/DIGT/problems/report-not-found/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/DIGT/problems/report-not-found/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/DIVI/api-tutorial/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/DIVI/api-tutorial/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/DIVI/api-tutorial/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/DIVI/folder-sync-handbuch/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/DIVI/folder-sync-handbuch/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/DIVI/folder-sync-handbuch/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/DUBA/api-tutorial/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/DUBA/api-tutorial/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/DUBA/api-tutorial/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/ELIM/api-tutorial/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIM/api-tutorial/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIM/api-tutorial/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/ELIM/faq/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIM/faq/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIM/faq/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/ELIM/onepager/ELIM%20%E2%80%93%20Marketing%20Produktbeschreibung/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIM/onepager/ELIM%20%E2%80%93%20Marketing%20Produktbeschreibung/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIM/onepager/ELIM%20%E2%80%93%20Marketing%20Produktbeschreibung/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/ELIM/onepager/OnePager%20%28HTML%29/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIM/onepager/OnePager%20%28HTML%29/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIM/onepager/OnePager%20%28HTML%29/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/ELIM/onepager/OnePager%20%28PNG%29/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIM/onepager/OnePager%20%28PNG%29/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIM/onepager/OnePager%20%28PNG%29/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/ELIM/onepager/OnePager/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIM/onepager/OnePager/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIM/onepager/OnePager/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/ELIM/problems/report-already-retrieved/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIM/problems/report-already-retrieved/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIM/problems/report-already-retrieved/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/ELIM/problems/report-not-found/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIM/problems/report-not-found/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIM/problems/report-not-found/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/ELIMPLUS/integration-guide/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIMPLUS/integration-guide/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIMPLUS/integration-guide/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/ELIMPLUS/migration-v0.2-to-v0.3/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIMPLUS/migration-v0.2-to-v0.3/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIMPLUS/migration-v0.2-to-v0.3/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/ELIMPLUS/roadmap/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIMPLUS/roadmap/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIMPLUS/roadmap/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/ELIMPLUS/testing-and-sandbox/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIMPLUS/testing-and-sandbox/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIMPLUS/testing-and-sandbox/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/ELIMPLUS/problems/report-already-retrieved/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIMPLUS/problems/report-already-retrieved/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIMPLUS/problems/report-already-retrieved/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/ELIMPLUS/problems/report-id-duplicate/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIMPLUS/problems/report-id-duplicate/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIMPLUS/problems/report-id-duplicate/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/ELIMPLUS/problems/report-id-missing/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIMPLUS/problems/report-id-missing/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIMPLUS/problems/report-id-missing/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/ELIMPLUS/problems/report-not-found/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIMPLUS/problems/report-not-found/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIMPLUS/problems/report-not-found/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/ZEAG/problems/report-already-retrieved/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ZEAG/problems/report-already-retrieved/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ZEAG/problems/report-already-retrieved/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/ZEAG/problems/report-expired/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ZEAG/problems/report-expired/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ZEAG/problems/report-expired/"/>
+    </url>
+    <url>
+        <loc>NoneProducts/ZEAG/problems/report-not-found/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ZEAG/problems/report-not-found/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ZEAG/problems/report-not-found/"/>
+    </url>
+    <url>
+        <loc>NoneReference/endpoints-and-infrastructure/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneReference/endpoints-and-infrastructure/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Reference/endpoints-and-infrastructure/"/>
+    </url>
+    <url>
+        <loc>NoneReference/system-requirements/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneReference/system-requirements/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Reference/system-requirements/"/>
+    </url>
+    <url>
+        <loc>NoneV.connect/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneV.connect/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/V.connect/"/>
+    </url>
+    <url>
+        <loc>NoneV.connect/Fremdaufruf/overview/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneV.connect/Fremdaufruf/overview/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/V.connect/Fremdaufruf/overview/"/>
+    </url>
+    <url>
+        <loc>NoneV.connect/Fremdaufruf/solution-outline/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneV.connect/Fremdaufruf/solution-outline/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/V.connect/Fremdaufruf/solution-outline/"/>
+    </url>
+    <url>
+        <loc>NoneV.connect/HL7/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneV.connect/HL7/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/V.connect/HL7/"/>
+    </url>
+    <url>
+        <loc>Nonebackground-and-explanations/krankenhausstandorte/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Nonebackground-and-explanations/krankenhausstandorte/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/background-and-explanations/krankenhausstandorte/"/>
+    </url>
+    <url>
+        <loc>Nonebackground-and-explanations/security-and-encryption/API-Usage-Guide/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Nonebackground-and-explanations/security-and-encryption/API-Usage-Guide/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/background-and-explanations/security-and-encryption/API-Usage-Guide/"/>
+    </url>
+    <url>
+        <loc>Nonebackground-and-explanations/security-and-encryption/Implementation-Notes/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Nonebackground-and-explanations/security-and-encryption/Implementation-Notes/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/background-and-explanations/security-and-encryption/Implementation-Notes/"/>
+    </url>
+    <url>
+        <loc>Nonebackground-and-explanations/security-and-encryption/Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Nonebackground-and-explanations/security-and-encryption/Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/background-and-explanations/security-and-encryption/Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/"/>
+    </url>
+    <url>
+        <loc>Nonebackground-and-explanations/security-and-encryption/Password-Based%20User%20Secrets%20Encryption%20with%20Derived%20Keys/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Nonebackground-and-explanations/security-and-encryption/Password-Based%20User%20Secrets%20Encryption%20with%20Derived%20Keys/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/background-and-explanations/security-and-encryption/Password-Based%20User%20Secrets%20Encryption%20with%20Derived%20Keys/"/>
+    </url>
+    <url>
+        <loc>Noneproblems/validation-error/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneproblems/validation-error/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/problems/validation-error/"/>
+    </url>
+    <url>
+        <loc>Nonede/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="None"/>
+    </url>
+    <url>
+        <loc>Nonede/about/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/about/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneabout/"/>
+    </url>
+    <url>
+        <loc>Nonede/Authentication/basic-auth-login/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Authentication/basic-auth-login/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneAuthentication/basic-auth-login/"/>
+    </url>
+    <url>
+        <loc>Nonede/Authentication/magic-token-link/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Authentication/magic-token-link/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneAuthentication/magic-token-link/"/>
+    </url>
+    <url>
+        <loc>Nonede/Downloads/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Downloads/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneDownloads/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/BELIM/api-tutorial/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/BELIM/api-tutorial/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/BELIM/api-tutorial/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/DIGG/api-tutorial/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/DIGG/api-tutorial/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/DIGG/api-tutorial/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/DIGT/api-tutorial/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/DIGT/api-tutorial/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/DIGT/api-tutorial/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/DIGT/problems/report-already-retrieved/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/DIGT/problems/report-already-retrieved/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/DIGT/problems/report-already-retrieved/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/DIGT/problems/report-expired/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/DIGT/problems/report-expired/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/DIGT/problems/report-expired/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/DIGT/problems/report-not-found/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/DIGT/problems/report-not-found/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/DIGT/problems/report-not-found/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/DIVI/api-tutorial/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/DIVI/api-tutorial/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/DIVI/api-tutorial/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/DIVI/folder-sync-handbuch/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/DIVI/folder-sync-handbuch/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/DIVI/folder-sync-handbuch/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/DUBA/api-tutorial/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/DUBA/api-tutorial/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/DUBA/api-tutorial/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/ELIM/api-tutorial/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIM/api-tutorial/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIM/api-tutorial/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/ELIM/faq/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIM/faq/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIM/faq/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/ELIM/onepager/ELIM%20%E2%80%93%20Marketing%20Produktbeschreibung/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIM/onepager/ELIM%20%E2%80%93%20Marketing%20Produktbeschreibung/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIM/onepager/ELIM%20%E2%80%93%20Marketing%20Produktbeschreibung/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/ELIM/onepager/OnePager%20%28HTML%29/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIM/onepager/OnePager%20%28HTML%29/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIM/onepager/OnePager%20%28HTML%29/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/ELIM/onepager/OnePager%20%28PNG%29/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIM/onepager/OnePager%20%28PNG%29/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIM/onepager/OnePager%20%28PNG%29/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/ELIM/onepager/OnePager/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIM/onepager/OnePager/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIM/onepager/OnePager/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/ELIM/problems/report-already-retrieved/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIM/problems/report-already-retrieved/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIM/problems/report-already-retrieved/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/ELIM/problems/report-not-found/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIM/problems/report-not-found/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIM/problems/report-not-found/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/ELIMPLUS/integration-guide/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIMPLUS/integration-guide/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIMPLUS/integration-guide/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/ELIMPLUS/migration-v0.2-to-v0.3/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIMPLUS/migration-v0.2-to-v0.3/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIMPLUS/migration-v0.2-to-v0.3/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/ELIMPLUS/roadmap/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIMPLUS/roadmap/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIMPLUS/roadmap/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/ELIMPLUS/testing-and-sandbox/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIMPLUS/testing-and-sandbox/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIMPLUS/testing-and-sandbox/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/ELIMPLUS/problems/report-already-retrieved/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIMPLUS/problems/report-already-retrieved/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIMPLUS/problems/report-already-retrieved/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/ELIMPLUS/problems/report-id-duplicate/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIMPLUS/problems/report-id-duplicate/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIMPLUS/problems/report-id-duplicate/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/ELIMPLUS/problems/report-id-missing/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIMPLUS/problems/report-id-missing/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIMPLUS/problems/report-id-missing/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/ELIMPLUS/problems/report-not-found/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ELIMPLUS/problems/report-not-found/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ELIMPLUS/problems/report-not-found/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/ZEAG/problems/report-already-retrieved/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ZEAG/problems/report-already-retrieved/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ZEAG/problems/report-already-retrieved/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/ZEAG/problems/report-expired/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ZEAG/problems/report-expired/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ZEAG/problems/report-expired/"/>
+    </url>
+    <url>
+        <loc>Nonede/Products/ZEAG/problems/report-not-found/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Products/ZEAG/problems/report-not-found/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneProducts/ZEAG/problems/report-not-found/"/>
+    </url>
+    <url>
+        <loc>Nonede/Reference/endpoints-and-infrastructure/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Reference/endpoints-and-infrastructure/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneReference/endpoints-and-infrastructure/"/>
+    </url>
+    <url>
+        <loc>Nonede/Reference/system-requirements/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/Reference/system-requirements/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneReference/system-requirements/"/>
+    </url>
+    <url>
+        <loc>Nonede/V.connect/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/V.connect/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneV.connect/"/>
+    </url>
+    <url>
+        <loc>Nonede/V.connect/Fremdaufruf/overview/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/V.connect/Fremdaufruf/overview/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneV.connect/Fremdaufruf/overview/"/>
+    </url>
+    <url>
+        <loc>Nonede/V.connect/Fremdaufruf/solution-outline/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/V.connect/Fremdaufruf/solution-outline/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneV.connect/Fremdaufruf/solution-outline/"/>
+    </url>
+    <url>
+        <loc>Nonede/V.connect/Fremdaufruf/url-builder/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/V.connect/Fremdaufruf/url-builder/"/>
+    </url>
+    <url>
+        <loc>Nonede/V.connect/HL7/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/V.connect/HL7/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="NoneV.connect/HL7/"/>
+    </url>
+    <url>
+        <loc>Nonede/background-and-explanations/krankenhausstandorte/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/background-and-explanations/krankenhausstandorte/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Nonebackground-and-explanations/krankenhausstandorte/"/>
+    </url>
+    <url>
+        <loc>Nonede/background-and-explanations/security-and-encryption/API-Usage-Guide/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/background-and-explanations/security-and-encryption/API-Usage-Guide/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Nonebackground-and-explanations/security-and-encryption/API-Usage-Guide/"/>
+    </url>
+    <url>
+        <loc>Nonede/background-and-explanations/security-and-encryption/Implementation-Notes/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/background-and-explanations/security-and-encryption/Implementation-Notes/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Nonebackground-and-explanations/security-and-encryption/Implementation-Notes/"/>
+    </url>
+    <url>
+        <loc>Nonede/background-and-explanations/security-and-encryption/Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/background-and-explanations/security-and-encryption/Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Nonebackground-and-explanations/security-and-encryption/Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/"/>
+    </url>
+    <url>
+        <loc>Nonede/background-and-explanations/security-and-encryption/Password-Based%20User%20Secrets%20Encryption%20with%20Derived%20Keys/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/background-and-explanations/security-and-encryption/Password-Based%20User%20Secrets%20Encryption%20with%20Derived%20Keys/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Nonebackground-and-explanations/security-and-encryption/Password-Based%20User%20Secrets%20Encryption%20with%20Derived%20Keys/"/>
+    </url>
+    <url>
+        <loc>Nonede/problems/validation-error/</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="Nonede/problems/validation-error/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneproblems/validation-error/"/>
+    </url>
+</urlset>

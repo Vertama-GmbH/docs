@@ -1,0 +1,2674 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../overview/" rel="prev"/>
+<link href="../url-builder/" rel="next"/>
+<link href="../../../../V.connect/Fremdaufruf/solution-outline/" hreflang="en" rel="alternate"/>
+<link href="./" hreflang="de" rel="alternate"/>
+<link href="../../../../img/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
+<title>Architecture - Vertama: The Manuals</title>
+<link href="../../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
+<link href="../../../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<link href="../../../../css/extra.css" rel="stylesheet"/>
+<link href="../../../../css/pdf-print.css" rel="stylesheet"/>
+<script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<!--
+    Umami analytics (self-hosted, privacy-friendly, no cookies).
+    Injected here (extrahead) rather than extra_javascript so it loads once
+    in <head> and survives navigation.instant SPA-style page changes.
+
+    data-domains: limits tracking to listed domains — script is a no-op elsewhere.
+    Note: ad blockers will silently block this request; there is no reliable
+    workaround on a static GitHub Pages host (no server-side proxy available).
+    Expect partial coverage for technical audiences.
+  -->
+<script data-domains="docs.vertama.com" data-website-id="bfc7264d-4d6e-40cb-97ff-4fae3976f388" defer="" src="https://umami.v1.vertamob.com/script.js"></script>
+</head>
+<body data-md-color-accent="indigo" data-md-color-primary="custom" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#vconnect-fremdaufruf-service-solution-outline">
+          Zum Inhalt
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="Kopfzeile" class="md-header__inner md-grid">
+<a aria-label="Vertama: The Manuals" class="md-header__button md-logo" data-md-component="logo" href="../../../" title="Vertama: The Manuals">
+<img alt="logo" src="../../../../img/Vertama-Icon.svg"/>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Vertama: The Manuals
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Architecture
+            
+          </span>
+</div>
+</div>
+</div>
+<div class="md-header__option">
+<div class="md-select">
+<button aria-label="Sprache wechseln" class="md-header__button md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+</button>
+<div class="md-select__inner">
+<ul class="md-select__list">
+<li class="md-select__item">
+<a class="md-select__link" href="../../../../V.connect/Fremdaufruf/solution-outline/" hreflang="en">
+              English
+            </a>
+</li>
+<li class="md-select__item">
+<a class="md-select__link" href="./" hreflang="de">
+              Deutsch
+            </a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Suche" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Suche" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Suche" class="md-search__options">
+<button aria-label="Zurücksetzen" class="md-search__icon md-icon" tabindex="-1" title="Zurücksetzen" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Suche wird initialisiert
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md-header__source">
+<a class="md-source" data-md-component="source" href="https://github.com/Vertama-GmbH/docs" title="Zum Repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+</div>
+<div class="md-source__repository">
+    Vertama-GmbH/docs
+  </div>
+</a>
+</div>
+</nav>
+<nav aria-label="Hauptnavigation" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../Products/BELIM/api-tutorial/">
+          
+  
+  
+  Products
+
+        </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../../">
+          
+  
+  
+  V.connect
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../background-and-explanations/krankenhausstandorte/">
+          
+  
+  
+  Background &amp; Explanations
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../Reference/system-requirements/">
+          
+  
+  
+  Reference
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../Authentication/basic-auth-login/">
+          
+  
+  
+  Authentication
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../Downloads/">
+        
+  
+  
+    
+  
+  Downloads
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../about/">
+        
+  
+  
+    
+  
+  About
+
+      </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Vertama: The Manuals" class="md-nav__button md-logo" data-md-component="logo" href="../../../" title="Vertama: The Manuals">
+<img alt="logo" src="../../../../img/Vertama-Icon.svg"/>
+</a>
+    Vertama: The Manuals
+  </label>
+<div class="md-nav__source">
+<a class="md-source" data-md-component="source" href="https://github.com/Vertama-GmbH/docs" title="Zum Repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+</div>
+<div class="md-source__repository">
+    Vertama-GmbH/docs
+  </div>
+</a>
+</div>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Products
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Products
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    BELIM
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    BELIM
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/BELIM/api-tutorial/">
+<span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../Products/BELIM/api.yml">
+<span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=BELIM">
+<span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    DIGG
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    DIGG
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/DIGG/api-tutorial/">
+<span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../Products/DIGG/api.yml">
+<span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIGG">
+<span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    DIGT
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    DIGT
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/DIGT/api-tutorial/">
+<span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../Products/DIGT/api.yml">
+<span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIGT">
+<span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_3_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_3_4" id="__nav_2_3_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Problem Types
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_3_4_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_2_3_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Problem Types
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/DIGT/problems/report-not-found/">
+<span class="md-ellipsis">
+    
+  
+    report-not-found
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/DIGT/problems/report-already-retrieved/">
+<span class="md-ellipsis">
+    
+  
+    report-already-retrieved
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/DIGT/problems/report-expired/">
+<span class="md-ellipsis">
+    
+  
+    report-expired
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    DIVI
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    DIVI
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/DIVI/api-tutorial/">
+<span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/DIVI/folder-sync-handbuch/">
+<span class="md-ellipsis">
+    
+  
+    Folder-Sync-Handbuch
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../Products/DIVI/api.yml">
+<span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIVI">
+<span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    DUBA
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    DUBA
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/DUBA/api-tutorial/">
+<span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../Products/DUBA/api.yml">
+<span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DUBA">
+<span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    ELIM
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_6_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    ELIM
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ELIM/api-tutorial/">
+<span class="md-ellipsis">
+    
+  
+    API Tutorial
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ELIM/faq/">
+<span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../Products/ELIM/api.yml">
+<span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=ELIM">
+<span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_6_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_6_5" id="__nav_2_6_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Problem Types
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_6_5_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_2_6_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Problem Types
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ELIM/problems/report-not-found/">
+<span class="md-ellipsis">
+    
+  
+    report-not-found
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ELIM/problems/report-already-retrieved/">
+<span class="md-ellipsis">
+    
+  
+    report-already-retrieved
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_6_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_6_6" id="__nav_2_6_6_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Flyer
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_6_6_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_2_6_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Flyer
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ELIM/onepager/OnePager%20%28PNG%29/">
+<span class="md-ellipsis">
+    
+  
+    One Pager / Flyer (PNG)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ELIM/onepager/OnePager%20%28HTML%29/">
+<span class="md-ellipsis">
+    
+  
+    One Pager / Flyer (HTML)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ELIM/onepager/OnePager/">
+<span class="md-ellipsis">
+    
+  
+    One Pager / Flyer (TEXT/Markdown)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_7" id="__nav_2_7_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    ELIM+
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_7_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_7">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    ELIM+
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ELIMPLUS/integration-guide/">
+<span class="md-ellipsis">
+    
+  
+    Integration Guide
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ELIMPLUS/testing-and-sandbox/">
+<span class="md-ellipsis">
+    
+  
+    Testing &amp; Sandbox
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ELIMPLUS/roadmap/">
+<span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ELIMPLUS/migration-v0.2-to-v0.3/">
+<span class="md-ellipsis">
+    
+  
+    Migration v0.2 → v0.3
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_7_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_7_5" id="__nav_2_7_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Problem Types
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_7_5_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_2_7_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Problem Types
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ELIMPLUS/problems/report-not-found/">
+<span class="md-ellipsis">
+    
+  
+    report-not-found
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ELIMPLUS/problems/report-already-retrieved/">
+<span class="md-ellipsis">
+    
+  
+    report-already-retrieved
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ELIMPLUS/problems/report-id-missing/">
+<span class="md-ellipsis">
+    
+  
+    report-id-missing
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ELIMPLUS/problems/report-id-duplicate/">
+<span class="md-ellipsis">
+    
+  
+    report-id-duplicate
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../Products/ELIMPLUS/api.yml">
+<span class="md-ellipsis">
+    
+  
+    api.yml (OpenAPI)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../Products/ELIMPLUS/api-v0.2.0.yml">
+<span class="md-ellipsis">
+    
+  
+    api-v0.2.0.yml (previous)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=ELIM%2B">
+<span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_8" id="__nav_2_8_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    ZEAG
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_8_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    ZEAG
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=ZEAG">
+<span class="md-ellipsis">
+    
+  
+    API Viewer (Swagger)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_8_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_8_2" id="__nav_2_8_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Problem Types
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_8_2_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_2_8_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Problem Types
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ZEAG/problems/report-not-found/">
+<span class="md-ellipsis">
+    
+  
+    report-not-found
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ZEAG/problems/report-already-retrieved/">
+<span class="md-ellipsis">
+    
+  
+    report-already-retrieved
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Products/ZEAG/problems/report-expired/">
+<span class="md-ellipsis">
+    
+  
+    report-expired
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    V.connect
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    V.connect
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../">
+<span class="md-ellipsis">
+    
+  
+    What is V.connect
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../HL7/">
+<span class="md-ellipsis">
+    
+  
+    HL7-Anbindung (KIS)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_3_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Fremdaufruf
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_3_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_3_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Fremdaufruf
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../overview/">
+<span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Inhaltsverzeichnis" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Inhaltsverzeichnis
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-purpose">
+<span class="md-ellipsis">
+      
+        1. Purpose
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-architecture">
+<span class="md-ellipsis">
+      
+        2. Architecture
+      
+    </span>
+</a>
+<nav aria-label="2. Architecture" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#component-topology">
+<span class="md-ellipsis">
+      
+        Component topology
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#runtime-flow-baseline-post-capable-kis-shown-for-reference">
+<span class="md-ellipsis">
+      
+        Runtime flow — baseline (POST-capable KIS, shown for reference)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#runtime-flow-with-vc-fremdaufruf-get-only-kis">
+<span class="md-ellipsis">
+      
+        Runtime flow — with V.c Fremdaufruf (GET-only KIS)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#admin-config-flow">
+<span class="md-ellipsis">
+      
+        Admin-config flow
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#responsibility-split">
+<span class="md-ellipsis">
+      
+        Responsibility split
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-component-contract">
+<span class="md-ellipsis">
+      
+        3. Component contract
+      
+    </span>
+</a>
+<nav aria-label="3. Component contract" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#31-url-scheme">
+<span class="md-ellipsis">
+      
+        3.1 URL scheme
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#32-type-coercion">
+<span class="md-ellipsis">
+      
+        3.2 Type coercion
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#33-module-mapping-path-mirroring">
+<span class="md-ellipsis">
+      
+        3.3 Module mapping (path mirroring)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#34-response-semantics">
+<span class="md-ellipsis">
+      
+        3.4 Response semantics
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-vap-side-responsibilities">
+<span class="md-ellipsis">
+      
+        4. V.ap-side responsibilities
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-deployment-model">
+<span class="md-ellipsis">
+      
+        5. Deployment model
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-tech-stack">
+<span class="md-ellipsis">
+      
+        6. Tech stack
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-configuration-and-credentials">
+<span class="md-ellipsis">
+      
+        7. Configuration and credentials
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8-security-posture">
+<span class="md-ellipsis">
+      
+        8. Security posture
+      
+    </span>
+</a>
+<nav aria-label="8. Security posture" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#81-authority-model">
+<span class="md-ellipsis">
+      
+        8.1 Authority model
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#82-wire-level-guarantees">
+<span class="md-ellipsis">
+      
+        8.2 Wire-level guarantees
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#83-future-direction-per-call-human-identity">
+<span class="md-ellipsis">
+      
+        8.3 Future direction: per-call human identity
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#9-scope-and-roadmap">
+<span class="md-ellipsis">
+      
+        9. Scope and roadmap
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../url-builder/">
+<span class="md-ellipsis">
+    
+  
+    URL-Builder
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../V.connect/Fremdaufruf/presentation/">
+<span class="md-ellipsis">
+    
+  
+    Präsentation (DE)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Background &amp; Explanations
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Background &amp; Explanations
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../background-and-explanations/krankenhausstandorte/">
+<span class="md-ellipsis">
+    
+  
+    Krankenhausstandorte Registry
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Security &amp; Encryption
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Security &amp; Encryption
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../background-and-explanations/security-and-encryption/Multi-User%20Secret%20Sharing%20with%20Zero-Knowledge%20Architecture/">
+<span class="md-ellipsis">
+    
+  
+    Multi-User Secret Sharing
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../background-and-explanations/security-and-encryption/Password-Based%20User%20Secrets%20Encryption%20with%20Derived%20Keys/">
+<span class="md-ellipsis">
+    
+  
+    Password-Based User Secrets Encryption
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../background-and-explanations/security-and-encryption/Implementation-Notes/">
+<span class="md-ellipsis">
+    
+  
+    Implementation Notes
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../background-and-explanations/security-and-encryption/API-Usage-Guide/">
+<span class="md-ellipsis">
+    
+  
+    API Usage Guide
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reference/system-requirements/">
+<span class="md-ellipsis">
+    
+  
+    Systemanforderungen
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reference/endpoints-and-infrastructure/">
+<span class="md-ellipsis">
+    
+  
+    Endpunkte &amp; Infrastruktur
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Problem Types (API-Fehlerkatalog)
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Problem Types (API-Fehlerkatalog)
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../problems/validation-error/">
+<span class="md-ellipsis">
+    
+  
+    validation-error
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Authentication
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Authentication/basic-auth-login/">
+<span class="md-ellipsis">
+    
+  
+    Basic Auth Login (BAL)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Authentication/magic-token-link/">
+<span class="md-ellipsis">
+    
+  
+    Magic Token Link (MTL)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Downloads/">
+<span class="md-ellipsis">
+    
+  
+    Downloads
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../about/">
+<span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Inhaltsverzeichnis" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Inhaltsverzeichnis
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-purpose">
+<span class="md-ellipsis">
+      
+        1. Purpose
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-architecture">
+<span class="md-ellipsis">
+      
+        2. Architecture
+      
+    </span>
+</a>
+<nav aria-label="2. Architecture" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#component-topology">
+<span class="md-ellipsis">
+      
+        Component topology
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#runtime-flow-baseline-post-capable-kis-shown-for-reference">
+<span class="md-ellipsis">
+      
+        Runtime flow — baseline (POST-capable KIS, shown for reference)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#runtime-flow-with-vc-fremdaufruf-get-only-kis">
+<span class="md-ellipsis">
+      
+        Runtime flow — with V.c Fremdaufruf (GET-only KIS)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#admin-config-flow">
+<span class="md-ellipsis">
+      
+        Admin-config flow
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#responsibility-split">
+<span class="md-ellipsis">
+      
+        Responsibility split
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-component-contract">
+<span class="md-ellipsis">
+      
+        3. Component contract
+      
+    </span>
+</a>
+<nav aria-label="3. Component contract" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#31-url-scheme">
+<span class="md-ellipsis">
+      
+        3.1 URL scheme
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#32-type-coercion">
+<span class="md-ellipsis">
+      
+        3.2 Type coercion
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#33-module-mapping-path-mirroring">
+<span class="md-ellipsis">
+      
+        3.3 Module mapping (path mirroring)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#34-response-semantics">
+<span class="md-ellipsis">
+      
+        3.4 Response semantics
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-vap-side-responsibilities">
+<span class="md-ellipsis">
+      
+        4. V.ap-side responsibilities
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-deployment-model">
+<span class="md-ellipsis">
+      
+        5. Deployment model
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-tech-stack">
+<span class="md-ellipsis">
+      
+        6. Tech stack
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-configuration-and-credentials">
+<span class="md-ellipsis">
+      
+        7. Configuration and credentials
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8-security-posture">
+<span class="md-ellipsis">
+      
+        8. Security posture
+      
+    </span>
+</a>
+<nav aria-label="8. Security posture" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#81-authority-model">
+<span class="md-ellipsis">
+      
+        8.1 Authority model
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#82-wire-level-guarantees">
+<span class="md-ellipsis">
+      
+        8.2 Wire-level guarantees
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#83-future-direction-per-call-human-identity">
+<span class="md-ellipsis">
+      
+        8.3 Future direction: per-call human identity
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#9-scope-and-roadmap">
+<span class="md-ellipsis">
+      
+        9. Scope and roadmap
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<a class="md-content__button md-icon" href="https://github.com/Vertama-GmbH/docs/edit/main/docs/V.connect/Fremdaufruf/solution-outline.md" rel="edit" title="Seite editieren">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"></path></svg>
+</a>
+<h1 id="vconnect-fremdaufruf-service-solution-outline">V.connect Fremdaufruf Service — Solution Outline</h1>
+<p><em>This document is currently available in English only.</em></p>
+<p><strong>Working title:</strong> V.connect Fremdaufruf Service
+<strong>Status:</strong> Solution outline, iteration 1, for internal alignment ahead of implementation
+<strong>Audience:</strong> Vertama engineering and product</p>
+<p>This document sketches the design of a small local component that enables
+KIS systems limited to GET-only outbound calls to initiate a V.ap session
+(currently exemplified by the ELIM+ memento flow) without leaking
+sensitive parameters into URLs. It is deliberately not yet a full
+specification: enough detail to consent to <em>what</em> is being built,
+deliberately short of implementation-level minutiae.</p>
+<hr/>
+<h2 id="1-purpose">1. Purpose</h2>
+<p>V.ap product modules expose POST endpoints that accept sensitive payload
+(patient identification, laboratory report data, etc.) and respond with
+an encrypted <code>memento</code> plus a <code>magicLink</code> — an authenticated single-use
+URL the end user opens in a browser to land on the pre-filled form.
+ELIM+ is the worked example throughout this document; the pattern is
+module-agnostic.</p>
+<p>This flow works for KIS systems that can issue an HTTP POST with a JSON
+body, authenticate with Basic Auth, and then open a browser at the
+returned URL. Many KIS systems cannot. In particular, some KIS
+configurations expose <strong>only a single integration primitive</strong>: "open
+this external URL, with these parameters appended to the query string."
+No POST verb, no request body, no programmatic header control.</p>
+<p>The naïve adaptation — accept the same payload via GET on a V.ap
+endpoint — is rejected for data-protection reasons. URLs leak: into
+browser history, into server access logs, into HTTP proxy logs, and into
+the <code>Referer</code> header of any link the user clicks after landing on the
+form. V.ap therefore declines to receive sensitive payload via GET URLs,
+on its own endpoints or anywhere else.</p>
+<p>A second motivation is UX-shaped. In many of these KIS systems the
+"open external URL" primitive specifically uses the KIS's <strong>embedded
+browser pane</strong>, which renders the target <em>inside</em> the KIS UI rather than
+in a separate window. The Fremdaufruf approach preserves this property
+end-to-end: the embedded browser issues the loopback GET, follows the
+303 redirect to V.ap, and renders the pre-filled form inside the KIS —
+no window switching, no external-browser handoff, no separate session.
+A KIS that prefers to launch an external browser process (its other
+common option) is supported by the same flow without changes.</p>
+<p>The <strong>V.connect Fremdaufruf Service</strong> closes this gap by intermediating
+locally on the KIS side. It runs adjacent to the KIS (per-workstation
+localhost in the primary deployment), receives the GET request from the
+KIS, performs the actual POST to V.ap on behalf of the KIS, and returns
+an HTTP 303 redirect to the resulting <code>magicLink</code>. The browser follows
+the redirect and reaches the same end state as the direct-POST case.</p>
+<p>The V.ap modules themselves are <strong>unchanged</strong>. The Fremdaufruf Service
+is the only addition.</p>
+<h2 id="2-architecture">2. Architecture</h2>
+<h3 id="component-topology">Component topology</h3>
+<div class="mermaid">flowchart LR
+    subgraph H["Hospital network"]
+        subgraph W["KIS workstation"]
+            subgraph K["KIS application"]
+                APP["application&lt;br/&gt;logic"]
+                EB("embedded&lt;br/&gt;browser")
+            end
+            F(["V.c Fremdaufruf&lt;br/&gt;127.0.0.1:PORT"])
+        end
+    end
+
+    subgraph V["Vertama cloud"]
+        VAP(["V.ap"])
+    end
+
+    APP -.-&gt;|"load URL"| EB
+    EB ==&gt;|"HTTP&lt;br/&gt;GET (loopback)"| F
+    F ==&gt;|"HTTPS&lt;br/&gt;POST"| VAP
+    EB ==&gt;|"HTTPS&lt;br/&gt;GET (magicLink)"| VAP
+
+    classDef added fill:#fff3e0,stroke:#ef6c00,stroke-width:2px,color:#3e2723
+    class F added
+
+    style H fill:#fafafa,stroke:#bdbdbd
+    style W fill:#f5f5f5,stroke:#9e9e9e
+    style K fill:#eeeeee,stroke:#757575
+    style V fill:#e3f2fd,stroke:#1976d2,color:#0d47a1
+
+    linkStyle 0 stroke:#999
+    linkStyle 1 stroke:#1976d2,stroke-width:2px
+    linkStyle 2 stroke:#1976d2,stroke-width:2px
+    linkStyle 3 stroke:#1976d2,stroke-width:2px
+</div>
+<p>The browser shown is the KIS's <strong>embedded browser pane</strong> — the typical
+case and the principal UX motivation for this design. The "load URL"
+arrow is an in-process instruction inside the KIS application, not an
+OS-level launch; the embedded browser then drives all subsequent HTTP
+exchanges. A KIS that launches an external browser process instead
+follows the same protocol path with no difference at the wire level —
+that arrow simply becomes a process spawn rather than an in-process
+load.</p>
+<p>Beyond KIS and embedded browser, the V.c Fremdaufruf service (added by
+this proposal) is the only new component on the workstation. It binds
+to the loopback interface and is not reachable from outside the
+workstation.</p>
+<p>Two HTTPS sessions cross the boundary between the Hospital network and
+the Vertama cloud: the component's POST to V.ap (carrying the patient
+payload and using the stored API-user credentials), and the browser's
+subsequent GET of the <code>magicLink</code> to obtain the pre-filled form. No
+other Vertama-cloud traffic originates from the workstation in this
+flow.</p>
+<p>Admin tooling for generating URL templates lives in V.ap as well; it is
+not depicted here because it is not part of the runtime path — see the
+admin-config sequence diagram below.</p>
+<h3 id="runtime-flow-baseline-post-capable-kis-shown-for-reference">Runtime flow — baseline (POST-capable KIS, shown for reference)</h3>
+<div class="mermaid">%%{init: {'theme':'base','themeVariables':{'actorBkg':'#f5f5f5','actorBorder':'#757575','actorTextColor':'#212121','actorLineColor':'#bdbdbd','signalColor':'#1976d2','signalTextColor':'#0d47a1','sequenceNumberColor':'#ffffff'},'sequence':{'boxMargin':5,'boxTextMargin':2,'height':40}}}%%
+sequenceDiagram
+    autonumber
+    participant K as KIS workstation
+    participant B as Embedded browser
+    participant V as V.ap
+
+    K-&gt;&gt;V: POST /api/{module}/v1/memento&lt;br/&gt;(JSON body, Basic Auth)
+    V--&gt;&gt;K: { memento, magicLink }
+    K-&gt;&gt;B: open(base + magicLink)
+    B-&gt;&gt;V: GET magicLink (MTL token)
+    V--&gt;&gt;B: pre-filled form
+</div>
+<h3 id="runtime-flow-with-vc-fremdaufruf-get-only-kis">Runtime flow — with V.c Fremdaufruf (GET-only KIS)</h3>
+<div class="mermaid">%%{init: {'theme':'base','themeVariables':{'actorBkg':'#f5f5f5','actorBorder':'#757575','actorTextColor':'#212121','actorLineColor':'#bdbdbd','signalColor':'#1976d2','signalTextColor':'#0d47a1','sequenceNumberColor':'#ffffff'},'sequence':{'boxMargin':5,'boxTextMargin':2,'height':40}}}%%
+sequenceDiagram
+    autonumber
+    participant K as KIS workstation
+    participant B as Embedded browser
+    participant F as V.c Fremdaufruf&lt;br/&gt;(localhost)
+    participant V as V.ap
+
+    K-&gt;&gt;B: open(http://127.0.0.1:PORT/l/{path}?params)
+    B-&gt;&gt;F: GET /l/{path}?params
+    F-&gt;&gt;V: POST /api/{module}/v1/memento&lt;br/&gt;(params→JSON, stored Basic Auth)
+    V--&gt;&gt;F: { memento, magicLink }
+    F--&gt;&gt;B: 303 Location: base + magicLink
+    B-&gt;&gt;V: GET magicLink (MTL token)
+    V--&gt;&gt;B: pre-filled form
+</div>
+<p>The only addition is the local component between browser and V.ap. The
+KIS-opens-browser step and the final magic-link GET are identical to the
+baseline.</p>
+<h3 id="admin-config-flow">Admin-config flow</h3>
+<div class="mermaid">%%{init: {'theme':'base','themeVariables':{'actorBkg':'#f5f5f5','actorBorder':'#757575','actorTextColor':'#212121','actorLineColor':'#bdbdbd','signalColor':'#1976d2','signalTextColor':'#0d47a1','sequenceNumberColor':'#ffffff'},'sequence':{'boxMargin':5,'boxTextMargin':2,'height':40}}}%%
+sequenceDiagram
+    autonumber
+    actor A as Hospital admin
+    participant T as V.ap admin tooling
+    participant KC as KIS configuration
+
+    A-&gt;&gt;T: open URL-template builder for {module}
+    T--&gt;&gt;A: form with all parameters of the POST endpoint,&lt;br/&gt;each with an input for the KIS-native placeholder
+    A-&gt;&gt;T: fill placeholders (e.g. %PatientVorname%, --DOB--)
+    T--&gt;&gt;A: complete GET URL template&lt;br/&gt;(prefix /l/, aliases, type manifest, data params)
+    A-&gt;&gt;KC: paste template into KIS external-call configuration
+</div>
+<p>The URL template is constant across workstations. The admin generates it
+once per module and per KIS placeholder convention, then pastes it into
+every KIS that should expose the integration.</p>
+<h3 id="responsibility-split">Responsibility split</h3>
+<table>
+<thead>
+<tr>
+<th>Concern</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product module endpoints, OpenAPI</td>
+<td>V.ap (unchanged)</td>
+</tr>
+<tr>
+<td>Admin URL-template builder UI</td>
+<td>V.ap (new)</td>
+</tr>
+<tr>
+<td>Placeholder substitution at run time</td>
+<td>KIS (existing mechanism)</td>
+</tr>
+<tr>
+<td>GET → JSON translation, POST, redirect</td>
+<td>Fremdaufruf Service</td>
+</tr>
+<tr>
+<td>API-user credentials at rest</td>
+<td>Fremdaufruf Service config</td>
+</tr>
+<tr>
+<td>Form rendering, MTL authentication</td>
+<td>V.ap (unchanged)</td>
+</tr>
+</tbody>
+</table>
+<p>All product-specific knowledge (schemas, field names, required fields,
+disease lists) stays in V.ap. The component carries no module-specific
+code.</p>
+<h2 id="3-component-contract">3. Component contract</h2>
+<p>The component is a single executable exposing one HTTP listener and one
+forwarding rule. It is module-agnostic: adding a new product module to
+V.ap requires no change to the component.</p>
+<h3 id="31-url-scheme">3.1 URL scheme</h3>
+<pre><code>GET http://127.0.0.1:PORT/l/&lt;vap-endpoint-path&gt;?&lt;query&gt;
+</code></pre>
+<ul>
+<li><code>/l/</code> is a fixed prefix reserved by the component. All requests not
+  matching the prefix return 404.</li>
+<li><code>&lt;vap-endpoint-path&gt;</code> is used verbatim as the path of the V.ap POST
+  request. The component performs no validation that the path resolves
+  to a known module — V.ap returns 404 if it does not, and the component
+  propagates that response.</li>
+<li><code>&lt;query&gt;</code> carries data parameters and reserved meta parameters. Meta
+  parameters are distinguished by a leading underscore (<code>_a</code>, <code>_t</code>).
+  All other keys are treated as data parameters.</li>
+</ul>
+<p>Two meta parameters are defined; both are optional.</p>
+<p><strong><code>_a</code> — path-segment alias map.</strong> A comma-separated list of
+<code>short:long</code> pairs that the component expands inside data-parameter
+keys, segment by segment.</p>
+<pre><code>_a=P:Patient,S:Standard,N:Name,M:MeldendeEinrichtung
+</code></pre>
+<p>With this map, the data-parameter key <code>P.S.N.Vorname</code> expands to
+<code>Patient.Standard.Name.Vorname</code> before JSON-path reconstruction.</p>
+<p>The alias map exists for URL density. KIS workstations and some
+intermediate URL handlers impose length limits; the aliases let a
+template stay well below those limits even for full-Patient payloads.</p>
+<p><strong><code>_t</code> — type manifest.</strong> A comma-separated list of <code>path:type</code> pairs
+that override the default string coercion for the named data parameters.</p>
+<pre><code>_t=P.IsAnonym:b,P.S.Geburtsdatum:d
+</code></pre>
+<p>The component applies aliases first (so <code>P.IsAnonym</code> is matched against
+the expanded JSON path), then coerces.</p>
+<p><strong>Data parameters.</strong> Each non-reserved query key is a dotted JSON path.
+After alias expansion, the component reconstructs a nested JSON object
+matching the path. Keys with no entry in <code>_t</code> are encoded as JSON
+strings.</p>
+<h3 id="32-type-coercion">3.2 Type coercion</h3>
+<p>A closed vocabulary of six type kinds is supported. Single-letter codes
+are used in <code>_t</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>JSON output type</th>
+<th>Accepted input form (after URL decoding)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>(none)</em></td>
+<td>string</td>
+<td>any</td>
+</tr>
+<tr>
+<td><code>b</code></td>
+<td>boolean</td>
+<td><code>true</code> / <code>false</code> (case-insensitive)</td>
+</tr>
+<tr>
+<td><code>i</code></td>
+<td>integer</td>
+<td>optional <code>-</code>, then decimal digits</td>
+</tr>
+<tr>
+<td><code>n</code></td>
+<td>number</td>
+<td>JSON number syntax (decimal, optional sign, optional <code>e</code>)</td>
+</tr>
+<tr>
+<td><code>d</code></td>
+<td>string (date)</td>
+<td>ISO 8601 calendar date <code>YYYY-MM-DD</code></td>
+</tr>
+<tr>
+<td><code>t</code></td>
+<td>string (datetime)</td>
+<td>ISO 8601 datetime with timezone offset or <code>Z</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>d</code> and <code>t</code> are sent to V.ap as JSON strings (matching the existing API
+contract — V.ap already expects date-shaped strings, not native date
+types), but the component validates the shape locally so that template
+or placeholder errors surface as a 400 from the component rather than
+as an opaque 400 from V.ap.</p>
+<p>This vocabulary is a property of JSON + OpenAPI, not of any product
+module. New modules can ship with no component change; only the
+introduction of a new <em>type kind</em> (rare) would require one.</p>
+<p>Coercion errors return HTTP 400 from the component without forwarding
+to V.ap. The response body names the offending parameter and the
+expected kind.</p>
+<h3 id="33-module-mapping-path-mirroring">3.3 Module mapping (path mirroring)</h3>
+<p>The component does not maintain a mapping from KIS-side URLs to V.ap
+endpoints. It mirrors the path: <code>/l/&lt;X&gt;</code> → <code>POST &lt;vap-base&gt;/&lt;X&gt;</code>. The
+V.ap admin tooling already knows the endpoint path (it has the OpenAPI),
+so it can emit the correct <code>&lt;X&gt;</code> directly into the URL template.</p>
+<p>Practical example (ELIM+):</p>
+<pre><code>GET  http://127.0.0.1:8810/l/api/elimplus/v1/memento?...
+→
+POST https://vap.example.com/api/elimplus/v1/memento
+</code></pre>
+<h3 id="34-response-semantics">3.4 Response semantics</h3>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>Component response</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Successful POST, V.ap returns 200</td>
+<td><strong>303 See Other</strong></td>
+<td><code>Location: &lt;vap-base&gt;&lt;magicLink&gt;</code>. Empty body.</td>
+</tr>
+<tr>
+<td>Malformed URL, missing required meta</td>
+<td>400 Bad Request</td>
+<td>Plain-text body identifying the problem.</td>
+</tr>
+<tr>
+<td>Type-coercion failure on a data parameter</td>
+<td>400 Bad Request</td>
+<td>Body names parameter and expected kind. No POST issued.</td>
+</tr>
+<tr>
+<td>V.ap returns 400 (validation)</td>
+<td>422 Unprocessable Entity</td>
+<td>Body propagates V.ap's <code>errors[]</code> array.</td>
+</tr>
+<tr>
+<td>V.ap returns 401 / 403</td>
+<td>502 Bad Gateway</td>
+<td>Component creds misconfigured — surface as upstream.</td>
+</tr>
+<tr>
+<td>V.ap returns any other 4xx / 5xx</td>
+<td>502 Bad Gateway</td>
+<td>Body includes short text and the V.ap status code.</td>
+</tr>
+<tr>
+<td>V.ap unreachable / TLS failure</td>
+<td>502 Bad Gateway</td>
+<td>Body identifies the network-level failure.</td>
+</tr>
+</tbody>
+</table>
+<p>The component never returns 401 or 403 itself. There is no caller
+authentication on the loopback listener in the primary deployment;
+trust is conferred by the binding to <code>127.0.0.1</code>.</p>
+<h2 id="4-vap-side-responsibilities">4. V.ap-side responsibilities</h2>
+<p>To make the component usable, V.ap provides one new piece: an admin
+URL-template builder.</p>
+<p>For each POST endpoint that should be exposable via Fremdaufruf, the
+tooling page must:</p>
+<ol>
+<li>List every parameter of the endpoint (from the OpenAPI),
+   distinguishing required from optional and labelling the type.</li>
+<li>Allow the admin to enter a free-text placeholder per parameter
+   (KIS-native syntax, e.g. <code>%PatientFirstName%</code>, <code>--DOB--</code>).</li>
+<li>Emit a complete URL template:</li>
+<li><code>/l/&lt;endpoint-path&gt;</code> prefix and target</li>
+<li><code>_a</code> alias map for compactness, derived automatically from path
+     prefixes that repeat across selected parameters</li>
+<li><code>_t</code> entry for each non-string parameter</li>
+<li>One query parameter per filled-in field, dotted-path key, admin's
+     placeholder as value</li>
+<li>Display the template ready to copy. (Optionally: preview with
+   sample placeholders substituted, to let the admin sanity-check.)</li>
+</ol>
+<p>How that page is built — what URL it lives at in V.ap, what
+authentication / customer scoping applies — is out of scope here.</p>
+<h2 id="5-deployment-model">5. Deployment model</h2>
+<p>Two deployment shapes are supported in V1; both run the same single
+binary, configured differently.</p>
+<p><strong>Per-workstation, loopback-bound.</strong> The binary installs on each
+KIS workstation, runs as a native Windows service (installed via a
+signed Windows installer), and binds to <code>127.0.0.1</code> on a configurable
+port. Reachable only from processes on the same workstation. Trust
+boundary: the workstation operating system. No additional caller
+authentication is required on the loopback listener.</p>
+<p><strong>Hospital-network-bound (intranet shared deployment).</strong> The binary
+installs on a single host inside the hospital network, bound to a
+routable address reachable by all KIS workstations that need it. One
+installation serves many workstations — operationally lighter for
+hospital IT. Runtime is platform-agnostic: the same binary runs as a
+native Windows service on a Windows host, as a systemd unit on a
+Linux host, or as a Linux container (image at
+<code>ghcr.io/mcp-health/v.connect/fremdaufruf</code>, linux/amd64, with a
+Docker Compose example as a starting point). Trust boundary: a
+configured <strong>access secret</strong> that every caller must supply on every
+request (see §8). Without a matching secret, the component returns
+403 before any upstream call.</p>
+<h2 id="6-tech-stack">6. Tech stack</h2>
+<p><strong>Go.</strong></p>
+<ul>
+<li>Single static binary, ~10 MB, no runtime dependency on the
+  workstation.</li>
+<li>Standard-library HTTP server and client, JSON, TLS — no third-party
+  surface to vet beyond the toolchain.</li>
+<li>Cross-compiles to Windows, Linux, macOS from one source tree.</li>
+<li>Operates as a native Windows service (via
+  <code>golang.org/x/sys/windows/svc</code>) or as a Linux container, without
+  any additional runtime supervisor.</li>
+<li>Fast startup (sub-second), small memory footprint (single-digit MB
+  resident).</li>
+</ul>
+<h2 id="7-configuration-and-credentials">7. Configuration and credentials</h2>
+<p>A single configuration file at a platform-conventional location:</p>
+<ul>
+<li>Windows: <code>%PROGRAMDATA%\Vertama\fremdaufruf\config.toml</code></li>
+<li>Linux:   <code>/etc/vertama/fremdaufruf/config.toml</code></li>
+</ul>
+<p>Sketch — the minimum required fields. The full schema (including the
+optional <code>[allowlist]</code> and <code>[access]</code> sections that govern §8's
+controls) lives in <a href="specification.md"><code>specification.md</code></a> §8:</p>
+<pre><code class="language-toml">vap_base_url = "https://vap.example.com"
+api_user     = "lab-api"
+api_secret   = "&lt;password&gt;"               # file-permission-restricted
+
+[bind]
+address = "127.0.0.1"
+port    = 8810
+
+[log]
+level = "info"
+</code></pre>
+<p>Permissions on the file are restricted to the service account
+(<code>chmod 0600</code> / equivalent NTFS ACL). A future iteration may integrate
+the credential with the OS credential store (Windows DPAPI / Linux
+secret-tool); not part of this iteration.</p>
+<p>The component does not implement credential rotation logic. Operators
+edit the config and restart the service. V.ap-side API-user lifecycle
+is unchanged.</p>
+<h2 id="8-security-posture">8. Security posture</h2>
+<p><strong>Operator sovereignty.</strong> Once installed, the component runs entirely
+within the operating party's control. Vertama has no remote admin
+surface, no phone-home, no inbound channel into the deployment. All
+configuration is local. Updates are applied by the operator pulling a
+new artifact and replacing the previous one; no auto-update mechanism.</p>
+<p>The component's network footprint is exactly what the operator
+configures:</p>
+<ul>
+<li><strong>Outbound</strong> is restricted to the configured V.ap base URL. The
+  component does not reach into the operator's intranet, even if the
+  surrounding network would permit it. No service discovery, no
+  opportunistic probing.</li>
+<li><strong>Inbound</strong> is restricted to the operator-configured bind address
+  and port. No other listeners are opened.</li>
+</ul>
+<p>What Vertama provides and where it runs:</p>
+<table>
+<thead>
+<tr>
+<th>Artifact</th>
+<th>Where it runs</th>
+<th>Controlled by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fremdaufruf component (Windows native service)</td>
+<td>KIS workstation</td>
+<td>Hospital admin</td>
+</tr>
+<tr>
+<td>Fremdaufruf component (Linux container)</td>
+<td>Hospital-managed host</td>
+<td>Hospital admin</td>
+</tr>
+<tr>
+<td>V.ap product modules + URL-builder</td>
+<td>Vertama cloud</td>
+<td>Vertama operates; hospital admin provisions and consumes via API user</td>
+</tr>
+</tbody>
+</table>
+<h3 id="81-authority-model">8.1 Authority model</h3>
+<p>Five distinct controls govern who can do what through the
+component. They have distinct owners, distinct levers, and compose
+without overlap.</p>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Owner</th>
+<th>Lever</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>What an API user may do at V.ap</td>
+<td>Vertama (V.ap)</td>
+<td>Per-API-user RBAC; evolves V.ap-side</td>
+</tr>
+<tr>
+<td>Which endpoints this workstation may reach</td>
+<td>Hospital admin</td>
+<td><code>[allowlist] paths = [...]</code> in component config</td>
+</tr>
+<tr>
+<td>Whether a caller is allowed to reach the component</td>
+<td>Hospital admin</td>
+<td><code>[access] secret</code> + URL parameter <code>_s</code></td>
+</tr>
+<tr>
+<td>Network reachability of the component</td>
+<td>Workstation OS / hospital network</td>
+<td>Bind address; access secret required when non-loopback</td>
+</tr>
+<tr>
+<td>Per-call human-user identification</td>
+<td>Vertama (V.ap)</td>
+<td>Forward-compatible via data parameters (see §8.3)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>V.ap-side authorisation is the primary control.</strong> The configured
+API user has a defined scope at V.ap; what that scope permits is
+governed by V.ap-side per-API-user RBAC and evolves independently
+of this component. The component is not the gatekeeper for which
+V.ap actions can be performed — V.ap is.</p>
+<p><strong>The allowlist is local defense-in-depth.</strong> Hospital admins can
+narrow the set of upstream paths this workstation's installation
+may reach, regardless of what the configured API user's V.ap-side
+scope permits. With the allowlist set, paths outside the list are
+rejected by the component before any upstream call. With the
+allowlist unset, all paths the API user's V.ap scope permits remain
+reachable.</p>
+<p><strong>The access secret is the trust boundary for non-loopback
+deployments.</strong> A loopback-bound deployment relies on the
+workstation operating system as the trust boundary — only local
+processes can reach the listener. An intranet-bound deployment
+serves multiple workstations and therefore needs an additional
+guard: the configured access secret, supplied on every request as
+the <code>_s</code> URL parameter. Without a matching secret, the component
+returns 403 before any upstream call. The component refuses to
+start in non-loopback configuration without a configured secret.</p>
+<h3 id="82-wire-level-guarantees">8.2 Wire-level guarantees</h3>
+<ul>
+<li><strong>Inbound scope:</strong> the listener binds only to the address
+  configured. The component never accepts connections beyond what
+  the bind address itself permits.</li>
+<li><strong>Outbound scope:</strong> HTTPS to the configured V.ap base URL only.
+  Other destinations are not reachable from component logic.</li>
+<li><strong>Credentials:</strong> stored at rest in the config file with
+  restricted file permissions; sent only to the configured V.ap
+  base URL over TLS; never logged.</li>
+<li><strong>Logging:</strong> every request emits a JSON-lines audit entry with
+  timestamp, target endpoint path, parameter count, V.ap status
+  code, and outcome. <strong>Parameter values and parameter keys are
+  never logged</strong>, regardless of log level — only the count. The
+  configured access secret is never logged either.</li>
+<li><strong>TLS:</strong> verification against the system trust store is mandatory
+  by default. Certificate pinning is not in this iteration;
+  reconsidered if a partner deployment requires it.</li>
+<li><strong>Workstation trust boundary (loopback deployment).</strong> GET URLs
+  from the KIS to the component still contain patient data in the
+  URL. They travel only over loopback. The trust boundary is the
+  workstation OS — the same boundary the KIS itself operates
+  within. The data-protection improvement is over the
+  <em>internet-facing</em> leakage paths (V.ap server logs, intermediate
+  proxy logs, <code>Referer</code>) — not over local-OS observation.</li>
+<li><strong>Hospital-network trust boundary (intranet deployment).</strong> GET
+  URLs traverse the intranet between caller and component. The
+  trust boundary is the hospital network plus the access secret;
+  the secret travels in the URL alongside the patient data and is
+  therefore exposed to whatever observes intranet traffic. As with
+  loopback, the data-protection improvement is over internet-facing
+  paths, not over intranet observation.</li>
+</ul>
+<h3 id="83-future-direction-per-call-human-identity">8.3 Future direction: per-call human identity</h3>
+<p>The component, by design, does not authenticate the human user
+behind a request. The configured API user is the only identity it
+presents to V.ap. Where per-human accountability is required (real
+domain side effects beyond memento prefill), this is a V.ap-side
+concern, addressed by V.ap-side mechanisms.</p>
+<p>The component is forward-compatible with such an evolution: any
+data parameter the component receives is relayed verbatim to V.ap
+as part of the JSON body, so a future V.ap-side per-user
+verification flow (for example, a <code>caller_user_id</code> field that V.ap
+gates with a 2FA challenge) can be added without changes to the
+component. This is recorded so future work does not re-litigate the
+design coupling.</p>
+<p>The companion direction-of-thought lives in the V.connect 2FA
+notes (<a href="../2fa/findings.md"><code>../2fa/findings.md</code></a>).</p>
+<h2 id="9-scope-and-roadmap">9. Scope and roadmap</h2>
+<p>Items deliberately not in the current scope, captured here so the
+scoping is visible rather than implicit:</p>
+<ul>
+<li>Array-typed parameters in the POST body. No currently shipping
+  V.ap module needs them; revisit when one does.</li>
+<li>Signed URL templates (V.ap-issued signature the component
+  verifies, so a tampered template is rejected at the component).</li>
+<li>OS credential-store integration (Windows DPAPI / Linux
+  secret-tool).</li>
+<li>Multi-customer or multi-tenant operation on one component
+  instance.</li>
+<li>Localised error pages on component-side error responses.</li>
+<li><strong>Per-call human-user authentication.</strong> Forward-compat property
+  recorded in §8.3; future consumers (e.g. V.connect 2FA) work
+  this out V.ap-side and rely on the component's verbatim relay
+  of data parameters. Not a component workstream.</li>
+<li>Remote-from-Vertama support / monitoring channel. Off the table
+  while we have no standing network reach into hospital intranets;
+  revisits iff a future tunnel (V.c VPN work) provides one and the
+  operator opts in.</li>
+<li>Multiple admin access codes with capability tags. Single access
+  code today; the <code>access_code_hash</code> field name (not <code>password_hash</code>)
+  reserves room for <code>[[admin.codes]]</code> later without a schema break.</li>
+<li>Metrics export (Prometheus / OpenTelemetry). Audit-log entries
+  cover the per-request observability we need today.</li>
+<li>Log viewer / download from the admin UI. Audit log is a file on
+  disk; operator handles shipping externally when needed.</li>
+<li>TLS on the admin listener. Only relevant if the loopback-only
+  rule ever lifts; while admin is loopback-only, plaintext is fine.</li>
+<li>Auto-update. Install/update remains the operator's responsibility;
+  installer signing comes with Authenticode in V2.</li>
+<li>Audit-log retention / rotation policy. The file grows unbounded
+  today; operator handles archival externally. Decide on rotation
+  size / age / total-cap before first production deployment if the
+  footprint becomes an issue.</li>
+</ul>
+<hr/>
+<p><strong>Companion documents.</strong> The customer-facing companion is the
+<a href="../overview/">Overview</a>. Integrators generating URL templates read the
+<a href="../url-builder/">V.ap Fremdaufruf URL-Builder</a>. The full operations
+manual ships with the binary as the <strong>Betriebshandbuch</strong> and is
+reachable from the component's admin dashboard once installed.</p>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Zurück zum Seitenanfang
+</button>
+</main>
+<footer class="md-footer">
+<nav aria-label="Fußzeile" class="md-footer__inner md-grid">
+<a aria-label="Zurück: Overview" class="md-footer__link md-footer__link--prev" href="../overview/">
+<div class="md-footer__button md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</div>
+<div class="md-footer__title">
+<span class="md-footer__direction">
+                Zurück
+              </span>
+<div class="md-ellipsis">
+                Overview
+              </div>
+</div>
+</a>
+<a aria-label="Weiter: URL-Builder" class="md-footer__link md-footer__link--next" href="../url-builder/">
+<div class="md-footer__title">
+<span class="md-footer__direction">
+                Weiter
+              </span>
+<div class="md-ellipsis">
+                URL-Builder
+              </div>
+</div>
+<div class="md-footer__button md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+</div>
+</a>
+</nav>
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+<div class="md-social">
+<a class="md-social__link" href="https://github.com/vertama-gmbh" rel="noopener" target="_blank" title="github.com">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</a>
+<a class="md-social__link" href="https://www.linkedin.com/company/vertama" rel="noopener" target="_blank" title="www.linkedin.com">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"></path></svg>
+</a>
+<a class="md-social__link" href="https://www.instagram.com/vertama.gmbh/" rel="noopener" target="_blank" title="www.instagram.com">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M224.3 141a115 115 0 1 0-.6 230 115 115 0 1 0 .6-230m-.6 40.4a74.6 74.6 0 1 1 .6 149.2 74.6 74.6 0 1 1-.6-149.2m93.4-45.1a26.8 26.8 0 1 1 53.6 0 26.8 26.8 0 1 1-53.6 0m129.7 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8M399 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.top", "navigation.tracking", "toc.follow", "content.action.edit", "content.code.copy", "search.highlight", "header.autohide", "navigation.footer"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "In Zwischenablage kopiert", "clipboard.copy": "In Zwischenablage kopieren", "search.result.more.one": "1 weiteres Suchergebnis auf dieser Seite", "search.result.more.other": "# weitere Suchergebnisse auf dieser Seite", "search.result.none": "Keine Suchergebnisse", "search.result.one": "1 Suchergebnis", "search.result.other": "# Suchergebnisse", "search.result.placeholder": "Suchbegriff eingeben", "search.result.term.missing": "Es fehlt", "select.version": "Version ausw\u00e4hlen"}, "version": null}</script>
+<script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+<script src="../../../../js/external-links.js"></script>
+<script type="module">import mermaid from "https://unpkg.com/mermaid@11.4.0/dist/mermaid.esm.min.mjs";
+mermaid.initialize({});</script></body>
+</html>
