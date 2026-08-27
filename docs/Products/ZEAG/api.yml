@@ -1,0 +1,713 @@
+openapi: 3.0.3
+info:
+    title: ZEAG API
+    version: "0.1.0"
+    description: API for ZEAG - xPersonenstand integration (portal2StA.Geburt.081021)
+servers:
+    -   url: /api/zeag/v1
+        description: ZEAG API Version 1
+
+paths:
+    /memento:
+        post:
+            summary: Create encrypted memento string from ZEAG report data
+            description: |-
+                Accepts ZEAG report data as JSON and returns an encrypted memento string.
+                The memento can be used to pre-fill HTML forms via URL parameter.
+
+                Use Case:
+                External systems (e.g., KIS, hospital systems) submit form data → receive encrypted string →
+                construct URL with memento parameter → user opens pre-filled form.
+
+                This endpoint validates the submitted data against the ZeagMementoRequest schema
+                before encryption. The memento string is URL-safe and tamper-proof.
+
+                Note: This endpoint does NOT submit the report. It only creates a pre-fill token
+                for the interactive HTML form.
+            tags:
+                - ZEAG
+            security:
+                -   basicAuth: [ ]
+            operationId: createMemento
+            requestBody:
+                required: true
+                description: ZEAG report data to encrypt into memento string
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ZeagMementoRequest'
+            responses:
+                '200':
+                    description: Memento successfully created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/MementoResponse'
+                            example:
+                                memento: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                                magicLink: "/mtl/eyJ...token.../zeag/Geburtsbescheinigung?m=eyJ...memento..."
+                '400':
+                    description: |-
+                        Bad Request — request validation failed (RFC 9457 problem details,
+                        type https://docs.vertama.com/problems/validation-error, one entry
+                        per violated constraint with a JSON Pointer to the offending field).
+                    content:
+                        application/problem+json:
+                            schema:
+                                $ref: '../web/api.yml#/components/schemas/ValidationProblem'
+                            example:
+                                type: "https://docs.vertama.com/problems/validation-error"
+                                title: "Request validation failed"
+                                status: 400
+                                detail: "1 violation"
+                                instance: "/api/zeag/v1/memento"
+                                errors:
+                                    - detail: "must not be null"
+                                      pointer: "#/id"
+                '401':
+                    description: |-
+                        Unauthorized - invalid or missing authentication.
+                        Returns 401 status with WWW-Authenticate header.
+                        Response body is empty.
+
+    /reports:
+        get:
+            summary: List pending report IDs for the authenticated API user
+            description: |-
+                Returns the list of report IDs that have been submitted by the authenticated
+                API user but not yet retrieved (unpolled). These are reports waiting for
+                the caller to fetch the full result.
+
+                Use GET /reports/{id} to retrieve the full result for each ID.
+
+                The list contains only unpolled report IDs — once a report has been
+                retrieved without ?peek=true it will no longer appear here.
+            tags:
+                - ZEAG
+            security:
+                -   basicAuth: [ ]
+            operationId: listPendingReports
+            responses:
+                '200':
+                    description: List of pending report IDs (may be empty)
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: string
+                            example:
+                                - "ZEAG-2024-00123"
+                                - "ZEAG-2024-00124"
+                '401':
+                    description: |-
+                        Unauthorized - invalid or missing authentication.
+                        Returns 401 status with WWW-Authenticate header.
+                        Response body is empty.
+
+    /reports/{id}:
+        get:
+            summary: Retrieve the status of a previously submitted ZEAG report
+            description: |-
+                Returns the current status of a ZEAG birth registration report identified by its id.
+
+                ZEAG reports have asynchronous delivery via xPersonenstand/XTA2 transport.
+                The status reflects the transport state:
+                - PENDING: Report was sent but transport acknowledgement has not yet been received.
+                - SUCCESS: Report was successfully delivered.
+                  receiptPdf contains the signed confirmation PDF (base64).
+                - FAILURE: Transport failed.
+
+                By default this is a destructive read for SUCCESS/FAILURE reports: once retrieved,
+                the report is marked as polled and will no longer appear. Use ?peek=true for
+                a non-destructive read. PENDING reports are never marked as polled.
+            tags:
+                - ZEAG
+            security:
+                -   basicAuth: [ ]
+            operationId: getReport
+            parameters:
+                -   name: id
+                    in: path
+                    required: true
+                    description: The report ID from the original ZEAG report submission
+                    schema:
+                        type: string
+                    example: "ZEAG-2024-00123"
+                -   name: peek
+                    in: query
+                    required: false
+                    description: |-
+                        If true, retrieve the result without marking it as polled.
+                        The report remains available for future retrieval.
+                        Default: false (destructive read).
+                    schema:
+                        type: boolean
+                        default: false
+            responses:
+                '200':
+                    description: Report status found
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ReportResult'
+                            example:
+                                id: "ZEAG-2024-00123"
+                                status: "SUCCESS"
+                                module: "ZEAG"
+                                submittedAt: "2024-12-08T14:32:00Z"
+                                portal: "GOVCONNECT"
+                                receiptPdf: "JVBERi0xLjQK..."
+                                failureReason: null
+                '401':
+                    description: |-
+                        Unauthorized - invalid or missing authentication.
+                        Returns 401 status with WWW-Authenticate header.
+                        Response body is empty.
+                '404':
+                    description: |-
+                        Report not found (RFC 9457 problem details, type
+                        https://docs.vertama.com/Products/ZEAG/problems/report-not-found).
+                        Covers: not yet submitted by the user, unknown id, id belonging to
+                        a different API user, or not a ZEAG report.
+                    content:
+                        application/problem+json:
+                            schema:
+                                $ref: '../web/api.yml#/components/schemas/ProblemDetail'
+                            example:
+                                type: "https://docs.vertama.com/Products/ZEAG/problems/report-not-found"
+                                title: "Not Found"
+                                status: 404
+                                detail: "No ZEAG report 'ZEAG-2024-00123' for this user — not yet submitted, unknown id, or not a ZEAG report"
+                                instance: "/api/zeag/v1/reports/ZEAG-2024-00123"
+                '410':
+                    description: |-
+                        Gone (RFC 9457 problem details) — two distinct types:
+                        https://docs.vertama.com/Products/ZEAG/problems/report-already-retrieved
+                        (previously retrieved without ?peek=true; not delivered again) and
+                        https://docs.vertama.com/Products/ZEAG/problems/report-expired
+                        (payload removed by the retention cleanup).
+                    content:
+                        application/problem+json:
+                            schema:
+                                $ref: '../web/api.yml#/components/schemas/ProblemDetail'
+                            example:
+                                type: "https://docs.vertama.com/Products/ZEAG/problems/report-already-retrieved"
+                                title: "Gone"
+                                status: 410
+                                detail: "Report 'ZEAG-2024-00123' was already retrieved; use ?peek=true to read without consuming"
+                                instance: "/api/zeag/v1/reports/ZEAG-2024-00123"
+
+components:
+    schemas:
+
+        # =========================================================================
+        # API-RESPONSE SCHEMAS
+        # =========================================================================
+
+        MementoResponse:
+            type: object
+            required:
+                - memento
+            properties:
+                memento:
+                    type: string
+                    description: |-
+                        Encrypted, URL-safe memento string containing the form data.
+                        Use as query parameter to pre-fill forms: ?m=<string>
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                magicLink:
+                    type: string
+                    nullable: true
+                    description: |-
+                        Ready-to-use Magic Token Link URL (relative path).
+                        Combines authentication and form pre-fill in a single click.
+                        Prepend your host to make it absolute: https://host + magicLink
+                    example: "/mtl/eyJ...token.../zeag?m=eyJ...memento..."
+
+        ReportResult:
+            type: object
+            required:
+                - id
+                - status
+                - module
+                - submittedAt
+            description: |-
+                Result of a ZEAG report submission.
+                - SUCCESS: Report was successfully delivered to the Standesamt.
+                - FAILURE: Transport failed.
+                - PENDING: Report was sent but delivery has not been confirmed yet.
+            properties:
+                id:
+                    type: string
+                    example: "ZEAG-2024-00123"
+                status:
+                    type: string
+                    enum: [ SUCCESS, FAILURE, PENDING ]
+                    example: "SUCCESS"
+                module:
+                    type: string
+                    example: "ZEAG"
+                submittedAt:
+                    type: string
+                    format: date-time
+                    example: "2024-12-08T14:32:00Z"
+                portal:
+                    type: string
+                    nullable: true
+                    description: The portal used for delivery (e.g. GOVCONNECT, AKDB)
+                    example: "GOVCONNECT"
+                receiptPdf:
+                    type: string
+                    nullable: true
+                    description: Base64-encoded PDF receipt. Available only for successful reports.
+                failureReason:
+                    type: string
+                    nullable: true
+                    description: Reason for failure, null on success or pending
+
+        # =========================================================================
+        # HAUPT-REQUEST-SCHEMA
+        # portal2StA.Geburt.081021 – Zusätzliche Datenlieferung der Eltern
+        # Rechtsgrundlage: § 18 (1) i.V.m. § 20 i.V.m. § 19 PStG
+        # =========================================================================
+
+        ZeagMementoRequest:
+            type: object
+            description: |-
+                ZEAG Geburtsmeldung – Zusätzliche Elternangaben zur Geburt (portal2StA.Geburt.081021).
+                Für die Memento-Erstellung ist nur id Pflicht. Alle anderen Felder sind optional.
+            required:
+                - id
+            properties:
+                # --- ZEAG-internes Pflichtfeld ---
+                id:
+                    type: string
+                    description: Eindeutige ID dieses Reports. Pflichtfeld zur Nachverfolgung im Workflow.
+                    example: "ZEAG-2024-00123"
+
+                # --- Felder gemäß PDF-Reihenfolge (portal2StA.Geburt.081021) ---
+                anschriftAutor:
+                    $ref: '#/components/schemas/PostalischeInlandsanschrift'
+                ansprechpartner:
+                    type: string
+                    nullable: true
+                    description: Ansprechpartner (datatypeC). 0..1
+                vorgangsidentifikation:
+                    type: object
+                    nullable: true
+                    description: Vorgangsidentifikation des Ereignisses (Identifikation.Ereignis). 0..1
+                    properties:
+                        ereignis:
+                            type: object
+                            properties:
+                                zeitpunkt:
+                                    type: string
+                                    format: date-time
+                                    description: Zeitpunkt des Ereignisses (xs:dateTime). 1
+                                    example: "2024-12-25T14:30:00Z"
+                                zeichen:
+                                    type: string
+                                    description: Identifikationszeichen (Identifikation.Ereignis.Zeichen). 1
+                geburtsangaben:
+                    $ref: '#/components/schemas/Geburtsangaben'
+                kind:
+                    $ref: '#/components/schemas/Kind'
+                mutter:
+                    $ref: '#/components/schemas/Mutter'
+                elternteil2:
+                    $ref: '#/components/schemas/Elternteil2'
+                elternVerheiratet:
+                    type: boolean
+                    nullable: true
+                    enum: [ true ]
+                    description: Eltern verheiratet. Nur "true" zulässig. Fehlendes Feld = nicht verheiratet. 0..1
+                ehe:
+                    $ref: '#/components/schemas/EheAngaben'
+                vorangegangenesKind:
+                    type: object
+                    nullable: true
+                    description: Vorangegangenes Kind beider Elternteile (gemeinsame Sorge). 0..1
+                    properties:
+                        namen:
+                            $ref: '#/components/schemas/PersonName'
+                        geburt:
+                            $ref: '#/components/schemas/AngabenEreignis'
+                kontaktdaten:
+                    type: array
+                    nullable: true
+                    description: Kontaktdaten der Eltern. 1..n
+                    items:
+                        $ref: '#/components/schemas/Kontakt'
+                urkundenbestellung:
+                    $ref: '#/components/schemas/Urkundenanforderung'
+                auftragsnummer:
+                    type: string
+                    description: Dieses Element enthält eine menschenlesbare Auftragsnummer zur Zuordnung des Elterngeldantrags der Eltern zur Mitteilung an die Elterngeldstelle. Die Auftragsnummer wird durch das Eingabeverfahren erzeugt und übermittelt.
+                zuordnungGeburtsanzeige:
+                    type: string
+                    nullable: true
+                    description: |-
+                        ID zur Zuordnung dieser Datenlieferung (081021) zur Anzeige der Einrichtung (081020).
+                        Muss in 081020 identisch übermittelt werden. 0..1
+                zustimmungElterngeldstelle:
+                    type: boolean
+                    nullable: true
+                    enum: [ true ]
+                    description: Zustimmung zur Datenübermittlung an Elterngeldstelle. Nur "true" zulässig. 0..1
+                zustaendigeElterngeldstelle:
+                    $ref: '#/components/schemas/Behoerde'
+
+        # =========================================================================
+        # GEBURTS-SCHEMAS
+        # =========================================================================
+
+        Geburtsangaben:
+            type: object
+            nullable: true
+            description: Angaben zur Geburt – Ort, Tag und Uhrzeit
+            properties:
+                ort:
+                    $ref: '#/components/schemas/Ereignisort'
+                tag:
+                    type: string
+                    format: date
+                    nullable: true
+                    example: "2024-12-25"
+                uhrzeit:
+                    type: string
+                    nullable: true
+                    description: Uhrzeit der Geburt. Muster [0-2][0-9AB]:[0-5][0-9]
+                    pattern: '^[0-2][0-9AB]:[0-5][0-9]$'
+                    example: "14:30"
+
+        Kind:
+            type: object
+            nullable: true
+            description: Angaben zum Neugeborenen
+            properties:
+                geschlecht:
+                    type: string
+                    nullable: true
+                    enum: [ MAENNLICH, WEIBLICH, UNBESTIMMT ]
+                    example: "WEIBLICH"
+                name:
+                    $ref: '#/components/schemas/PersonNameVeraenderung'
+
+        # =========================================================================
+        # ELTERN-SCHEMAS
+        # =========================================================================
+
+        Mutter:
+            type: object
+            nullable: true
+            description: Angaben zur Mutter – Standard oder vertraulich
+            properties:
+                namen:
+                    $ref: '#/components/schemas/PersonName'
+                geburt:
+                    $ref: '#/components/schemas/AngabenEreignis'
+                geschlecht:
+                    type: string
+                    nullable: true
+                    enum: [ MAENNLICH, WEIBLICH, UNBESTIMMT ]
+                    example: "WEIBLICH"
+                staatsangehoerigkeit:
+                    $ref: '#/components/schemas/Staatsangehoerigkeit'
+                weitereStaatsangehoerigkeit:
+                    $ref: '#/components/schemas/Staatsangehoerigkeit'
+                anschrift:
+                    $ref: '#/components/schemas/AnschriftInland'
+                anzahlTotgeburten:
+                    type: integer
+                    minimum: 0
+                    nullable: true
+                geburtsdatumVorherigesKind:
+                    type: string
+                    format: date
+                    nullable: true
+                anzahlKinder:
+                    type: integer
+                    minimum: 1
+                    nullable: true
+
+        Elternteil2:
+            type: object
+            nullable: true
+            description: Angaben zum zweiten Elternteil
+            properties:
+                namen:
+                    $ref: '#/components/schemas/PersonName'
+                geburt:
+                    $ref: '#/components/schemas/AngabenEreignis'
+                geschlecht:
+                    type: string
+                    nullable: true
+                    enum: [ MAENNLICH, WEIBLICH, UNBESTIMMT ]
+                    example: "WEIBLICH"
+                staatsangehoerigkeit:
+                    $ref: '#/components/schemas/Staatsangehoerigkeit'
+                weitereStaatsangehoerigkeit:
+                    $ref: '#/components/schemas/Staatsangehoerigkeit'
+                anschrift:
+                    $ref: '#/components/schemas/AnschriftInland'
+        EheAngaben:
+            type: object
+            nullable: true
+            description: Angaben zur Ehe – nur wenn elternVerheiratet=true
+            properties:
+                ereignis:
+                    $ref: '#/components/schemas/AngabenEreignis'
+                kinderDerEhe:
+                    type: integer
+                    minimum: 1
+                    nullable: true
+                    description: Als wievieltes Kind der Ehe. Totgeburten mitzählen. 0..1
+                totgeburtenDerEhe:
+                    type: integer
+                    minimum: 0
+                    nullable: true
+                    description: Anzahl Totgeburten in dieser Ehe inkl. jetzt totgeborenes. 0..1
+
+        AngabenEreignis:
+            type: object
+            nullable: true
+            description: Geburts- bzw. Ereignisangaben eines Elternteils (Ort + Tag)
+            properties:
+                ort:
+                    $ref: '#/components/schemas/Ereignisort'
+                tag:
+                    type: string
+                    format: date
+                    nullable: true
+                    example: "2024-12-25"
+
+        Behoerde:
+            type: object
+            nullable: true
+            description: Behördenangabe (z.B. zuständige Elterngeldstelle)
+            properties:
+                name:
+                    type: string
+                    nullable: true
+                anschrift:
+                    $ref: '#/components/schemas/AnschriftInland'
+
+        Staatsangehoerigkeit:
+            type: object
+            nullable: true
+            description: |-
+                Staatsangehörigkeit als Choice: entweder Code aus der Codeliste
+                ODER Freitext, falls der Staat nicht gelistet ist.
+            properties:
+                code:
+                    type: string
+                    nullable: true
+                    description: Code aus der Staatsangehörigkeits-Codeliste (z.B. "MA")
+                nichtGelisteterWert:
+                    type: string
+                    nullable: true
+                    description: Freitext, falls der Staat nicht in der Codeliste vorhanden ist
+
+        # =========================================================================
+        # ADRESSEN
+        # =========================================================================
+
+        PostalischeInlandsanschrift:
+            type: object
+            description: |-
+                Postalische Inlandsanschrift — entweder Gebäudeanschrift ODER Postfachanschrift.
+                Genau eine der beiden Varianten muss befüllt sein.
+            properties:
+                gebaeude:
+                    $ref: '#/components/schemas/GebaeudeAnschrift'
+                postfach:
+                    $ref: '#/components/schemas/PostfachAnschrift'
+
+        GebaeudeAnschrift:
+            type: object
+            nullable: true
+            description: Gebäudeanschrift (PostalischeInlandsanschrift.Gebaeudeanschrift)
+            properties:
+                postleitzahl:
+                    type: string
+                    nullable: true
+                strasse:
+                    type: string
+                    nullable: true
+                hausnummer:
+                    type: string
+                    nullable: true
+                wohnort:
+                    type: string
+                    nullable: true
+                wohnortFruehererGemeindename:
+                    type: string
+                    nullable: true
+                zusatzangaben:
+                    type: string
+                    nullable: true
+
+        PostfachAnschrift:
+            type: object
+            nullable: true
+            description: Postfachanschrift (PostalischeInlandsanschrift.Postfachanschrift)
+            properties:
+                postfach:
+                    type: string
+                    nullable: true
+                wohnort:
+                    type: string
+                    nullable: true
+                    description: Pflichtfeld laut Spec (Anz. 1)
+                postleitzahl:
+                    type: string
+                    nullable: true
+                    description: Pflichtfeld laut Spec (Anz. 1), max. 5 Zeichen, nur Ziffern
+
+        AnschriftInland:
+            type: object
+            nullable: true
+            description: Inlandsanschrift (Anschrift.Inland / XInneres)
+            properties:
+                strasse:
+                    type: string
+                    nullable: true
+                hausnummer:
+                    type: string
+                    nullable: true
+                postleitzahl:
+                    type: string
+                    nullable: true
+                wohnort:
+                    type: string
+                    nullable: true
+
+        Ereignisort:
+            type: object
+            nullable: true
+            description: Ort eines Ereignisses (Geburt, Eheschließung etc.)
+            properties:
+                strasse:
+                    type: string
+                    nullable: true
+                hausnummer:
+                    type: string
+                    nullable: true
+                ort:
+                    type: string
+                    nullable: true
+                ortsteil:
+                    type: string
+                    nullable: true
+                kreisbezeichnung:
+                    type: string
+                    nullable: true
+
+        # =========================================================================
+        # PERSONEN-NAMEN
+        # =========================================================================
+
+        PersonName:
+            type: object
+            nullable: true
+            description: Personenname (PersonName / XInneres)
+            properties:
+                vornamen:
+                    type: string
+                    nullable: true
+                familienname:
+                    type: string
+                    nullable: true
+                geburtsname:
+                    type: string
+                    nullable: true
+                    description: Geburtsname (Mädchenname)
+
+        PersonNameVeraenderung:
+            type: object
+            nullable: true
+            description: |-
+                Personenname bei Namensveränderung / Neugeborene (PersonNameVeraenderung).
+                Vorname → "vornamen", Geburtsname des Kindes → "familienname".
+                Das Feld "geburtsname" darf NICHT befüllt werden.
+            properties:
+                familienname:
+                    $ref: '#/components/schemas/AllgemeinerNamePersonenstandswesen'
+                geburtsname:
+                    $ref: '#/components/schemas/AllgemeinerNamePersonenstandswesen'
+                vornamen:
+                    $ref: '#/components/schemas/AllgemeinerNamePersonenstandswesen'
+
+        AllgemeinerNamePersonenstandswesen:
+            type: object
+            nullable: true
+            description: |-
+                Allgemeiner Name in XPersonenstand (Erweiterung von AllgemeinerName aus XInneres).
+                Choice: entweder "name" (Zeichenkette) ODER "nichtVorhanden" (true).
+                Optional: "namensart" für ausländische Namensformen.
+            properties:
+                name:
+                    type: string
+                    nullable: true
+                    description: "[C1/2] Der eigentliche Name als Zeichenkette (datatypeC). 1"
+                nichtVorhanden:
+                    type: boolean
+                    nullable: true
+                    enum: [ true ]
+                    description: "[C2/2] Name nicht vorhanden (z.B. ausländischer Name). Nur true zulässig."
+                namensart:
+                    type: string
+                    nullable: true
+                    description: Namensart nach ausländischem Recht (Code.Namensart). 0..1
+
+        # =========================================================================
+        # KONTAKT
+        # =========================================================================
+
+        Kontakt:
+            type: object
+            nullable: true
+            description: Kontaktdaten (XÖV KommunikationType)
+            properties:
+                kanal:
+                    type: string
+                    nullable: true
+                    description: Code aus Codeliste erreichbarkeit (z.B. E-Mail, Telefon)
+                kennung:
+                    type: string
+                    nullable: true
+                    description: Die eigentliche Kontaktangabe (z.B. max@beispiel.de oder 089 12345678)
+                zusatz:
+                    type: string
+                    nullable: true
+                    description: Optionale Zusatzbemerkung
+
+        Urkundenanforderung:
+            type: object
+            properties:
+                anzahlStandardformat:
+                    type: integer
+                    minimum: 0
+                    nullable: true
+                    description: Hier wird die Anzahl der Urkunden im Standardformat übermittelt.
+                anzahlStammbuchformat:
+                    type: integer
+                    minimum: 0
+                    nullable: true
+                    description: Hier wird die Anzahl der Urkunden im Stammbuchformat übermittelt.
+                anzahlCIEC16:
+                    type: integer
+                    minimum: 0
+                    nullable: true
+                    description: Hier wird die Anzahl des mehrsprachigen Auszugs aus dem Register (internationale Urkunde) nach dem CIEC Abkommen 16 übermittelt.
+                anzahlCIEC34:
+                    type: integer
+                    minimum: 0
+                    nullable: true
+                    description: Hier wird die Anzahl des mehrsprachigen Auszugs aus dem Register (internationale Urkunde) nach dem CIEC Abkommen 34 übermittelt.
+
+    securitySchemes:
+        basicAuth:
+            type: http
+            scheme: basic
