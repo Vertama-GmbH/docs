@@ -14,9 +14,9 @@ Um eine verschlüsselte Kommunikation zu garantieren, nutzen wir aktuelle SSL/TL
 
 **Downloads der aktuellen Zertifikate:**
 
- - [elim.vertamob.de.ca-bundle](endpoints-and-infrastructure/certs/2026/elim.vertamob.de.ca-bundle)
- - [elim.vertamob.de.crt](endpoints-and-infrastructure/certs/2026/elim.vertamob.de.crt)
- - [elim.vertamob.de.p7b](endpoints-and-infrastructure/certs/2026/elim.vertamob.de.p7b)
+ - [elim.vertamob.de-2026.ca-bundle](endpoints-and-infrastructure/certs/2026/elim.vertamob.de-2026.ca-bundle)
+ - [elim.vertamob.de-2026.crt](endpoints-and-infrastructure/certs/2026/elim.vertamob.de-2026.crt)
+ - [elim.vertamob.de-2026.p7b](endpoints-and-infrastructure/certs/2026/elim.vertamob.de-2026.p7b)
 
 ### 🌐 IP-Adressen
 

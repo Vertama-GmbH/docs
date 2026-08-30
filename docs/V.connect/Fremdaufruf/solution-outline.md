@@ -386,7 +386,8 @@ A single configuration file at a platform-conventional location:
 
 Sketch — the minimum required fields. The full schema (including the
 optional `[allowlist]` and `[access]` sections that govern §8's
-controls) lives in [`specification.md`](specification.md) §8:
+controls) lives in the wire specification §8 — `fremdaufruf/specification.md`
+in the component's implementation repository, not published here:
 
 ```toml
 vap_base_url = "https://vap.example.com"
@@ -523,8 +524,9 @@ gates with a 2FA challenge) can be added without changes to the
 component. This is recorded so future work does not re-litigate the
 design coupling.
 
-The companion direction-of-thought lives in the V.connect 2FA
-notes ([`../2fa/findings.md`](../2fa/findings.md)).
+The companion direction-of-thought lives in the V.connect 2FA notes
+(`2fa/findings.md` in the component's implementation repository, not
+published here).
 
 ## 9. Scope and roadmap
 
