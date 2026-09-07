@@ -1,0 +1,104 @@
+openapi: 3.0.3
+info:
+  title: Vertama REST common — shared error schemas (RFC 9457)
+  version: "0.1.0-draft"
+  description: |
+    Shared OpenAPI schemas for the REST error contract — RFC 9457 Problem
+    Details (application/problem+json), adopted per ADR-010.
+
+    Placement: lives in de/vertama/web because the web layer owns and emits
+    this contract for every REST module (ExceptionAdvice.Rest); it is an HTTP
+    concern, not a product concern.
+
+    Module specs (elim, belim, digg, digt, divi, duba, elimplus, zeag)
+    reference these schemas via external $ref. NO code is generated from this
+    spec: module generation runs use schemaMappings to route references to
+    existing classes and suppress local emission —
+
+      ProblemDetail      -> org.springframework.http.ProblemDetail
+      ValidationProblem  -> de.vertama.web.ValidationProblem  (hand-written subclass)
+      FieldViolation     -> de.vertama.web.FieldViolation     (hand-written)
+
+    A conformance test keeps the classes and these schemas from drifting,
+    since no generator enforces the match.
+
+    Problem `type` URIs are namespaced https://docs.vertama.com/problems/<slug>;
+    each URI resolves to the published reference page for that error type.
+    The docs site is the normative type registry.
+
+    DRAFT — not yet referenced by any module spec. Wiring follows once
+    ADR-010 is accepted.
+
+paths: {}   # Schema-only spec — no operations.
+
+components:
+  schemas:
+
+    ProblemDetail:
+      type: object
+      description: |-
+        RFC 9457 Problem Details object (application/problem+json). Base shape
+        for every REST error response. `title`/`detail` are English-only
+        integrator-facing diagnostics — display text for end users is derived
+        from `type` by the consuming system.
+      required:
+        - type
+        - title
+        - status
+      properties:
+        type:
+          type: string
+          format: uri
+          description: |-
+            URI identifying the problem type — the stable, machine-readable
+            error code. Resolves to the published reference page for this
+            error type.
+          example: "https://docs.vertama.com/problems/validation-error"
+        title:
+          type: string
+          description: Short, human-readable summary of the problem type (English).
+          example: "Request validation failed"
+        status:
+          type: integer
+          description: HTTP status code, repeated in the body.
+          example: 400
+        detail:
+          type: string
+          description: Human-readable explanation specific to this occurrence (English).
+          example: "1 violation"
+        instance:
+          type: string
+          description: URI reference identifying this specific occurrence (request path).
+          example: "/api/digg/v1/memento"
+
+    ValidationProblem:
+      allOf:
+        - $ref: '#/components/schemas/ProblemDetail'
+        - type: object
+          description: |-
+            Problem Details for request-validation failures
+            (type: …/problems/validation-error) — extends ProblemDetail with
+            the per-field violations, RFC 9457 §3 example style.
+          required:
+            - errors
+          properties:
+            errors:
+              type: array
+              description: One entry per violated constraint.
+              items:
+                $ref: '#/components/schemas/FieldViolation'
+
+    FieldViolation:
+      type: object
+      description: A single violated constraint within the request body.
+      required:
+        - detail
+      properties:
+        detail:
+          type: string
+          description: What is wrong with the field value (English).
+          example: "must not be null"
+        pointer:
+          type: string
+          description: JSON Pointer to the offending member of the request body.
+          example: "#/id"

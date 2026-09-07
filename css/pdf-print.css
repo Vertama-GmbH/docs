@@ -1,0 +1,13 @@
+
+code, pre code {
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace !important;
+}
+
+code, .rst-content tt, .rst-content code {
+  white-space: pre;
+}
+
+code.hljs {            
+    display: block;      
+    white-space: pre-wrap
+}
