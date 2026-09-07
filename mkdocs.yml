@@ -131,6 +131,8 @@ nav:
        #- "Swagger API Viewer": "https://editor.swagger.io/#/?import=https://vertama-gmbh.github.io/docs/Products/ELIMPLUS/api.yml"
        - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=ELIM%2B"
      - ZEAG:
+       - "API Tutorial": "Products/ZEAG/api-tutorial.md"
+       - "api.yml (OpenAPI)": Products/ZEAG/api.yml
        - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=ZEAG"
        - "Problem Types":
          - "report-not-found": "Products/ZEAG/problems/report-not-found.md"

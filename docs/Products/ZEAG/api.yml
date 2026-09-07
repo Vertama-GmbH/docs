@@ -389,8 +389,9 @@ components:
                 geschlecht:
                     type: string
                     nullable: true
-                    enum: [ MAENNLICH, WEIBLICH, UNBESTIMMT ]
-                    example: "WEIBLICH"
+                    enum: [ m, w, x, d ]
+                    description: Code aus XÖV-Codeliste urn:xoev-de:xinneres:codeliste:geschlecht
+                    example: "w"
                 name:
                     $ref: '#/components/schemas/PersonNameVeraenderung'
 
@@ -410,8 +411,9 @@ components:
                 geschlecht:
                     type: string
                     nullable: true
-                    enum: [ MAENNLICH, WEIBLICH, UNBESTIMMT ]
-                    example: "WEIBLICH"
+                    enum: [ m, w, x, d ]
+                    description: Code aus XÖV-Codeliste urn:xoev-de:xinneres:codeliste:geschlecht
+                    example: "w"
                 staatsangehoerigkeit:
                     $ref: '#/components/schemas/Staatsangehoerigkeit'
                 weitereStaatsangehoerigkeit:
@@ -443,8 +445,9 @@ components:
                 geschlecht:
                     type: string
                     nullable: true
-                    enum: [ MAENNLICH, WEIBLICH, UNBESTIMMT ]
-                    example: "WEIBLICH"
+                    enum: [ m, w, x, d ]
+                    description: Code aus XÖV-Codeliste urn:xoev-de:xinneres:codeliste:geschlecht
+                    example: "m"
                 staatsangehoerigkeit:
                     $ref: '#/components/schemas/Staatsangehoerigkeit'
                 weitereStaatsangehoerigkeit:
@@ -487,11 +490,20 @@ components:
             nullable: true
             description: Behördenangabe (z.B. zuständige Elterngeldstelle)
             properties:
+                kennung:
+                    type: string
+                    nullable: true
+                    description: Kennung der Behörde im Verzeichnisdienst DVDV
                 name:
                     type: string
                     nullable: true
+                erreichbarkeit:
+                    type: array
+                    nullable: true
+                    items:
+                        $ref: '#/components/schemas/Kontakt'
                 anschrift:
-                    $ref: '#/components/schemas/AnschriftInland'
+                    $ref: '#/components/schemas/PostalischeInlandsanschrift'
 
         Staatsangehoerigkeit:
             type: object
@@ -630,11 +642,9 @@ components:
             description: |-
                 Personenname bei Namensveränderung / Neugeborene (PersonNameVeraenderung).
                 Vorname → "vornamen", Geburtsname des Kindes → "familienname".
-                Das Feld "geburtsname" darf NICHT befüllt werden.
+                Ein separates Geburtsname-Feld existiert für Neugeborene fachlich nicht.
             properties:
                 familienname:
-                    $ref: '#/components/schemas/AllgemeinerNamePersonenstandswesen'
-                geburtsname:
                     $ref: '#/components/schemas/AllgemeinerNamePersonenstandswesen'
                 vornamen:
                     $ref: '#/components/schemas/AllgemeinerNamePersonenstandswesen'
@@ -656,11 +666,10 @@ components:
                     nullable: true
                     enum: [ true ]
                     description: "[C2/2] Name nicht vorhanden (z.B. ausländischer Name). Nur true zulässig."
-                namensart:
+                namensartCode:
                     type: string
                     nullable: true
-                    description: Namensart nach ausländischem Recht (Code.Namensart). 0..1
-
+                    description: Code aus der Codeliste Namensart, für ausländische Namensformen (Code.Namensart.Code). 0..1
         # =========================================================================
         # KONTAKT
         # =========================================================================

@@ -2,8 +2,8 @@
 
 A practical guide for integration partners using the ZEAG (Zusätzliche Elternangaben zur Geburt) API.
 
-**Version:** 0.1.0
-**Last Updated:** 2026-08-27
+**Version:** 0.1.1
+**Last Updated:** 2026-09-07
 
 !!! info "Pre-production module"
     ZEAG is not yet in production. The API is published here so integration
@@ -144,14 +144,13 @@ Creating a memento does **not** submit anything. It only produces a pre-fill tok
 The `magicLink` field in the API response is a server-issued, time-limited URL that:
 
 - Authenticates the end user automatically (no login page)
-- Redirects to the pre-filled ZEAG form (`/zeag/Geburtsbescheinigung?m={memento}`) on success
+- Redirects to the pre-filled ZEAG form (`/zeag/form?m={memento}`) on success
 - Is a **relative path** — prepend your instance host to make it absolute
 
-```
-magicLink: "/mtl/eyJ...token.../zeag/Geburtsbescheinigung?m=eyJ...memento..."
+magicLink: "/mtl/eyJ...token.../zeag/form?m=eyJ...memento..."
 
-Full URL: https://elim.vertamob.de/mtl/eyJ...token.../zeag/Geburtsbescheinigung?m=eyJ...memento...
-```
+Full URL: https://elim.vertamob.de/mtl/eyJ...token.../zeag/form?m=eyJ...memento...
+
 
 Treat the returned string as **opaque**: hand it out or prepend your host, but do not parse, rewrite, or reassemble it. See [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) for security details and token lifetime.
 
@@ -168,9 +167,11 @@ Several xPersonenstand types are *choices* — populate exactly one branch and l
 
 | Type | Branch A | Branch B |
 |------|----------|----------|
-| `PostalischeInlandsanschrift` (`anschriftAutor`) | `gebaeude` — street address | `postfach` — P.O. box |
+| `PostalischeInlandsanschrift` (`anschriftAutor`, `zustaendigeElterngeldstelle.anschrift`) | `gebaeude` — street address | `postfach` — P.O. box |
 | `Staatsangehoerigkeit` | `code` — code from the nationality code list | `nichtGelisteterWert` — free text for an unlisted state |
 | `AllgemeinerNamePersonenstandswesen` (the child's name parts) | `name` — the name as a string | `nichtVorhanden: true` — no such name exists |
+
+`zustaendigeElterngeldstelle.anschrift` uses the **same** `PostalischeInlandsanschrift` choice type as `anschriftAutor` — not a plain street address object.
 
 ### True-only booleans
 
@@ -192,12 +193,12 @@ The first says the parents are married; the second (field absent) says they are 
 
 - Given names → `vornamen.name`
 - The child's birth name → `familienname.name`
-- `geburtsname` **must not be populated** for the child
+- A separate birth-name field does not exist for a newborn — `PersonNameVeraenderung` has no `geburtsname`
 
 ```json
 {
   "kind": {
-    "geschlecht": "WEIBLICH",
+    "geschlecht": "w",
     "name": {
       "vornamen": { "name": "Emma Sophie" },
       "familienname": { "name": "Mustermann" }
@@ -206,7 +207,7 @@ The first says the parents are married; the second (field absent) says they are 
 }
 ```
 
-`namensart` is available on each part for name forms under foreign law.
+`namensartCode` is available on each name part (a code from the Namensart code list) for name forms under foreign law. There is no free-text fallback for an unlisted Namensart — only codes from the list are accepted.
 
 ---
 
@@ -258,7 +259,7 @@ Only `id` is required; all other fields are optional to allow partial pre-fillin
     }
   },
   "kind": {
-    "geschlecht": "WEIBLICH",
+    "geschlecht": "w",
     "name": {
       "vornamen": { "name": "Emma Sophie" },
       "familienname": { "name": "Mustermann" }
@@ -274,8 +275,8 @@ Only `id` is required; all other fields are optional to allow partial pre-fillin
       "tag": "1994-05-15",
       "ort": { "ort": "Musterstadt" }
     },
-    "geschlecht": "WEIBLICH",
-    "staatsangehoerigkeit": { "code": "DE" },
+    "geschlecht": "w",
+    "staatsangehoerigkeit": { "code": "221" },
     "anschrift": {
       "strasse": "Musterweg",
       "hausnummer": "12",
@@ -294,8 +295,8 @@ Only `id` is required; all other fields are optional to allow partial pre-fillin
       "tag": "1991-11-02",
       "ort": { "ort": "Berlin" }
     },
-    "geschlecht": "MAENNLICH",
-    "staatsangehoerigkeit": { "code": "DE" },
+    "geschlecht": "m",
+    "staatsangehoerigkeit": { "code": "221" },
     "anschrift": {
       "strasse": "Musterweg",
       "hausnummer": "12",
@@ -313,8 +314,8 @@ Only `id` is required; all other fields are optional to allow partial pre-fillin
     "totgeburtenDerEhe": 0
   },
   "kontaktdaten": [
-    { "kanal": "E-Mail", "kennung": "familie.mustermann@example.org" },
-    { "kanal": "Telefon", "kennung": "+49 30 1234567", "zusatz": "tagsüber erreichbar" }
+    { "kanal": "01", "kennung": "familie.mustermann@example.org" },
+    { "kanal": "02", "kennung": "+49 30 1234567", "zusatz": "tagsüber erreichbar" }
   ],
   "urkundenbestellung": {
     "anzahlStandardformat": 2,
@@ -328,10 +329,12 @@ Only `id` is required; all other fields are optional to allow partial pre-fillin
   "zustaendigeElterngeldstelle": {
     "name": "Elterngeldstelle Musterstadt",
     "anschrift": {
-      "strasse": "Rathausplatz",
-      "hausnummer": "3",
-      "postleitzahl": "12345",
-      "wohnort": "Musterstadt"
+      "gebaeude": {
+        "strasse": "Rathausplatz",
+        "hausnummer": "3",
+        "postleitzahl": "12345",
+        "wohnort": "Musterstadt"
+      }
     }
   }
 }
@@ -344,7 +347,7 @@ Returns a JSON object containing the encrypted memento and a ready-to-use magic 
 ```json
 {
   "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..DGG5lQvJC8OpYrCt.Xm8YR...",
-  "magicLink": "/mtl/eyJ...token.../zeag/Geburtsbescheinigung?m=eyJ...memento..."
+  "magicLink": "/mtl/eyJ...token.../zeag/form?m=eyJ...memento..."
 }
 ```
 
@@ -502,9 +505,22 @@ A 404 between memento creation and the parents dispatching the form is the **exp
 
 | Field | Values |
 |-------|--------|
-| `kind.geschlecht`, `mutter.geschlecht`, `elternteil2.geschlecht` | `MAENNLICH`, `WEIBLICH`, `UNBESTIMMT` |
+| `kind.geschlecht`, `mutter.geschlecht`, `elternteil2.geschlecht` | `m` (männlich), `w` (weiblich), `x` (keine Angabe), `d` (divers) — codes from XÖV codelist `urn:xoev-de:xinneres:codeliste:geschlecht` |
 | `status` (report result) | `PENDING`, `SUCCESS`, `FAILURE` |
 | `elternVerheiratet`, `zustimmungElterngeldstelle`, `nichtVorhanden` | `true` only — omit for the negative |
+
+### Codes vs. free text
+
+Some fields take a **code from a fixed list**, not free text:
+
+| Field | Source | Example |
+|-------|--------|---------|
+| `kind.geschlecht`, `mutter.geschlecht`, `elternteil2.geschlecht` | XÖV codelist `urn:xoev-de:xinneres:codeliste:geschlecht` | `w` |
+| `staatsangehoerigkeit.code`, `weitereStaatsangehoerigkeit.code` | Destatis Staatsangehörigkeits-Schlüssel — **not** ISO 3166 | `221` (Germany) |
+| `kontaktdaten[].kanal`, `zustaendigeElterngeldstelle.erreichbarkeit[].kanal` | XÖV codelist `urn:de:xoev:codeliste:erreichbarkeit` | `01` |
+| `name.namensartCode` | XÖV codelist Namensart | — |
+
+If a value isn't in the relevant codelist, use the choice type's free-text branch where one exists (`nichtGelisteterWert` for `Staatsangehoerigkeit`); `geschlecht`, `kanal` and `namensartCode` have no free-text fallback.
 
 ### Counts
 
@@ -522,6 +538,6 @@ The 081021 message is the parents' supplementary data delivery under § 18 (1) i
 
 ---
 
-**Document Version:** 0.1.0
-**Last Updated:** 2026-08-27
-**API Version:** v1
+**Document Version:** 0.2.0
+**Last Updated:** 2026-09-07
+**API Version:** v1get
