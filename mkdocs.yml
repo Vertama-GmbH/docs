@@ -51,6 +51,13 @@ markdown_extensions:
   - admonition                # !!! info "…" call-out boxes (house style)
   - pymdownx.highlight
   - pymdownx.inlinehilite
+  # Code blocks inside lists, highlighting and the copy button (content.code.copy)
+  # need SuperFences; mermaid then needs its own fence, or diagrams render as code.
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:mermaid2.fence_mermaid_custom
 plugins:
   #  - pdf-export:
   #    compbined: true
