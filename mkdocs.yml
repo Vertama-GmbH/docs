@@ -111,6 +111,8 @@ nav:
        - "api.yml (OpenAPI)": Products/DUBA/api.yml
        #- "Swagger API Viewer": "https://editor.swagger.io/#/?import=https://vertama-gmbh.github.io/docs/Products/DUBA/api.yml"
        - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DUBA"
+       - "Anleitungen":
+         - "Zertifikats-PIN prüfen": "Products/DUBA/check-certificate-pin.md"
      - ELIM:
        - "API Tutorial": "Products/ELIM/api-tutorial.md"
        - "FAQ": "Products/ELIM/faq.md"
