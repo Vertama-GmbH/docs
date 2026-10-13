@@ -68,6 +68,33 @@ Distribution:
 
 Auf Arbeitsplatzrechnern übernimmt das in der Regel Ihre IT-Abteilung.
 
+## Werkzeuge mit Beispieldateien ausprobieren
+
+Bevor Sie Ihre eigenen Dateien prüfen, können Sie an zwei Beispieldateien
+sehen, wie die Ergebnisse aussehen. Die Beispieldateien sind wie echte
+Zertifikatsdateien aufgebaut, aber selbst ausgestellt und keinem Postfach
+zugeordnet – für EGVP und V.ap sind sie unbrauchbar.
+
+<!-- target="_self" is needed, not redundant: these links lead from the German page into
+     the English tree, below this page's English counterpart. Material's language switcher
+     takes such a link for a language switch and opens the English page instead; it leaves
+     links with a target alone, so the browser downloads the file. -->
+
+| Beispieldatei | PIN |
+|---|---|
+| [beispiel-postfachzertifikat.p12](check-certificate-pin/beispiel-postfachzertifikat.p12){ download="beispiel-postfachzertifikat.p12" target="_self" } | `Beispiel-1234` |
+| [beispiel-vhn-zertifikat.p12](check-certificate-pin/beispiel-vhn-zertifikat.p12){ download="beispiel-vhn-zertifikat.p12" target="_self" } | `Beispiel-5678` |
+
+1. Laden Sie beide Beispieldateien herunter.
+1. Prüfen Sie jede Beispieldatei mit ihrer PIN, wie im Abschnitt für Ihr
+   System beschrieben. Das Ergebnis ist jeweils das für eine passende PIN,
+   siehe [Ergebnis deuten](#ergebnis-deuten).
+1. Prüfen Sie eine der Beispieldateien noch einmal mit der PIN der anderen.
+   Jetzt erscheint die Meldung für eine falsche PIN.
+
+Verhalten sich die Werkzeuge so, prüfen Sie auf dieselbe Weise Ihre eigenen
+Dateien.
+
 ## Unter Windows prüfen
 
 Sie geben zuerst an, welche Datei geprüft wird, und starten dann die
