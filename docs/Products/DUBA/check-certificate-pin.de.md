@@ -16,6 +16,10 @@ Prüfen Sie jede Datei mit ihrer PIN:
 | Postfachzertifikat | eBO und beBPo |
 | VHN-Zertifikat | nur beBPo |
 
+Das Postfachzertifikat heißt je nach Quelle auch *Autorenzertifikat*; im
+Registrierungsformular von V.ap steht *Author-Zertifikat*. Gemeint ist
+jeweils dieselbe Datei.
+
 !!! note "Ihre Daten bleiben auf Ihrem Rechner"
     Die Prüfung läuft vollständig lokal. Weder die Datei noch die PIN werden
     dabei übertragen.
