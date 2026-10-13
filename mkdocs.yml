@@ -49,8 +49,16 @@ extra_javascript:
   - js/external-links.js
 markdown_extensions:
   - admonition                # !!! info "…" call-out boxes (house style)
+  - attr_list                 # { download="…" } on file links: a click saves the file
   - pymdownx.highlight
   - pymdownx.inlinehilite
+  # Code blocks inside lists, highlighting and the copy button (content.code.copy)
+  # need SuperFences; mermaid then needs its own fence, or diagrams render as code.
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:mermaid2.fence_mermaid_custom
 plugins:
   #  - pdf-export:
   #    compbined: true
@@ -104,6 +112,8 @@ nav:
        - "api.yml (OpenAPI)": Products/DUBA/api.yml
        #- "Swagger API Viewer": "https://editor.swagger.io/#/?import=https://vertama-gmbh.github.io/docs/Products/DUBA/api.yml"
        - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DUBA"
+       - "Anleitungen":
+         - "Zertifikats-PIN prüfen": "Products/DUBA/check-certificate-pin.md"
      - ELIM:
        - "API Tutorial": "Products/ELIM/api-tutorial.md"
        - "FAQ": "Products/ELIM/faq.md"
