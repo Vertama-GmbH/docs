@@ -108,17 +108,15 @@ Prüfung mit einem Befehl, den Sie unverändert übernehmen.
 1. **Datei angeben:** Tippen Sie in der PowerShell `$f = ` ein, fügen Sie den
    Pfad ein (Strg + V) und drücken Sie die Eingabetaste. Die Zeile sieht etwa
    so aus: `$f = "C:\Users\name\Downloads\VHN Zertifikat.p12"`. Die
-   Anführungszeichen müssen dabei sein; *Als Pfad kopieren* setzt sie für Sie.
-1. **Prüfen:** Kopieren Sie den folgenden Befehl – fahren Sie dazu mit der
-   Maus über den Kasten und klicken Sie auf die Kopier-Schaltfläche, die oben
-   rechts erscheint. Fügen Sie ihn in der PowerShell ein (Strg + V) und drücken
-   Sie die Eingabetaste:
+   Anführungszeichen müssen dabei sein.
+1. **Prüfen:** Kopieren Sie den folgenden Befehl und drücken Sie die
+   Eingabetaste:
 
     ```powershell
     Get-PfxData -FilePath $f -Password (Read-Host -Prompt "PIN" -AsSecureString)
     ```
 
-1. Bei `PIN:` geben Sie die PIN ein und drücken wieder die Eingabetaste. Die
+1. Bei `PIN:` geben Sie ihren Zerifikats PIN ein und drücken die Eingabetaste. Die
    PIN erscheint dabei als Sternchen.
 
 Für eine weitere Datei wiederholen Sie die Schritte 2 bis 5. Was die Ausgabe
