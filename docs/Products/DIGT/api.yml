@@ -67,13 +67,23 @@ paths:
                 memento: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                 magicLink: "/mtl/eyJ...token...?m=eyJ...memento..."
         '400':
-          description: Bad Request - invalid form data (validation errors)
+          description: |-
+            Bad Request — request validation failed (RFC 9457 problem details,
+            type https://docs.vertama.com/problems/validation-error, one entry
+            per violated constraint with a JSON Pointer to the offending field).
           content:
-            application/json:
+            application/problem+json:
               schema:
-                $ref: '#/components/schemas/ValidationErrorResponse'
+                $ref: '../web/api.yml#/components/schemas/ValidationProblem'
               example:
-                errors: ["id must not be null"]
+                type: "https://docs.vertama.com/problems/validation-error"
+                title: "Request validation failed"
+                status: 400
+                detail: "1 violation"
+                instance: "/api/digt/v1/memento"
+                errors:
+                  - detail: "must not be null"
+                    pointer: "#/id"
         '401':
           description: |-
             Unauthorized - invalid or missing authentication.
@@ -131,6 +141,13 @@ paths:
         By default this is a destructive read for SUCCESS/FAILURE reports: once retrieved,
         the report is marked as polled and will no longer appear. Use ?peek=true for
         a non-destructive read. PENDING reports are never marked as polled.
+
+        **Testing:**
+        The following IDs are reserved for testing and return canned responses without
+        a real report lookup:
+        - `DIGT-TEST-SUCCESS`: Always returns SUCCESS with a mock receipt PDF.
+        - `DIGT-TEST-PENDING`: Always returns PENDING.
+        - `DIGT-TEST-FAILURE`: Always returns FAILURE with a simulated failure reason.
       tags:
         - DIGT
       security:
@@ -140,7 +157,9 @@ paths:
         - name: id
           in: path
           required: true
-          description: The report ID from the original DIGT report submission
+          description: |-
+            The report ID from the original DIGT report submission, or one of the
+            reserved test IDs `DIGT-TEST-SUCCESS`, `DIGT-TEST-PENDING`, `DIGT-TEST-FAILURE`.
           schema:
             type: string
           example: "DIGT-2026-00123"
@@ -176,12 +195,37 @@ paths:
             Response body is empty.
         '404':
           description: |-
-            Report not found. No DIGT report with this ID exists for the
-            authenticated API user.
+            Report not found (RFC 9457 problem details, type
+            https://docs.vertama.com/Products/DIGT/problems/report-not-found).
+            Covers: not yet submitted by the user, unknown id, id belonging to
+            a different API user, or not a DIGT report.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '../web/api.yml#/components/schemas/ProblemDetail'
+              example:
+                type: "https://docs.vertama.com/Products/DIGT/problems/report-not-found"
+                title: "Not Found"
+                status: 404
+                detail: "No DIGT report 'DIGT-2024-00123' for this user — not yet submitted, unknown id, or not a DIGT report"
+                instance: "/api/digt/v1/reports/DIGT-2024-00123"
         '410':
           description: |-
-            Gone. The report was previously retrieved (polled) and is no longer
-            available. Use ?peek=true on future requests to avoid consuming reports.
+            Gone (RFC 9457 problem details) — two distinct types:
+            https://docs.vertama.com/Products/DIGT/problems/report-already-retrieved
+            (previously retrieved without ?peek=true; not delivered again) and
+            https://docs.vertama.com/Products/DIGT/problems/report-expired
+            (payload removed by the retention cleanup).
+          content:
+            application/problem+json:
+              schema:
+                $ref: '../web/api.yml#/components/schemas/ProblemDetail'
+              example:
+                type: "https://docs.vertama.com/Products/DIGT/problems/report-already-retrieved"
+                title: "Gone"
+                status: 410
+                detail: "Report 'DIGT-2024-00123' was already retrieved; use ?peek=true to read without consuming"
+                instance: "/api/digt/v1/reports/DIGT-2024-00123"
 
 components:
   schemas:
@@ -214,21 +258,6 @@ components:
             not a URL path segment — the link is /mtl/{token}?m={memento}.
             Prepend your host to make it absolute: https://host + magicLink
           example: "/mtl/eyJ...token...?m=eyJ...memento..."
-
-    ValidationErrorResponse:
-      type: object
-      required:
-        - errors
-      description: |-
-        Validation error response returned by Spring's ControllerAdvice.
-        Contains a list of validation error messages.
-      properties:
-        errors:
-          type: array
-          description: List of validation error messages
-          items:
-            type: string
-          example: ["id must not be null"]
 
     ReportResult:
       type: object
@@ -563,7 +592,7 @@ components:
           # No minItems: the Auskunftsgeber is an optional sub-object that the HTML form
           # always instantiates empty, so a Bean-Validation @Size(min=1) would reject every
           # submission where no Auskunftsgeber was entered. The "at least one Kontakt" rule
-          # is enforced downstream (service-layer placeholder + xPersonenstand schema).
+          # is enforced downstream (FormValidator + XpsMapping.requireKontakt) once an Auskunftsgeber is given.
           description: Kontaktdaten des Auskunftsgebers
           items:
             $ref: '#/components/schemas/Kontakt'
@@ -675,16 +704,21 @@ components:
 
     Familienbuch:
       type: object
-      description: Familienbuch-Angaben (entweder Fuehrungsort oder Hinweis)
+      description: |
+        Familienbuch-Angaben: entweder der Fuehrungsort oder - falls dieser nicht bekannt ist -
+        der Hinweis, dass ein Familienbuch existiert. Ist ein Fuehrungsort angegeben, wird nur
+        dieser uebermittelt.
       properties:
         fuehrungsort:
           type: string
-          description: Fuehrungsort des Familienbuchs (optional)
+          description: Fuehrungsort des Familienbuchs, falls bekannt (optional)
           example: "Berlin"
         hinweis:
           type: boolean
-          description: Hinweis auf Familienbuch vorhanden? (optional)
-          example: true
+          description: |
+            Hinweis, dass ein Familienbuch existiert, dessen Fuehrungsort nicht bekannt ist
+            (optional). Wird nur ohne Fuehrungsort uebermittelt.
+          example: false
 
     AufloesungEheLpVerstorbener:
       type: object
@@ -868,9 +902,7 @@ components:
           description: Kreisbezeichnung (optional)
           example: "Berlin"
         staat:
-          type: string
-          description: Staat (z.B. ISO 3166-1 Code oder Klartext) (optional)
-          example: "Deutschland"
+          $ref: '#/components/schemas/Staat'
 
     # =========================================================================
     # Sterbefall 084040 (Hauptobjekt)
@@ -979,7 +1011,7 @@ components:
           type: array
           # No minItems: see Auskunftsgeber.kontaktdaten — the Leichenschau section is
           # instantiated empty by the form, so the "at least one Kontakt" rule is enforced
-          # downstream (service-layer placeholder + xPersonenstand schema) rather than at bind time.
+          # downstream (FormValidator + XpsMapping.requireKontakt) rather than at bind time.
           description: Kontaktdaten des Arztes (mindestens eine Angabe)
           items:
             $ref: '#/components/schemas/Kontakt'
@@ -1085,7 +1117,10 @@ components:
 
     AnschriftAuslandDruckbild:
       type: object
-      description: Auslaendische Anschrift als Druckbild (freie Textzeilen)
+      description: |-
+        Auslaendische Anschrift als Druckbild (freie Textzeilen). xPersonenstand verlangt
+        den Staat als Code der Staatenliste (nicht 000 Deutschland) und mindestens zwei
+        Adresszeilen mit je hoechstens 35 Zeichen.
       properties:
         adresszeile1:
           type: string
@@ -1100,9 +1135,7 @@ components:
           description: Dritte Adresszeile (optional)
           example: "New York, NY 10001"
         staat:
-          type: string
-          description: Staat
-          example: "USA"
+          $ref: '../xoev/codelists/StaatCode.yml'
 
     AnschriftAuslandStrukturiert:
       type: object
@@ -1125,9 +1158,7 @@ components:
           description: Ort (optional)
           example: "New York"
         staat:
-          type: string
-          description: Staat
-          example: "USA"
+          $ref: '#/components/schemas/Staat'
 
     # =========================================================================
     # Gemeinsame Typen
@@ -1198,9 +1229,22 @@ components:
           description: Kreisbezeichnung (optional)
           example: "Hamburg"
         staat:
+          $ref: '#/components/schemas/Staat'
+
+    Staat:
+      type: object
+      nullable: true
+      description: |-
+        Staat (xPersonenstand Code.Staat) als Choice: entweder Code aus der
+        Staatenliste des Statistischen Bundesamts ODER Freitext, falls der Staat
+        nicht gelistet ist. Sind beide gesetzt, gewinnt der Code.
+      properties:
+        code:
+          $ref: '../xoev/codelists/StaatCode.yml'
+        nichtGelisteterWert:
           type: string
-          description: Staat (z.B. ISO 3166-1 Code oder Klartext) (optional)
-          example: "Deutschland"
+          nullable: true
+          description: Freitext, falls der Staat nicht in der Staatenliste vorhanden ist
 
     Anhang:
       type: object

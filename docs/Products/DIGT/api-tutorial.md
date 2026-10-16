@@ -2,8 +2,8 @@
 
 A practical guide for integration partners using the DIGT (Digitale Sterbefall-Meldung) API.
 
-**Version:** 0.1.0
-**Last Updated:** 2026-07-21
+**Version:** 0.2.0
+**Last Updated:** 2026-10-16
 
 ---
 
@@ -212,6 +212,29 @@ Within the chosen slot, only the top-level `id` is mandatory; every other field 
 
 To pre-fill an undertaker form, populate `Bestatter` instead; for a death-certificate form, populate `Todesbescheinigung`. See the OpenAPI schema for the field structure of each slot.
 
+### Specifying a State (`staat`)
+
+For places (`sterbeort`, `geburtsort` and the other event locations such as the place of marriage) and for the structured foreign address (`anschriftAuslandStrukturiert`), `staat` is an object, as xPersonenstand defines it (`Code.Staat`):
+
+- `code`: key from the state list (Staatenliste) of the Federal Statistical Office (Destatis), e.g. `"000"` (Germany), `"129"` (France), `"368"` (United States)
+- `nichtGelisteterWert`: free text, only if the state is not on the list
+
+If both are given, `code` takes precedence.
+
+```json
+"staat": { "code": "129" }
+```
+
+```json
+"staat": { "nichtGelisteterWert": "Beispielstaat" }
+```
+
+For a foreign address given as free lines (`anschriftAusland`), `staat` is the bare key itself (e.g. `"staat": "368"`) — no free text, and not `"000"`. At least two address lines of at most 35 characters each are required.
+
+For postal addresses (`letzterWohnsitz`, the reporter's `anschrift` and similar), `staat` remains free text.
+
+The valid keys are listed in the [state code list](../xoev/codelists/StaatCode.yml).
+
 ### Response
 
 Returns a JSON object containing the encrypted memento and a ready-to-use magic link:
@@ -308,17 +331,38 @@ The following mock IDs are reserved for testing to simulate different delivery o
 | Code | Status | Meaning |
 |------|--------|---------|
 | 200 | OK | Request successful |
-| 400 | Bad Request | Invalid JSON, missing `id`, or zero / more than one report-type slot populated |
-| 401 | Unauthorized | Missing or invalid API credentials |
-| 404 | Not Found | Report ID does not exist |
-| 410 | Gone | Report was already retrieved (use `?peek=true` to avoid) |
+| 400 | Bad Request | Request validation failed (e.g. invalid JSON, missing `id`, zero / more than one report-type slot populated) |
+| 401 | Unauthorized | Missing or invalid API credentials — empty body, `WWW-Authenticate` header |
+| 404 | Not Found | No DIGT report under this id for your API user |
+| 410 | Gone | Report already retrieved, or aged out of the retention window |
+
+### Problem Details (RFC 9457)
+
+Except for 401, errors are returned as [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) problem details with `Content-Type: application/problem+json`. **Branch on the `type` URI** — it is the stable machine-readable discriminator; `title` and `detail` are developer diagnostics and may be reworded.
+
+| `type` URI | Status | Documentation |
+|---|---|---|
+| `…/problems/validation-error` | 400 | [validation-error](../../problems/validation-error.md) |
+| `…/Products/DIGT/problems/report-not-found` | 404 | [report-not-found](problems/report-not-found.md) |
+| `…/Products/DIGT/problems/report-already-retrieved` | 410 | [report-already-retrieved](problems/report-already-retrieved.md) |
+| `…/Products/DIGT/problems/report-expired` | 410 | [report-expired](problems/report-expired.md) |
+
+Note that **the two 410 cases share a status code but differ in `type`** — one means "someone already consumed this", the other "it aged out". Distinguish them by `type`, never by status alone.
 
 ### Validation Errors
 
-If the request data is invalid (e.g. missing `id`), a 400 Bad Request is returned:
+A rejected memento request returns 400 with one `errors` entry per violated constraint, each carrying a JSON Pointer to the offending member of your request body:
+
 ```json
 {
-  "errors": ["id must not be null"]
+  "type": "https://docs.vertama.com/problems/validation-error",
+  "title": "Request validation failed",
+  "status": 400,
+  "detail": "1 violation",
+  "instance": "/api/digt/v1/memento",
+  "errors": [
+    { "detail": "must not be null", "pointer": "#/id" }
+  ]
 }
 ```
 
@@ -345,6 +389,6 @@ If the request data is invalid (e.g. missing `id`), a 400 Bad Request is returne
 
 ---
 
-**Document Version:** 0.1.0
-**Last Updated:** 2026-07-21
+**Document Version:** 0.2.0
+**Last Updated:** 2026-10-16
 **API Version:** v1
