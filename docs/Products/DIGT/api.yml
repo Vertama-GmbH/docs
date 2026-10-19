@@ -777,10 +777,15 @@ components:
           minimum: 0
           description: Anzahl Urkunden im Stammbuchformat
           example: 0
-        anzahlMehrsprachig:
+        anzahlCIEC16:
           type: integer
           minimum: 0
-          description: Anzahl mehrsprachiger Urkunden
+          description: Anzahl mehrsprachiger Auszuege aus dem Register (internationale Urkunde) nach dem CIEC-Abkommen 16
+          example: 0
+        anzahlCIEC34:
+          type: integer
+          minimum: 0
+          description: Anzahl mehrsprachiger Auszuege aus dem Register (internationale Urkunde) nach dem CIEC-Abkommen 34
           example: 0
         anzahlRegisterausdruck:
           type: integer
