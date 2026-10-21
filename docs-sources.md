@@ -46,6 +46,9 @@ and falls back to the default language when a translation is missing.
 | Folder-Sync-Handbuch (DE) | `Products/DIVI/folder-sync-handbuch.de.md` | this repo | canonical | n/a |
 | Folder Sync Guide (EN notice page) | `Products/DIVI/folder-sync-handbuch.md` | this repo | canonical | n/a — stub pointing at the German version |
 | Fremdaufruf Präsentation (DE) | `V.connect/Fremdaufruf/presentation/` | `mcp-health/V.connect` → `fremdaufruf/presentation/` | yes | `make sync-fremdaufruf-deck` — pulls the self-contained reveal.js deck from V.c, strips `<aside class="notes">` speaker-note blocks (presenter guidance not intended for the public site) via `scripts/strip-notes.py`, copies brand assets and images unchanged. Note: the deck links absolute `docs.vertama.com/Products/V.connect/…` URLs — served via redirect stubs since the uplift; fix upstream in V.c at next deck revision |
+| DIGT API Tutorial | `Products/DIGT/api-tutorial.md` | this repo | canonical | n/a — not to be confused with the German draft `Vertama-GmbH/elim` → `docs/external/digt/api-guide.md`, a separate document never adopted here |
+| DIGT OpenAPI spec | `Products/DIGT/api.yml` | `Vertama-GmbH/elim` → `src/main/resources/de/vertama/digt/api.yml` (served by V.ap's Swagger UI, `urls.primaryName=DIGT`) | yes | manual copy, unchanged — the relative `$ref: '../web/api.yml#/…'` resolves both in elim and here (`Products/web/api.yml`). Change the spec in elim first, then copy; identical to elim @ `8cc10e90c` as of 2026-10-21 |
+| DIGT problem types | `Products/DIGT/problems/*.md` | this repo | canonical | n/a — problem-type registry pages that the `type` URIs of V.ap's RFC 9457 responses resolve to (elim ADR-010) |
 
 URL history: `Products/V.connect/*` moved to top-level `V.connect/*` in the
 2026-08 nav restructure (V.connect uplift), and `how-to/folder-sync-handbuch`

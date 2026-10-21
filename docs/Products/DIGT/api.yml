@@ -42,6 +42,13 @@ paths:
         inner fields) are optional to allow partial pre-filling. Full validation happens
         at form-submission time downstream.
 
+        `standortId` names the InEK Standort of the reporting hospital. For `Einrichtung`
+        (084020) the name and address of the reporting institution, for `Todesbescheinigung`
+        (084040) the address of the physician are taken from the Krankenhausstandorte
+        registry for that Standort — they cannot be entered. A Standort that does not
+        belong to the calling account (or is unknown) is ignored, as if none was given.
+        Without `standortId` the user picks one of the account's Standorte in the form.
+
         Note: This endpoint does NOT submit the report. It only creates a pre-fill token
         for the interactive HTML form.
       tags:
@@ -333,6 +340,19 @@ components:
             Correlation ID supplied by the calling system.
             Used to track and correlate this report throughout the workflow.
           example: "DIGT-2026-00123"
+        standortId:
+          type: string
+          # No pattern on purpose: a malformed id falls back like a foreign one (ignored).
+          description: |-
+            InEK Standort-ID (6 digits) of the reporting hospital. Should be one of the
+            Standorte of the calling account; any other value is ignored and the user picks
+            the Standort in the form.
+
+            Used by `Einrichtung` (084020: name and address of the reporting institution)
+            and `Todesbescheinigung` (084040: address of the physician); ignored by
+            `Bestatter` (084021). Name and address come from the Krankenhausstandorte
+            registry. Optional: without it the user picks the Standort in the form.
+          example: "770001"
         Einrichtung:
           $ref: '#/components/schemas/SterbefallEinrichtung'
         Bestatter:
@@ -362,7 +382,7 @@ components:
         verstorbener:
           $ref: '#/components/schemas/Verstorbener'
         anzeigender:
-          $ref: '#/components/schemas/AnzeigenderOrganisation'
+          $ref: '#/components/schemas/AnzeigenderEinrichtung'
         leichenID:
           type: string
           description: Identifikationsnummer der Leiche (optional)
@@ -851,8 +871,8 @@ components:
     AnzeigenderOrganisation:
       type: object
       description: |
-        Angaben zum Anzeigenden. Der Anzeigende ist eine Organisation
-        (Einrichtung wie Krankenhaus/Pflegeheim oder Bestattungsunternehmen).
+        Angaben zum Anzeigenden (084021). Der Anzeigende ist eine Organisation
+        (Bestattungsunternehmen).
       properties:
         nameOrganisation:
           type: string
@@ -862,6 +882,36 @@ components:
           $ref: '#/components/schemas/PersonName'
         anschrift:
           $ref: '#/components/schemas/Anschrift'
+        kontaktdaten:
+          type: array
+          description: Mindestens eine Kontaktmoeglichkeit
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/Kontakt'
+
+    AnzeigenderEinrichtung:
+      type: object
+      description: |
+        Angaben zur meldenden Einrichtung (084020). Name und Anschrift kommen aus dem
+        Krankenhausstandorte-Verzeichnis fuer die `standortId` der Anfrage; angegeben
+        werden nur Ansprechpartner und Kontaktdaten.
+      properties:
+        nameOrganisation:
+          type: string
+          deprecated: true
+          description: |-
+            Deprecated and ignored: the name is taken from the Krankenhausstandorte
+            registry for `standortId`.
+          example: "Klinikum Berlin-Mitte"
+        ansprechpartner:
+          $ref: '#/components/schemas/PersonName'
+        anschrift:
+          allOf:
+            - $ref: '#/components/schemas/Anschrift'
+          deprecated: true
+          description: |-
+            Deprecated and ignored: the address is taken from the Krankenhausstandorte
+            registry for `standortId`.
         kontaktdaten:
           type: array
           description: Mindestens eine Kontaktmoeglichkeit
@@ -1011,7 +1061,12 @@ components:
         namenArzt:
           $ref: '#/components/schemas/PersonName'
         anschriftArzt:
-          $ref: '#/components/schemas/AnschriftInland'
+          allOf:
+            - $ref: '#/components/schemas/AnschriftInland'
+          deprecated: true
+          description: |-
+            Deprecated and ignored: the address is taken from the Krankenhausstandorte
+            registry for the `standortId` of the request.
         kontaktArzt:
           type: array
           # No minItems: see Auskunftsgeber.kontaktdaten — the Leichenschau section is

@@ -2,8 +2,8 @@
 
 A practical guide for integration partners using the DIGT (Digitale Sterbefall-Meldung) API.
 
-**Version:** 0.2.0
-**Last Updated:** 2026-10-16
+**Version:** 0.3.0
+**Last Updated:** 2026-10-19
 
 ---
 
@@ -169,9 +169,9 @@ Within the chosen slot, only the top-level `id` is mandatory; every other field 
 ```json
 {
   "id": "DIGT-2026-00123",
+  "standortId": "770001",
   "Einrichtung": {
     "anzeigender": {
-      "nameOrganisation": "Universitätsklinikum Musterstadt",
       "ansprechpartner": {
         "vornamen": "Anna",
         "familienname": "Schmidt"
@@ -212,6 +212,24 @@ Within the chosen slot, only the top-level `id` is mandatory; every other field 
 
 To pre-fill an undertaker form, populate `Bestatter` instead; for a death-certificate form, populate `Todesbescheinigung`. See the OpenAPI schema for the field structure of each slot.
 
+### Reporting Institution (`standortId`)
+
+For `Einrichtung` (084020) and `Todesbescheinigung` (084040), the reporting hospital is identified by its 6-digit InEK Standort-ID (`standortId`, top level of the request, next to `id`). Name and address are taken from the Krankenhausstandorte registry for that Standort and cannot be entered:
+
+| Slot | Taken from the Standort |
+|------|-------------------------|
+| `Einrichtung` (084020) | Name and address of the reporting institution (`anzeigender`) |
+| `Todesbescheinigung` (084040) | Address of the physician (`angabenLeichenschau.anschriftArzt`) |
+
+Contact person and contact details (`ansprechpartner`, `kontaktdaten`, `namenArzt`, `kontaktArzt`) are still supplied by you or entered in the form.
+
+- The Standort must be one of the Standorte of your account. A Standort that is not (or an unknown or malformed value) is **ignored**, as if none was given — the request is not rejected.
+- Without a valid `standortId`, the user picks one of the account's Standorte in the form; with only one Standort, it is set automatically.
+- For `Einrichtung` (084020), the receiving Standesamt is limited to the Standesämter assigned to the chosen Standort.
+- `Bestatter` (084021) ignores `standortId`; the undertaker's name and address are still entered.
+
+**Deprecated fields:** `Einrichtung.anzeigender.nameOrganisation`, `Einrichtung.anzeigender.anschrift` and `Todesbescheinigung.angabenLeichenschau.anschriftArzt` are deprecated. They are still accepted, but ignored — the values from the Standort always apply. Do not send them in new integrations.
+
 ### Specifying a State (`staat`)
 
 For places (`sterbeort`, `geburtsort` and the other event locations such as the place of marriage) and for the structured foreign address (`anschriftAuslandStrukturiert`), `staat` is an object, as xPersonenstand defines it (`Code.Staat`):
@@ -231,7 +249,7 @@ If both are given, `code` takes precedence.
 
 For a foreign address given as free lines (`anschriftAusland`), `staat` is the bare key itself (e.g. `"staat": "368"`) — no free text, and not `"000"`. At least two address lines of at most 35 characters each are required.
 
-For postal addresses (`letzterWohnsitz`, the reporter's `anschrift` and similar), `staat` remains free text.
+For postal addresses (`letzterWohnsitz`, the undertaker's `anschrift` and similar), `staat` remains free text.
 
 The valid keys are listed in the [state code list](../xoev/codelists/StaatCode.yml).
 
