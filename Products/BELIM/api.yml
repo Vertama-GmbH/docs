@@ -1,0 +1,414 @@
+openapi: 3.0.3
+info:
+  title: BELIM API
+  version: "0.1.0"
+  description: API for BELIM bed occupancy reporting (Bettenbelegung) - DEMIS integration
+servers:
+  - url: /api/belim/v1
+    description: BELIM API Version 1
+paths:
+  /memento:
+    post:
+      summary: Create encrypted memento string from BELIM report data
+      description: |-
+        Accepts BELIM report data (Bettenbelegung) as JSON and returns an encrypted memento string.
+        The memento can be used to pre-fill HTML forms via URL parameter.
+
+        Use Case:
+        External systems (e.g., KIS, hospital systems) submit form data → receive encrypted string →
+        construct URL with memento parameter → user opens pre-filled form.
+
+        This endpoint validates the submitted data against the BelimReport schema
+        before encryption. The memento string is URL-safe and tamper-proof.
+
+        Note: This endpoint does NOT submit the report to DEMIS.
+        It only creates a pre-fill token for the interactive HTML form.
+      tags:
+        - BELIM
+      security:
+        - basicAuth: []
+      operationId: createMemento
+      requestBody:
+        required: true
+        description: BELIM report data to encrypt into memento string
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BelimMementoRequest'
+      responses:
+        '200':
+          description: Memento successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MementoResponse'
+              example:
+                memento: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        '400':
+          description: Bad Request - invalid form data (validation errors)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+              example:
+                errors: ["reportId must not be null"]
+        '401':
+          description: |-
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
+  /report:
+    post:
+      summary: Submit a BELIM bed occupancy report to DEMIS
+      description: |-
+        Accepts BELIM report data and submits it to DEMIS (Deutsches Elektronisches Melde- und
+        Informationssystem) for bed occupancy reporting.
+
+        The report is validated, the hospital is resolved by StandortId, and the data is sent
+        to the configured DEMIS endpoint (either directly or via ABAT connector).
+
+        On success, the report is archived and a receipt is returned.
+        On failure, an error message is returned.
+
+        The reportId must be unique per user. Re-submitting with an already-used reportId
+        will be rejected.
+      tags:
+        - BELIM
+      security:
+        - basicAuth: []
+      operationId: submitReport
+      requestBody:
+        required: true
+        description: BELIM report data to submit
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BelimReportSubmission'
+      responses:
+        '200':
+          description: Report successfully submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportResponse'
+        '400':
+          description: Bad Request - invalid report data (validation errors)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        '401':
+          description: |-
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
+  /reports:
+    get:
+      summary: List pending report IDs for the authenticated API user
+      description: |-
+        Returns the list of report IDs that have been submitted by the authenticated
+        API user but not yet retrieved (unpolled). These are reports waiting for
+        the caller to fetch the full result.
+        
+        Use GET /api/belim/v1/reports/{reportId} to retrieve the full result for each ID.
+        
+        The list contains only unpolled report IDs — once a report has been
+        retrieved without ?peek=true it will no longer appear here.
+      tags:
+        - BELIM
+      security:
+        -   basicAuth: [ ]
+      operationId: listPendingReports
+      responses:
+        '200':
+          description: List of pending report IDs (may be empty)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example:
+                - "BELIM-2026-00123"
+                - "BELIM-2026-00124"
+        '401':
+          description: |-
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
+  /reports/{reportId}:
+    get:
+      summary: Retrieve the status of a previously submitted BELIM report
+      description: |-
+        Returns the current status of a report identified by its reportId.
+
+        The response includes whether the report was successfully sent, the send date,
+        any error messages, and the PDF receipt (base64-encoded) if available.
+
+        Reports are looked up by the authenticated user and the given reportId.
+      tags:
+        - BELIM
+      security:
+        - basicAuth: []
+      operationId: getReportStatus
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          description: The report identifier used when submitting the report
+          schema:
+            type: string
+            example: "status-2024-00123"
+      responses:
+        '200':
+          description: Report status found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '401':
+          description: |-
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
+        '404':
+          description: Report not found for the given reportId and authenticated user
+components:
+  schemas:
+    MementoResponse:
+      type: object
+      required:
+        - memento
+      properties:
+        memento:
+          type: string
+          description: |-
+            Encrypted, URL-safe memento string containing the form data.
+            Use as query parameter to pre-fill forms: ?memento=<string>
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    ValidationErrorResponse:
+      type: object
+      required:
+        - errors
+      description: |-
+        Validation error response returned by Spring's ControllerAdvice.
+        Contains a list of validation error messages.
+      properties:
+        errors:
+          type: array
+          description: List of validation error messages
+          items:
+            type: string
+          example: ["reportId must not be null", "StandortId must not be empty"]
+    BelimMementoRequest:
+      type: object
+      description: |-
+        BELIM bed occupancy report data (Bettenbelegung).
+
+        For memento creation, most fields are optional to allow partial pre-filling.
+        For report submission, StandortId is required to resolve the hospital.
+      required:
+        - reportId
+      properties:
+        reportId:
+          type: string
+          description: |-
+            Unique identifier for this report (StatusID).
+            Required to track and correlate this report throughout the workflow.
+            Must be unique per user - reusing an already-submitted reportId will be rejected.
+          example: "status-2024-00123"
+        dateOfReport:
+          type: string
+          format: date
+          nullable: true
+          description: Date when the report was created
+          example: "2024-12-08"
+        numbers:
+          $ref: '#/components/schemas/BelimMementReportNumbers'
+        IK_Nummer:
+          type: string
+          nullable: true
+          description: |-
+            9-stellige Institutionskennzeichen (IK) Nummer.
+            Used for hospital identification alongside StandortId.
+          example: "987654321"
+        StandortId:
+          type: string
+          nullable: true
+          description: |-
+            6-stellige InEK Standort-Id for unique hospital location identification.
+            Used to resolve the hospital in the system.
+            See: https://krankenhausstandorte.de/directory
+          example: "987654"
+        Standortname:
+          type: string
+          nullable: true
+          description: Name of the hospital location
+          example: "Universitätsklinikum Musterstadt"
+        Strasse:
+          type: string
+          nullable: true
+          description: Street name
+          example: "Musterstraße"
+        Hausnummer:
+          type: string
+          nullable: true
+          description: House number
+          example: "123"
+        PLZ:
+          type: string
+          nullable: true
+          description: Postal code
+          example: "12345"
+        Ort:
+          type: string
+          nullable: true
+          description: City name
+          example: "Musterstadt"
+        Telefon:
+          type: string
+          nullable: true
+          description: Phone number
+          example: "+49 123 456789"
+    BelimMementReportNumbers:
+      type: object
+      nullable: true
+      description: Bed occupancy numbers for the report
+      properties:
+        kinder_betten_belegt:
+          type: integer
+          description: Number of occupied children's beds
+          example: 3.0
+        kinder_betten_betrieben:
+          type: integer
+          description: Number of operational children's beds
+          example: 4.0
+        erwachsenen_betten_belegt:
+          type: integer
+          description: Number of occupied adult beds
+          example: 1.0
+        erwachsenen_betten_betrieben:
+          type: integer
+          description: Number of operational adult beds
+          example: 2.0
+    BelimReportSubmission:
+      type: object
+      description: |-
+        Strict definition of BELIM report data.
+        All fields are required and non-nullable.
+      required:
+        - reportId
+        - dateOfReport
+        - numbers
+        - IK_Nummer
+        - StandortId
+        - Standortname
+        - Strasse
+        - Hausnummer
+        - PLZ
+        - Ort
+        - Telefon
+      properties:
+        reportId:
+          type: string
+          description: Unique identifier.
+        dateOfReport:
+          type: string
+          format: date
+        numbers:
+          $ref: '#/components/schemas/BelimReportSubmissionNumbers'
+        IK_Nummer:
+          type: string
+        StandortId:
+          type: string
+        Standortname:
+          type: string
+        Strasse:
+          type: string
+        Hausnummer:
+          type: string
+        PLZ:
+          type: string
+        Ort:
+          type: string
+        Telefon:
+          type: string
+
+    BelimReportSubmissionNumbers:
+      type: object
+      description: Mandatory bed occupancy numbers
+      required:
+        - kinder_betten_belegt
+        - erwachsenen_betten_belegt
+      properties:
+        kinder_betten_belegt:
+          type: integer
+        kinder_betten_betrieben:
+          type: integer
+        erwachsenen_betten_belegt:
+          type: integer
+        erwachsenen_betten_betrieben:
+          type: integer
+    ReportResponse:
+      type: object
+      required:
+        - reportId
+        - succeeded
+      description: Response after submitting a BELIM report
+      properties:
+        reportId:
+          type: string
+          description: The report identifier
+          example: "status-2024-00123"
+        succeeded:
+          type: boolean
+          description: Whether the report was successfully sent to DEMIS
+          example: true
+        errorMsg:
+          type: string
+          nullable: true
+          description: Error message if submission failed, null on success
+          example: null
+    StatusResponse:
+      type: object
+      required:
+        - reportId
+        - succeeded
+      description: Status information for a previously submitted report
+      properties:
+        reportId:
+          type: string
+          description: The report identifier
+          example: "status-2024-00123"
+        succeeded:
+          type: boolean
+          description: Whether the report was successfully sent
+          example: true
+        sendDate:
+          type: string
+          format: date-time
+          nullable: true
+          description: Timestamp when the report was sent
+          example: "2024-12-08T14:30:00Z"
+        formName:
+          type: string
+          nullable: true
+          description: Name of the report form/endpoint used
+          example: "belim.direct"
+        errorMsg:
+          type: string
+          nullable: true
+          description: Error message if submission failed, null on success
+          example: null
+        base64Pdf:
+          type: string
+          nullable: true
+          description: |-
+            Base64-encoded PDF receipt from DEMIS.
+            Available only for successful reports. May be null if the report
+            data has been cleaned up (retention policy).
+          example: null
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
