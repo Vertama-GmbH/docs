@@ -472,7 +472,7 @@ A rejected memento request returns 400 with one `errors` entry per violated cons
 }
 ```
 
-Every violation is listed, so one round trip shows all problems at once. `pointer` is absent for violations of the request as a whole (an unparseable body, or a rule spanning several fields).
+Every violation is listed, so one round trip shows all problems at once. `pointer` is absent only for violations of the request as a whole: JSON that is broken (`detail` then names its line and column), or a rule spanning several fields. A value that does not read, such as a date not in ISO 8601, has its pointer, and `detail` names the kind of value expected there.
 
 ### Not-found is normal
 

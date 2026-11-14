@@ -336,19 +336,46 @@ The following mock IDs are reserved for testing to simulate different delivery o
 | Code | Status | Meaning |
 |------|--------|---------|
 | 200 | OK | Request successful |
-| 400 | Bad Request | Invalid JSON or validation error |
-| 401 | Unauthorized | Missing or invalid API credentials |
-| 404 | Not Found | Report ID does not exist |
-| 410 | Gone | Report was already retrieved (use `?peek=true` to avoid) |
+| 400 | Bad Request | Request validation failed (e.g. invalid JSON, missing `id`, a date not in ISO 8601) |
+| 401 | Unauthorized | Missing or invalid API credentials — empty body, `WWW-Authenticate` header |
+| 404 | Not Found | No DIGG report under this id for your API user |
+| 410 | Gone | Report already retrieved, or aged out of the retention window |
+
+### Problem Details (RFC 9457)
+
+Except for 401, errors are returned as [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) problem details with `Content-Type: application/problem+json`. **Branch on the `type`** — it is the stable machine-readable discriminator; `title` and `detail` are developer diagnostics and may be reworded. Each `type` is a path: resolved against your V.ap host, it opens the type's page, and `/api/docs/problems` lists all types (see [Problem types](../../problems/index.md)).
+
+| `type` | Status |
+|---|---|
+| `/api/docs/problems/validation-error` | 400 |
+| `/api/docs/problems/digg/report-not-found` | 404 |
+| `/api/docs/problems/digg/report-already-retrieved` | 410 |
+| `/api/docs/problems/digg/report-expired` | 410 |
+
+Note that **the two 410 cases share a status code but differ in `type`** — one means "someone already consumed this", the other "it aged out". Distinguish them by `type`, never by status alone.
 
 ### Validation Errors
 
-If the request data is invalid (e.g. missing `id`), a 400 Bad Request is returned:
+A rejected memento request returns 400 with one `errors` entry per violation, each carrying a JSON Pointer to the offending member of your request body. A missing `id` answers `"pointer": "#/id"` with `"detail": "must not be null"`. A value that does not read has its pointer too, here a date in German notation:
+
 ```json
 {
-  "errors": ["id must not be null"]
+  "type": "/api/docs/problems/validation-error",
+  "title": "Request validation failed",
+  "status": 400,
+  "detail": "1 violation",
+  "instance": "/api/digg/v1/memento",
+  "errors": [
+    { "detail": "not a valid value: expected a date, YYYY-MM-DD", "pointer": "#/geburtsangaben/tag" }
+  ]
 }
 ```
+
+`pointer` is absent only for a violation of the request as a whole, such as JSON that is broken; `detail` then names its line and column.
+
+### Not-found is normal
+
+A 404 between memento creation and the user sending the form is the **expected** state, not a fault in your integration — keep polling. If sending fails in the form, nothing is recorded either, so the id stays 404 until the user sends successfully. Poll well inside the 3-day retention window: a result that is never fetched is removed by the retention cleanup and answers 410 (`report-expired`).
 
 ---
 
@@ -358,6 +385,10 @@ If the request data is invalid (e.g. missing `id`), a 400 Bad Request is returne
 
 - [OpenAPI](./api.yml) 
 - [API Viewer (Swagger)](https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIGG)
+
+### Runnable Examples
+
+[vap-examples](https://github.com/Vertama-GmbH/vap-examples) holds small Java programs that call the memento endpoint with basic auth and open the prefilled form: the `id` alone, a rich prefill (built in code, and the same as literal JSON), and two refused requests with V.ap's answer as sent. Run them from the command line with `make`, or in your IDE.
 
 ### API Endpoints Summary
 

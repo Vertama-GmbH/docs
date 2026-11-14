@@ -606,7 +606,7 @@ A rejected memento request returns 400 with one `errors` entry per violated cons
 }
 ```
 
-`pointer` is absent for violations of the request as a whole, such as an unparseable body or a wrong number of populated slots.
+`pointer` is absent only for violations of the request as a whole, such as JSON that is broken (`detail` then names its line and column) or a wrong number of populated slots. A value that does not read, such as a date not in ISO 8601, has its pointer, and `detail` names the kind of value expected there.
 
 ### Not-found is normal
 
