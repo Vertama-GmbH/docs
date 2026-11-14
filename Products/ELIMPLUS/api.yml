@@ -1,0 +1,547 @@
+openapi: 3.0.3
+info:
+  title: ELIM+ API
+  # 0.2.0 (2026-03-03): the currently published contract. Everything below is in-flight and unpublished.
+  # 0.3.0 (2026-04-20): MeldendeEinrichtung carries BSNR + Telefon + optional Email. Name/address flow from the Krankenhausstandorte registry; phone is not in the registry and is form-supplied (required at form submit, nullable at memento for partial pre-fill).
+  # 0.3.1 (2026-09-02): removed six unreferenced value-set schemas (ConclusionCode, Interpretation, FastenStatus, Method, SpecimenProcessingProcedure, FHIRSpecimenCollectionMethod). No request or response property carried their type, so they documented values the API cannot accept. They belong to the Krankheit/Laborbericht layer, which stays out of the pre-fill contract (see 0.2.0). Invisible to consumers — hence a patch bump.
+  version: "0.3.2" # Updated 2026-09-04: added Labormeldung.KrankheitsCode and EinsendendeEinrichtung.Alias. Both were already processed by the application but could not be supplied by a client — KrankheitsCode was read from the memento, Alias was rendered in the form and bundled into the DEMIS notification. Additive only, no existing property changed.
+  description: API for ELIM+ laboratory reporting (Labormeldung) - DEMIS integration
+servers:
+  - url: /api/elimplus/v1
+    description: ELIM+ API Version 1
+paths:
+  /memento:
+    post:
+      summary: Create encrypted memento string from laboratory report data
+      description: |-
+        Accepts laboratory report data (Labormeldung) as JSON and returns an encrypted memento string.
+        The answer carries a magic link (`magicLink`) that opens the pre-filled form.
+
+        Use Case:
+        External systems (e.g., KIS, laboratory systems) submit form data → receive a magic link →
+        open it in the user's browser → the user lands on the pre-filled form, logged in.
+
+        This endpoint validates the submitted data against the Labormeldung schema
+        before encryption. The memento string is URL-safe and tamper-proof.
+
+        Note: This endpoint does NOT submit the report to DEMIS.
+        It only creates a pre-fill token for the interactive HTML form.
+      tags:
+        - ELIMPLUS
+      security:
+        - basicAuth: []
+      operationId: createMemento
+      requestBody:
+        required: true
+        description: Laboratory report data to encrypt into memento string
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Labormeldung'
+      responses:
+        '200':
+          description: Memento successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MementoResponse'
+              example:
+                memento: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                magicLink: "/mtl/v2.k9Xq...token..."
+        '400':
+          description: |-
+            Bad Request — request validation failed (RFC 9457 problem details,
+            type /api/docs/problems/validation-error, one entry
+            per violated constraint with a JSON Pointer to the offending field).
+          content:
+            application/problem+json:
+              schema:
+                $ref: '../web/api.yml#/components/schemas/ValidationProblem'
+              example:
+                type: "/api/docs/problems/validation-error"
+                title: "Request validation failed"
+                status: 400
+                detail: "1 violation"
+                instance: "/api/elimplus/v1/memento"
+                errors:
+                  - detail: "must be a valid date"
+                    pointer: "#/meldungsDatum"
+        '401':
+          description: |-
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
+  /reports:
+    get:
+      summary: List pending report IDs for the authenticated API user
+      description: |-
+        Returns the list of report IDs that have been submitted by the authenticated
+        API user but not yet retrieved (unpolled). These are reports waiting for
+        the caller to fetch the full result.
+
+        Use GET /reports/{reportId} to retrieve the full result for each ID.
+
+        The list contains only unpolled report IDs — once a report has been
+        retrieved without ?peek=true it will no longer appear here.
+      tags:
+        - ELIMPLUS
+      security:
+        - basicAuth: []
+      operationId: listPendingReports
+      responses:
+        '200':
+          description: List of pending report IDs (may be empty)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example:
+                - "LAB-2024-00123"
+                - "LAB-2024-00124"
+        '401':
+          description: |-
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
+  /reports/{reportId}:
+    get:
+      summary: Retrieve a single report result by report ID
+      description: |-
+        Returns the full result for a submitted laboratory report.
+
+        By default this is a destructive read: once retrieved, the report is marked
+        as polled and will no longer appear in GET /reports. Use ?peek=true for
+        a non-destructive read that leaves the report in the pending list.
+
+        The report ID is the `reportId` field from the original Labormeldung
+        submitted to POST /memento (and used in the form submission).
+
+        Only SUCCESS is ever reported here: a retrievable report is a
+        confirmed submission (receiptPdf carries the RKI-issued receipt PDF,
+        base64). Failures are never delivered through this API — failed
+        attempts are handled interactively in the form; an id without a
+        report answers 404.
+      tags:
+        - ELIMPLUS
+      security:
+        - basicAuth: []
+      operationId: getReport
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          description: The report ID from the original Labormeldung
+          schema:
+            type: string
+          example: "LAB-2024-00123"
+        - name: peek
+          in: query
+          required: false
+          description: |-
+            If true, retrieve the result without marking it as polled.
+            The report remains in the GET /reports pending list.
+            Default: false (destructive read).
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Report result found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportResult'
+              example:
+                reportId: "LAB-2024-00123"
+                status: "SUCCESS"
+                module: "ELIMPLUS"
+                diseaseCode: "Influenza"
+                description: "Labormeldung Influenza"
+                submittedAt: "2024-12-08T14:32:00Z"
+                receiptPdf: "JVBERi0xLjQK..."
+                failureReason: null
+        '401':
+          description: |-
+            Unauthorized - invalid or missing authentication.
+            Returns 401 status with WWW-Authenticate header.
+            Response body is empty.
+        '404':
+          description: |-
+            Report not found (RFC 9457 problem details, type
+            /api/docs/problems/elimplus/report-not-found).
+            Covers: not yet submitted by the user, unknown id, id belonging to
+            a different API user, or expired (retention cleanup).
+          content:
+            application/problem+json:
+              schema:
+                $ref: '../web/api.yml#/components/schemas/ProblemDetail'
+              example:
+                type: "/api/docs/problems/elimplus/report-not-found"
+                title: "Not Found"
+                status: 404
+                detail: "No report 'LAB-2024-00123' for this user — not yet submitted, unknown id, or expired"
+                instance: "/api/elimplus/v1/reports/LAB-2024-00123"
+        '410':
+          description: |-
+            Gone (RFC 9457 problem details, type
+            /api/docs/problems/elimplus/report-already-retrieved).
+            The report was previously retrieved (polled) and is no longer
+            available. Use ?peek=true on future requests to avoid consuming reports.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '../web/api.yml#/components/schemas/ProblemDetail'
+              example:
+                type: "/api/docs/problems/elimplus/report-already-retrieved"
+                title: "Gone"
+                status: 410
+                detail: "Report 'LAB-2024-00123' was already retrieved; use ?peek=true to read without consuming"
+                instance: "/api/elimplus/v1/reports/LAB-2024-00123"
+components:
+  schemas:
+    MementoResponse:
+      type: object
+      required:
+        - memento
+      properties:
+        memento:
+          type: string
+          description: |-
+            Encrypted, URL-safe memento string containing the form data.
+            Deprecated: only for the old entry, where a form URL with ?m=<string>
+            is opened with basic auth. Open the magicLink instead.
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        magicLink:
+          type: string
+          nullable: true
+          description: |-
+            Ready-to-use Magic Token Link URL (relative path).
+            Combines authentication and form pre-fill in a single click:
+            the authenticated API user can forward this URL to a browser
+            session that has no existing login — it will authenticate and
+            open the pre-filled form selection page directly.
+            The link is /mtl/{token}. The token carries no form data: the data and the
+            target stay on the server, sealed, until the link is opened. The link is
+            valid only briefly and for few uses, depending on the configuration:
+            count on one use and open it at once.
+            Prepend your host to make it absolute: https://host + magicLink
+          example: "/mtl/v2.k9Xq...token..."
+    Labormeldung:
+      type: object
+      description: |-
+        Laboratory report for notifiable diseases (DEMIS integration).
+
+        For memento creation, most fields are optional to allow partial pre-filling.
+        Actual validation for DEMIS submission happens later in the form workflow.
+      required:
+        - reportId
+      properties:
+        reportId:
+          type: string
+          description: |-
+            Unique identifier for this laboratory report.
+            Required to track and correlate this report throughout the workflow.
+          example: "LAB-2024-00123"
+        KrankheitsCode:
+          type: string
+          nullable: true
+          description: |-
+            DEMIS notification category of the disease this report is about.
+
+            Supplying it lets the magic link open the matching disease form directly instead
+            of the selection page. Deliberately a free string rather than an enum, mirroring
+            the internal form model; an unknown value falls back to the selection page.
+
+            Supported values: `invp` (Influenza), `rsvp` (RSV), `novp` (Norovirus),
+            `cvdp` (SARS-CoV-2).
+          example: "invp"
+        MeldungsVerweisId:
+          type: string
+          nullable: true
+          description: |-
+            DEMIS-Meldungs-ID (NotificationId, a UUID assigned by DEMIS) of a previously accepted
+            notification this report follows up on — sent as Composition.relatesTo (appends).
+            Not the reportId. Required for "Erreger nicht nachgewiesen" (pathogenNotDetected) and for
+            anonymous patients. Not a correction mechanism: corrections are not supported.
+          example: "3f2c8a1e-6b4d-4e2a-9c1f-8d7e5b2a4c60"
+        Patient:
+          $ref: '#/components/schemas/Patient'
+        MeldendeEinrichtung:
+          $ref: '#/components/schemas/MeldendeEinrichtung'
+        MeldendePerson:
+          $ref: '#/components/schemas/MeldendePerson'
+        EinsendendeEinrichtung:
+          $ref: '#/components/schemas/EinsendendeEinrichtung'
+        MeldungsDatum:
+          type: string
+          format: date
+          nullable: true
+          description: Date when the report was created
+          example: "2024-12-08"
+    Patient:
+      type: object
+      description: |-
+        Patient information - supports both standard and anonymous patients.
+
+        Validation semantics (enforced at form/backend level):
+        - When IsAnonym=true: Anonym object should be populated, Standard should be null
+        - When IsAnonym=false: Standard object should be populated, Anonym should be null
+        - When IsAnonym=null: Both Standard and Anonym can be null
+        - Both Standard and Anonym populated simultaneously is an error
+
+        All fields are optional for lenient memento creation.
+      properties:
+        IsAnonym:
+          type: boolean
+          nullable: true
+          description: |-
+            Indicates patient type: true for anonymous, false for standard, null for unspecified.
+            Anonymous patients have limited data for privacy protection.
+          example: false
+        Standard:
+          $ref: '#/components/schemas/PatientStandard'
+        Anonym:
+          $ref: '#/components/schemas/PatientAnonym'
+    PatientStandard:
+      type: object
+      description: Standard patient with full identification
+      properties:
+        Name:
+          $ref: '#/components/schemas/Name'
+        Geschlecht:
+          $ref: '#/components/schemas/GenderOrNoInformation'
+        Geburtsdatum:
+          type: string
+          format: date
+          nullable: true
+          description: Full birth date (YYYY-MM-DD)
+          example: "1980-05-15"
+        Adresse:
+          $ref: '#/components/schemas/Adresse'
+        Kontakt:
+          $ref: '#/components/schemas/Kontakt'
+    PatientAnonym:
+      type: object
+      description: |-
+        Anonymous patient with limited data for privacy protection.
+
+        Differences from standard patient:
+        - No name or contact information
+        - Birth month/year only (not full date)
+        - Limited address (postal code and country only)
+      properties:
+        Geschlecht:
+          $ref: '#/components/schemas/GenderOrNoInformation'
+        GeburtsmonatJahr:
+          type: string
+          pattern: '^\d{4}-\d{2}$'
+          nullable: true
+          description: Birth month and year in YYYY-MM format (not full date for privacy)
+          example: "1980-05"
+        Adresse:
+          $ref: '#/components/schemas/AnonymAdresse'
+    AnonymAdresse:
+      type: object
+      description: |-
+        Limited address information for anonymous patients (privacy protection).
+
+        Contains only postal code and country - no street name, city, or other identifiable details.
+      properties:
+        PLZ:
+          type: string
+          nullable: true
+          description: Postal code
+          example: "12345"
+        Land:
+          type: string
+          nullable: true
+          description: ISO 3166-1 alpha-2 country code
+          example: "DE"
+    Name:
+      type: object
+      description: Person name
+      properties:
+        Vorname:
+          type: string
+          nullable: true
+          description: First name
+          example: "Max"
+        Nachname:
+          type: string
+          nullable: true
+          description: Last name
+          example: "Mustermann"
+    Adresse:
+      type: object
+      description: Address information
+      properties:
+        Strasse:
+          type: string
+          nullable: true
+          description: Street name and number
+          example: "Musterstraße 123"
+        PLZ:
+          type: string
+          nullable: true
+          description: Postal code
+          example: "12345"
+        Stadt:
+          type: string
+          nullable: true
+          description: City name
+          example: "Musterstadt"
+    Kontakt:
+      type: object
+      description: Contact information
+      properties:
+        Telefon:
+          type: string
+          nullable: true
+          description: Phone number
+          example: "+49 123 456789"
+        Email:
+          type: string
+          format: email
+          nullable: true
+          description: Email address
+          example: "kontakt@example.com"
+    GenderOrNoInformation:
+      type: string
+      nullable: true
+      description: |-
+        Gender or no information (administrative gender).
+
+        Values:
+        - NASK: Not asked (nicht gefragt)
+        - ASKU: Asked but unknown (gefragt, aber unbekannt)
+        - MAENNLICH: Male (männlich)
+        - WEIBLICH: Female (weiblich)
+        - DIVERS: Diverse
+        - UNBESTIMMT: Unspecified (unbestimmt)
+      enum:
+        - NASK
+        - ASKU
+        - MAENNLICH
+        - WEIBLICH
+        - DIVERS
+        - UNBESTIMMT
+      example: "MAENNLICH"
+    MeldendeEinrichtung:
+      type: object
+      description: |-
+        Notifier facility identification. The BSNR is the routing key: it resolves
+        via the Krankenhausstandorte registry (name + postal address) against the
+        Customer-scoped IK set of the authenticated ApiUser. Telefon is required
+        at form submit — the registry does not carry phone data, so the caller
+        supplies it. Email is optional and emitted to the bundle only when present.
+      properties:
+        BSNR:
+          type: string
+          nullable: true
+          description: |-
+            Betriebsstättennummer — 9-digit KBV facility number. Must resolve to an
+            active Einrichtung under an IK in the authenticated ApiUser's Customer scope.
+          example: "123456789"
+        Telefon:
+          type: string
+          nullable: true
+          description: |-
+            Phone number for the notifier facility. Required at form submit — the
+            Krankenhausstandorte registry does not carry phone data, so the caller
+            supplies it. Nullable here to permit partial memento pre-fills.
+          example: "+49 123 456700"
+        Email:
+          type: string
+          format: email
+          nullable: true
+          description: Optional contact email. Emitted to the bundle only when present.
+          example: "meldungen@example-klinik.de"
+    MeldendePerson:
+      type: object
+      description: Reporting person - optional for memento
+      properties:
+        Name:
+          $ref: '#/components/schemas/Name'
+        Kontakt:
+          $ref: '#/components/schemas/Kontakt'
+    EinsendendeEinrichtung:
+      type: object
+      description: Sending facility (e.g., laboratory that performed the test) - optional for memento
+      properties:
+        EinrichtungsName:
+          type: string
+          nullable: true
+          description: Name of the sending facility
+          example: "Labor für Medizinische Mikrobiologie"
+        Alias:
+          type: string
+          nullable: true
+          description: |-
+            Alternative name of the sending facility, forwarded to DEMIS as an
+            Organization alias alongside the primary name.
+          example: "MVZ Labor Nord"
+        Adresse:
+          $ref: '#/components/schemas/Adresse'
+        Kontakt:
+          $ref: '#/components/schemas/Kontakt'
+    ReportResult:
+      type: object
+      required:
+        - reportId
+        - status
+        - module
+        - submittedAt
+      description: |-
+        Result of a laboratory report submission to DEMIS.
+        Returned by GET /reports/{reportId}.
+      properties:
+        reportId:
+          type: string
+          description: The report ID from the original Labormeldung submission
+          example: "LAB-2024-00123"
+        status:
+          type: string
+          enum:
+            - SUCCESS
+          description: |-
+            Only SUCCESS is ever reported here: a retrievable report is a
+            confirmed submission. Failures are never delivered through this
+            API — failed attempts are handled interactively in the form; an
+            id without a report answers 404 (see the report-not-found
+            problem type).
+          example: "SUCCESS"
+        module:
+          type: string
+          description: Module that produced this report
+          example: "ELIMPLUS"
+        diseaseCode:
+          type: string
+          nullable: true
+          description: |-
+            Disease code identifying the type of report (e.g. Influenza, Rsv, Norovirus, Sarscov2).
+            Null if not available.
+          example: "Influenza"
+        description:
+          type: string
+          nullable: true
+          description: |-
+            Human-readable description of the report (e.g. "Labormeldung Influenza").
+            Null if not available.
+          example: "Labormeldung Influenza"
+        submittedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the report was submitted to DEMIS (ISO 8601)
+          example: "2024-12-08T14:32:00Z"
+        receiptPdf:
+          type: string
+          nullable: true
+          description: |-
+            Base64-encoded RKI receipt PDF.
+          example: "JVBERi0xLjQK..."
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic

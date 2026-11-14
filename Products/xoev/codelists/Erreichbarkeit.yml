@@ -1,0 +1,41 @@
+# GENERATED FILE - do not edit by hand. Re-derive from the source JSON in
+# this same directory if the codelist version changes.
+type: string
+nullable: true
+enum:
+  - "01"
+  - "02"
+  - "03"
+  - "04"
+  - "05"
+  - "06"
+  - "07"
+  - "08"
+  - "09"
+  - "10"
+  - "11"
+  - "12"
+  - "13"
+  - "14"
+  - "15"
+description: |-
+  Erreichbarkeit (Kommunikationskanal / Erreichbarkeit).
+  Code aus XÖV-Codeliste urn:de:xoev:codeliste:erreichbarkeit (Version 4.1).
+
+  Codes:
+  - 01: E-Mail
+  - 02: Telefon Festnetz
+  - 03: Telefon mobil
+  - 04: Fax
+  - 05: Instant Messenger
+  - 06: Pager
+  - 07: Sonstiges
+  - 08: De-Mail
+  - 09: Web
+  - 10: Web sicher
+  - 11: Kontaktformular sicher
+  - 12: Facebook
+  - 13: X (vormals Twitter)
+  - 14: Mastodon
+  - 15: Instagram
+example: "01"

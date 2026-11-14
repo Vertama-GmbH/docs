@@ -1,0 +1,433 @@
+# GENERATED FILE - do not edit by hand. Re-derive from the source JSON in
+# this same directory if the codelist version changes.
+type: string
+nullable: true
+enum:
+  - "423"
+  - "287"
+  - "121"
+  - "221"
+  - "123"
+  - "223"
+  - "320"
+  - "274"
+  - "323"
+  - "422"
+  - "425"
+  - "225"
+  - "523"
+  - "324"
+  - "424"
+  - "460"
+  - "322"
+  - "169"
+  - "124"
+  - "330"
+  - "229"
+  - "426"
+  - "326"
+  - "122"
+  - "227"
+  - "327"
+  - "185"
+  - "429"
+  - "125"
+  - "258"
+  - "291"
+  - "242"
+  - "332"
+  - "479"
+  - "334"
+  - "231"
+  - "126"
+  - "000"
+  - "333"
+  - "335"
+  - "230"
+  - "336"
+  - "337"
+  - "224"
+  - "127"
+  - "281"
+  - "526"
+  - "128"
+  - "129"
+  - "910"
+  - "236"
+  - "237"
+  - "430"
+  - "238"
+  - "340"
+  - "134"
+  - "345"
+  - "261"
+  - "259"
+  - "328"
+  - "346"
+  - "347"
+  - "411"
+  - "436"
+  - "437"
+  - "438"
+  - "439"
+  - "135"
+  - "136"
+  - "441"
+  - "137"
+  - "355"
+  - "442"
+  - "421"
+  - "445"
+  - "120"
+  - "138"
+  - "446"
+  - "262"
+  - "348"
+  - "444"
+  - "447"
+  - "243"
+  - "450"
+  - "530"
+  - "349"
+  - "244"
+  - "245"
+  - "246"
+  - "434"
+  - "467"
+  - "150"
+  - "130"
+  - "351"
+  - "448"
+  - "449"
+  - "226"
+  - "139"
+  - "451"
+  - "247"
+  - "248"
+  - "141"
+  - "142"
+  - "143"
+  - "412"
+  - "249"
+  - "256"
+  - "482"
+  - "454"
+  - "251"
+  - "145"
+  - "252"
+  - "544"
+  - "239"
+  - "253"
+  - "353"
+  - "545"
+  - "146"
+  - "147"
+  - "457"
+  - "140"
+  - "254"
+  - "427"
+  - "267"
+  - "531"
+  - "458"
+  - "536"
+  - "354"
+  - "148"
+  - "255"
+  - "232"
+  - "144"
+  - "149"
+  - "999"
+  - "456"
+  - "151"
+  - "461"
+  - "459"
+  - "537"
+  - "357"
+  - "538"
+  - "359"
+  - "361"
+  - "462"
+  - "152"
+  - "153"
+  - "265"
+  - "154"
+  - "160"
+  - "524"
+  - "257"
+  - "543"
+  - "156"
+  - "268"
+  - "472"
+  - "157"
+  - "158"
+  - "269"
+  - "170"
+  - "133"
+  - "132"
+  - "271"
+  - "272"
+  - "233"
+  - "474"
+  - "155"
+  - "131"
+  - "273"
+  - "159"
+  - "161"
+  - "431"
+  - "370"
+  - "366"
+  - "369"
+  - "997"
+  - "263"
+  - "277"
+  - "276"
+  - "278"
+  - "364"
+  - "475"
+  - "470"
+  - "465"
+  - "282"
+  - "476"
+  - "483"
+  - "283"
+  - "541"
+  - "371"
+  - "284"
+  - "164"
+  - "162"
+  - "285"
+  - "163"
+  - "471"
+  - "540"
+  - "286"
+  - "166"
+  - "165"
+  - "998"
+  - "365"
+  - "477"
+  - "532"
+  - "167"
+  - "367"
+  - "469"
+  - "368"
+  - "168"
+  - "432"
+  - "289"
+  - "181"
+description: |-
+  DESTATIS Staatsangehörigkeit (Codeliste Staatsangehörigkeit aus der Staats- und Gebietssystematik des Statistischen Bundesamtes).
+  Code aus XÖV-Codeliste urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:staatsangehoerigkeit (Version 2024-08-01).
+
+  Codes:
+  - 423: Afghanistan
+  - 287: Ägypten
+  - 121: Albanien
+  - 221: Algerien
+  - 123: Andorra
+  - 223: Angola
+  - 320: Antigua und Barbuda
+  - 274: Äquatorialguinea
+  - 323: Argentinien
+  - 422: Armenien
+  - 425: Aserbaidschan
+  - 225: Äthiopien
+  - 523: Australien
+  - 324: Bahamas
+  - 424: Bahrain
+  - 460: Bangladesch
+  - 322: Barbados
+  - 169: Belarus
+  - 124: Belgien
+  - 330: Belize
+  - 229: Benin
+  - 426: Bhutan
+  - 326: Bolivien
+  - 122: Bosnien und Herzegowina
+  - 227: Botsuana
+  - 327: Brasilien
+  - 185: Britische Überseegebiete
+  - 429: Brunei Darussalam
+  - 125: Bulgarien
+  - 258: Burkina Faso
+  - 291: Burundi
+  - 242: Cabo Verde
+  - 332: Chile
+  - 479: China
+  - 334: Costa Rica
+  - 231: Côte d’Ivoire
+  - 126: Dänemark
+  - 000: Deutschland
+  - 333: Dominica
+  - 335: Dominikanische Republik
+  - 230: Dschibuti
+  - 336: Ecuador
+  - 337: El Salvador
+  - 224: Eritrea
+  - 127: Estland
+  - 281: Eswatini
+  - 526: Fidschi
+  - 128: Finnland
+  - 129: Frankreich
+  - 910: für interne Zwecke verwendet
+  - 236: Gabun
+  - 237: Gambia
+  - 430: Georgien
+  - 238: Ghana
+  - 340: Grenada
+  - 134: Griechenland
+  - 345: Guatemala
+  - 261: Guinea
+  - 259: Guinea-Bissau
+  - 328: Guyana
+  - 346: Haiti
+  - 347: Honduras
+  - 411: Hongkong
+  - 436: Indien
+  - 437: Indonesien
+  - 438: Irak
+  - 439: Iran
+  - 135: Irland
+  - 136: Island
+  - 441: Israel
+  - 137: Italien
+  - 355: Jamaika
+  - 442: Japan
+  - 421: Jemen
+  - 445: Jordanien
+  - 120: Jugoslawien
+  - 138: Jugoslawien, Bundesrepublik
+  - 446: Kambodscha
+  - 262: Kamerun
+  - 348: Kanada
+  - 444: Kasachstan
+  - 447: Katar
+  - 243: Kenia
+  - 450: Kirgisistan
+  - 530: Kiribati
+  - 349: Kolumbien
+  - 244: Komoren
+  - 245: Kongo
+  - 246: Kongo, Demokratische Republik
+  - 434: Korea, Demokratische Volksrepublik
+  - 467: Korea, Republik
+  - 150: Kosovo
+  - 130: Kroatien
+  - 351: Kuba
+  - 448: Kuwait
+  - 449: Laos
+  - 226: Lesotho
+  - 139: Lettland
+  - 451: Libanon
+  - 247: Liberia
+  - 248: Libyen
+  - 141: Liechtenstein
+  - 142: Litauen
+  - 143: Luxemburg
+  - 412: Macau
+  - 249: Madagaskar
+  - 256: Malawi
+  - 482: Malaysia
+  - 454: Malediven
+  - 251: Mali
+  - 145: Malta
+  - 252: Marokko
+  - 544: Marshallinseln
+  - 239: Mauretanien
+  - 253: Mauritius
+  - 353: Mexiko
+  - 545: Mikronesien
+  - 146: Moldau
+  - 147: Monaco
+  - 457: Mongolei
+  - 140: Montenegro
+  - 254: Mosambik
+  - 427: Myanmar
+  - 267: Namibia
+  - 531: Nauru
+  - 458: Nepal
+  - 536: Neuseeland
+  - 354: Nicaragua
+  - 148: Niederlande
+  - 255: Niger
+  - 232: Nigeria
+  - 144: Nordmazedonien
+  - 149: Norwegen
+  - 999: ohne Angabe (Staatsangehörigkeit)
+  - 456: Oman
+  - 151: Österreich
+  - 461: Pakistan
+  - 459: Palästinensische Gebiete
+  - 537: Palau
+  - 357: Panama
+  - 538: Papua-Neuguinea
+  - 359: Paraguay
+  - 361: Peru
+  - 462: Philippinen
+  - 152: Polen
+  - 153: Portugal
+  - 265: Ruanda
+  - 154: Rumänien
+  - 160: Russische Föderation
+  - 524: Salomonen
+  - 257: Sambia
+  - 543: Samoa
+  - 156: San Marino
+  - 268: São Tomé und Príncipe
+  - 472: Saudi-Arabien
+  - 157: Schweden
+  - 158: Schweiz
+  - 269: Senegal
+  - 170: Serbien
+  - 133: Serbien (einschließlich Kosovo)
+  - 132: Serbien und Montenegro
+  - 271: Seychellen
+  - 272: Sierra Leone
+  - 233: Simbabwe
+  - 474: Singapur
+  - 155: Slowakei
+  - 131: Slowenien
+  - 273: Somalia
+  - 159: Sowjetunion
+  - 161: Spanien
+  - 431: Sri Lanka
+  - 370: St. Kitts und Nevis
+  - 366: St. Lucia
+  - 369: St. Vincent und die Grenadinen
+  - 997: staatenlos
+  - 263: Südafrika
+  - 277: Sudan
+  - 276: Sudan (einschließlich Südsudan)
+  - 278: Südsudan
+  - 364: Suriname
+  - 475: Syrien
+  - 470: Tadschikistan
+  - 465: Taiwan
+  - 282: Tansania
+  - 476: Thailand
+  - 483: Timor-Leste
+  - 283: Togo
+  - 541: Tonga
+  - 371: Trinidad und Tobago
+  - 284: Tschad
+  - 164: Tschechien
+  - 162: Tschechoslowakei
+  - 285: Tunesien
+  - 163: Türkei
+  - 471: Turkmenistan
+  - 540: Tuvalu
+  - 286: Uganda
+  - 166: Ukraine
+  - 165: Ungarn
+  - 998: ungeklärt
+  - 365: Uruguay
+  - 477: Usbekistan
+  - 532: Vanuatu
+  - 167: Vatikanstadt
+  - 367: Venezuela
+  - 469: Vereinigte Arabische Emirate
+  - 368: Vereinigte Staaten
+  - 168: Vereinigtes Königreich
+  - 432: Vietnam
+  - 289: Zentralafrikanische Republik
+  - 181: Zypern
+example: "423"
