@@ -475,7 +475,7 @@ curl -u "api-user:api-pass" \
 - `portal`: the Standesamt portal the report was sent through, e.g. `GOVCONNECT`, `GOVCONNECT_TEST` (test mode) or `AKDB`.
 - `submittedAt`: when the user sent the form.
 
-**Note:** By default, reading a SUCCESS or FAILURE report is destructive — it is marked as polled, the report PDF is deleted, and the report is not delivered again ([report-already-retrieved](problems/report-already-retrieved.md)). Use `?peek=true` and consume the report only once you have durably stored the result.
+**Note:** By default, reading a SUCCESS or FAILURE report is destructive — it is marked as polled, the report PDF is deleted, and the report is not delivered again (`report-already-retrieved`). Use `?peek=true` and consume the report only once you have durably stored the result.
 
 ### Recommended polling loop
 
@@ -486,7 +486,7 @@ curl -u "api-user:api-pass" \
 
 If your client detects the [success redirect](#detecting-submission-success-from-an-embedding-client), start watching that `id` right after it. As a cyclic safety net, once per minute against `GET /reports` is more than sufficient — keep the cadence moderate. The result carries the report PDF base64-encoded and can be a few hundred kilobytes.
 
-Poll well inside the 3-day retention window: results that are never fetched are removed by the retention cleanup and return 410 ([report-expired](problems/report-expired.md)).
+Poll well inside the 3-day retention window: results that are never fetched are removed by the retention cleanup and return 410 (`report-expired`).
 
 ### Testing
 
@@ -578,14 +578,14 @@ done
 
 ### Problem Details (RFC 9457)
 
-Except for 401, errors are returned as [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) problem details with `Content-Type: application/problem+json`. **Branch on the `type` URI** — it is the stable machine-readable discriminator; `title` and `detail` are developer diagnostics and may be reworded.
+Except for 401, errors are returned as [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) problem details with `Content-Type: application/problem+json`. **Branch on the `type` URI** — it is the stable machine-readable discriminator; `title` and `detail` are developer diagnostics and may be reworded. Each `type` is a path: resolved against your V.ap host, it opens the type's page, and `/api/docs/problems` lists all types (see [Problem types](../../problems/index.md)).
 
-| `type` URI | Status | Documentation |
-|---|---|---|
-| `…/problems/validation-error` | 400 | [validation-error](../../problems/validation-error.md) |
-| `…/Products/DIGT/problems/report-not-found` | 404 | [report-not-found](problems/report-not-found.md) |
-| `…/Products/DIGT/problems/report-already-retrieved` | 410 | [report-already-retrieved](problems/report-already-retrieved.md) |
-| `…/Products/DIGT/problems/report-expired` | 410 | [report-expired](problems/report-expired.md) |
+| `type` | Status |
+|---|---|
+| `/api/docs/problems/validation-error` | 400 |
+| `/api/docs/problems/digt/report-not-found` | 404 |
+| `/api/docs/problems/digt/report-already-retrieved` | 410 |
+| `/api/docs/problems/digt/report-expired` | 410 |
 
 Note that **the two 410 cases share a status code but differ in `type`** — one means "someone already consumed this", the other "it aged out". Distinguish them by `type`, never by status alone.
 
@@ -595,7 +595,7 @@ A rejected memento request returns 400 with one `errors` entry per violated cons
 
 ```json
 {
-  "type": "https://docs.vertama.com/problems/validation-error",
+  "type": "/api/docs/problems/validation-error",
   "title": "Request validation failed",
   "status": 400,
   "detail": "1 violation",
@@ -610,7 +610,7 @@ A rejected memento request returns 400 with one `errors` entry per violated cons
 
 ### Not-found is normal
 
-A 404 between memento creation and the user sending the form is the **expected** state, not a fault in your integration — keep polling. If sending fails in the form, nothing is recorded either, so the id stays 404 until the user sends successfully. See [report-not-found](problems/report-not-found.md) for the full case list.
+A 404 between memento creation and the user sending the form is the **expected** state, not a fault in your integration — keep polling. If sending fails in the form, nothing is recorded either, so the id stays 404 until the user sends successfully. See `report-not-found` for the full case list.
 
 ---
 

@@ -48,13 +48,18 @@ and falls back to the default language when a translation is missing.
 | Fremdaufruf Präsentation (DE) | `V.connect/Fremdaufruf/presentation/` | `mcp-health/V.connect` → `fremdaufruf/presentation/` | yes | `make sync-fremdaufruf-deck` — pulls the self-contained reveal.js deck from V.c, strips `<aside class="notes">` speaker-note blocks (presenter guidance not intended for the public site) via `scripts/strip-notes.py`, copies brand assets and images unchanged. Note: the deck links absolute `docs.vertama.com/Products/V.connect/…` URLs — served via redirect stubs since the uplift; fix upstream in V.c at next deck revision |
 | DIGT API Tutorial | `Products/DIGT/api-tutorial.md` | this repo | canonical | n/a — not to be confused with the German draft `Vertama-GmbH/elim` → `docs/external/digt/api-guide.md`, a separate document never adopted here |
 | DIGT OpenAPI spec | `Products/DIGT/api.yml` | `Vertama-GmbH/elim` → `src/main/resources/de/vertama/digt/api.yml` (served by V.ap's Swagger UI, `urls.primaryName=DIGT`) | yes | manual copy, unchanged — the relative `$ref: '../web/api.yml#/…'` resolves both in elim and here (`Products/web/api.yml`). Change the spec in elim first, then copy; identical to elim @ `8cc10e90c` as of 2026-10-21 |
-| DIGT problem types | `Products/DIGT/problems/*.md` | this repo | canonical | n/a — problem-type registry pages that the `type` URIs of V.ap's RFC 9457 responses resolve to (elim ADR-010) |
+| Problem types (pointer page) | `problems/index.md` | this repo | canonical | n/a — a pointer only: the type pages are served by V.ap itself under `/api/docs/problems/…`, authored in `Vertama-GmbH/elim` → `src/main/resources/de/vertama/<product>/problems/` next to the code that names the types (elim ADR-010, amendment 2026-11-14). The per-product nav entries "Problem Types (V.ap)" are external links to V.ap's index, like the Swagger links |
 
 URL history: `Products/V.connect/*` moved to top-level `V.connect/*` in the
 2026-08 nav restructure (V.connect uplift), and `how-to/folder-sync-handbuch`
 moved into the DIVI vertical (`Products/DIVI/folder-sync-handbuch`, German
 now as `.de.md`) — DIVI is its only user. Old URLs keep serving through
 redirect stubs written by `scripts/hooks/redirects.py` at build time.
+
+One deliberate exception: the 13 problem-type pages (`problems/validation-error`,
+`Products/{DIGT,ELIM,ELIMPLUS,ZEAG}/problems/*`) were removed on 2026-11-14
+without stubs. They did not move: V.ap no longer sends their URLs as names,
+and its own pages replace them.
 
 ## Internal mirror points
 
@@ -75,6 +80,9 @@ long-term target. The end state varies per document:
   application already serves OpenAPI; documentation can follow), this
   site's URL-Builder page becomes a thin pointer to the V.ap-hosted
   authoritative version. No mirror, no drift, ownership = publication.
+- **The problem-type pages** made that move first (2026-11-14): V.ap serves
+  them next to the code that names the types, and this site keeps one
+  pointer page and links. Ownership = publication.
 - **The Architecture doc** is a candidate for **automated mirror** (e.g.
   `mkdocs-multirepo-plugin` pulling at build time, or a CI sync). Both
   ends remain markdown; only the sync mechanism upgrades.

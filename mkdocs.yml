@@ -94,14 +94,12 @@ nav:
        - "API Tutorial": "Products/DIGG/api-tutorial.md"
        - "api.yml (OpenAPI)": Products/DIGG/api.yml
        - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIGG"
+       - "Problem Types (V.ap)": "https://elim.vertamob.de/api/docs/problems"
      - DIGT:
        - "API Tutorial": "Products/DIGT/api-tutorial.md"
        - "api.yml (OpenAPI)": Products/DIGT/api.yml
        - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DIGT"
-       - "Problem Types":
-         - "report-not-found": "Products/DIGT/problems/report-not-found.md"
-         - "report-already-retrieved": "Products/DIGT/problems/report-already-retrieved.md"
-         - "report-expired": "Products/DIGT/problems/report-expired.md"
+       - "Problem Types (V.ap)": "https://elim.vertamob.de/api/docs/problems"
      - DIVI:
        - "API Tutorial": "Products/DIVI/api-tutorial.md"
        - "Folder-Sync-Handbuch": "Products/DIVI/folder-sync-handbuch.md"
@@ -112,6 +110,7 @@ nav:
        - "api.yml (OpenAPI)": Products/DUBA/api.yml
        #- "Swagger API Viewer": "https://editor.swagger.io/#/?import=https://vertama-gmbh.github.io/docs/Products/DUBA/api.yml"
        - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=DUBA"
+       - "Problem Types (V.ap)": "https://elim.vertamob.de/api/docs/problems"
        - "Anleitungen":
          - "Zertifikats-PIN prüfen": "Products/DUBA/check-certificate-pin.md"
      - ELIM:
@@ -119,9 +118,7 @@ nav:
        - "FAQ": "Products/ELIM/faq.md"
        - "api.yml (OpenAPI)": Products/ELIM/api.yml
        - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=ELIM"
-       - "Problem Types":
-         - "report-not-found": "Products/ELIM/problems/report-not-found.md"
-         - "report-already-retrieved": "Products/ELIM/problems/report-already-retrieved.md"
+       - "Problem Types (V.ap)": "https://elim.vertamob.de/api/docs/problems"
        - "Flyer":
          - "Products/ELIM/onepager/OnePager (PNG).md"
          - "Products/ELIM/onepager/OnePager (HTML).md"
@@ -131,11 +128,7 @@ nav:
        - "Testing & Sandbox": "Products/ELIMPLUS/testing-and-sandbox.md"
        - "Roadmap": "Products/ELIMPLUS/roadmap.md"
        - "Migration v0.2 → v0.3": "Products/ELIMPLUS/migration-v0.2-to-v0.3.md"
-       - "Problem Types":
-         - "report-not-found": "Products/ELIMPLUS/problems/report-not-found.md"
-         - "report-already-retrieved": "Products/ELIMPLUS/problems/report-already-retrieved.md"
-         - "report-id-missing": "Products/ELIMPLUS/problems/report-id-missing.md"
-         - "report-id-duplicate": "Products/ELIMPLUS/problems/report-id-duplicate.md"
+       - "Problem Types (V.ap)": "https://elim.vertamob.de/api/docs/problems"
        - "api.yml (OpenAPI)": Products/ELIMPLUS/api.yml
        - "api-v0.2.0.yml (previous)": Products/ELIMPLUS/api-v0.2.0.yml
        #- "Swagger API Viewer": "https://editor.swagger.io/#/?import=https://vertama-gmbh.github.io/docs/Products/ELIMPLUS/api.yml"
@@ -144,10 +137,7 @@ nav:
        - "API Tutorial": "Products/ZEAG/api-tutorial.md"
        - "api.yml (OpenAPI)": Products/ZEAG/api.yml
        - "API Viewer (Swagger)": "https://elim.vertamob.de/api/docs/swagger-ui/index.html?urls.primaryName=ZEAG"
-       - "Problem Types":
-         - "report-not-found": "Products/ZEAG/problems/report-not-found.md"
-         - "report-already-retrieved": "Products/ZEAG/problems/report-already-retrieved.md"
-         - "report-expired": "Products/ZEAG/problems/report-expired.md"
+       - "Problem Types (V.ap)": "https://elim.vertamob.de/api/docs/problems"
   - "V.connect":
     - "What is V.connect": "V.connect/index.md"
     - "HL7-Anbindung (KIS)": "V.connect/HL7/index.md"
@@ -167,8 +157,7 @@ nav:
   - Reference:
     - "Systemanforderungen": "Reference/system-requirements.md"
     - "Endpunkte & Infrastruktur": "Reference/endpoints-and-infrastructure.md"
-    - "Problem Types (API-Fehlerkatalog)":
-      - "validation-error": "problems/validation-error.md"
+    - "Problem Types": "problems/index.md"
   - Authentication:
     - "Basic Auth Login (BAL)": "Authentication/basic-auth-login.md"
     - "Magic Token Link (MTL)": "Authentication/magic-token-link.md"
