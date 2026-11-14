@@ -12,11 +12,11 @@ paths:
             summary: Create encrypted memento string from DIVI report data
             description: |-
                 Accepts DIVI report data (Intensivregister Meldung) as JSON and returns an encrypted memento string.
-                The memento can be used to pre-fill HTML forms via URL parameter.
+                The answer carries a magic link (`magicLink`) that opens the pre-filled form.
 
                 Use Case:
-                External systems submit form data → receive encrypted string →
-                construct URL with memento parameter → user opens pre-filled form.
+                External systems submit form data → receive a magic link →
+                open it in the user's browser → the user lands on the pre-filled form, logged in.
 
                 This endpoint does NOT submit the report to the DIVI Intensivregister.
                 It only creates a pre-fill token for the interactive HTML form.
@@ -170,7 +170,8 @@ components:
                     type: string
                     description: |-
                         Encrypted, URL-safe memento string containing the form data.
-                        Use as query parameter to pre-fill forms: ?m=<string>
+                        Deprecated: only for the old entry, where a form URL with ?m=<string>
+                        is opened with basic auth. Open the magicLink instead.
                     example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                 magicLink:
                     type: string
@@ -181,8 +182,12 @@ components:
                         the authenticated API user can forward this URL to a browser
                         session that has no existing login — it will authenticate and
                         open the pre-filled form selection page directly.
+                        The link is /mtl/{token}. The token carries no form data: the data and the
+                        target stay on the server, sealed, until the link is opened. The link is
+                        valid only briefly and for few uses, depending on the configuration:
+                        count on one use and open it at once.
                         Prepend your host to make it absolute: https://host + magicLink
-                    example: "/mtl/eyJ...token.../divi/reporting/new?m=eyJ...memento..."
+                    example: "/mtl/v2.k9Xq...token..."
         ValidationErrorResponse:
             type: object
             required:

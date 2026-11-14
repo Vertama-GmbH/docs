@@ -12,11 +12,11 @@ paths:
       summary: Create encrypted memento string from Hospitalisierungsmeldung data
       description: |-
         Accepts Hospitalisierungsmeldung data as JSON and returns an encrypted memento string.
-        The memento can be used to pre-fill HTML forms via URL parameter.
+        The answer carries a magic link (`magicLink`) that opens the pre-filled form.
 
         Use Case:
-        External systems (e.g., KIS) submit form data → receive encrypted string →
-        construct URL with memento parameter → user opens pre-filled form.
+        External systems (e.g., KIS) submit form data → receive a magic link →
+        open it in the user's browser → the user lands on the pre-filled form, logged in.
 
         This endpoint validates the submitted data against the Hospitalisierungsmeldung schema
         before encryption. The memento string is URL-safe and tamper-proof.
@@ -44,7 +44,7 @@ paths:
                 $ref: '#/components/schemas/MementoResponse'
               example:
                 memento: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                magicLink: "/mtl/kfC...token.../elim/forms/eyJ...memento..."
+                magicLink: "/mtl/v2.k9Xq...token..."
         '400':
           description: |-
             Bad Request — request validation failed (RFC 9457 problem details,
@@ -201,7 +201,8 @@ components:
           type: string
           description: |-
             Encrypted, URL-safe memento string containing the form data.
-            Use as query parameter to pre-fill forms: ?m=<string>
+            Deprecated: only for the old entry, where a form URL with ?m=<string>
+            is opened with basic auth. Open the magicLink instead.
           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
         magicLink:
           type: string
@@ -212,8 +213,12 @@ components:
             the authenticated API user can forward this URL to a browser
             session that has no existing login — it will authenticate and
             open the pre-filled form selection page directly.
+            The link is /mtl/{token}. The token carries no form data: the data and the
+            target stay on the server, sealed, until the link is opened. The link is
+            valid only briefly and for few uses, depending on the configuration:
+            count on one use and open it at once.
             Prepend your host to make it absolute: https://host + magicLink
-          example: "/mtl/eyJ...token.../elim/?m=eyJ...memento..."
+          example: "/mtl/v2.k9Xq...token..."
     Hospitalisierungsmeldung:
       type: object
       description: |-
