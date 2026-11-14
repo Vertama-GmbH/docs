@@ -45,7 +45,7 @@ KIS / Bestatter-Software
     ↓
 [1] POST /api/digt/v1/memento  (API user credentials)
     ↓
-[2] Receives { "memento": "...", "magicLink": "/mtl/...?m=..." }
+[2] Receives { "memento": "...", "magicLink": "/mtl/v2.k9Xq...token..." }
     ↓
 [3] Constructs absolute URL: https://elim.vertamob.de + magicLink
     ↓
@@ -120,7 +120,7 @@ A **memento** is an encrypted, URL-safe string that contains form pre-fill data:
 
 - Generated from JSON report data
 - Tamper-proof and URL-safe
-- Used as query parameter: `?m={memento}`
+- Deprecated: only for the old entry, where a form URL with `?m={memento}` is opened in a logged-in session. Open the magic link instead.
 
 ### Magic Token Link (MTL)
 
@@ -129,15 +129,15 @@ The `magicLink` field in the API response is a server-issued, time-limited URL t
 - Redirects to `/digt/{reportType}?m={memento}` on success
 - Is a **relative path** — prepend your instance host to make it absolute
 
-The link itself is `/mtl/{token}?m={memento}`. The redirect target (`/digt/{reportType}`) is encrypted inside the opaque token — it is **not** a readable path segment.
+The link is `/mtl/{token}`. The token carries no form data: the data and the redirect target stay on the server, sealed, until the link is opened. The link is valid only briefly and for few uses, depending on the configuration: count on one use and open it at once.
 
 ```
-magicLink: "/mtl/eyJ...token...?m=eyJ...memento..."
+magicLink: "/mtl/v2.k9Xq...token..."
 
-Full URL: https://elim.vertamob.de/mtl/eyJ...token...?m=eyJ...memento..."
+Full URL: https://elim.vertamob.de/mtl/v2.k9Xq...token...
 ```
 
-See [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) for security details and token lifetime.
+See [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) for how the link works and how long it is valid.
 
 ### Report ID
 
@@ -386,13 +386,13 @@ Returns a JSON object containing the encrypted memento and a ready-to-use magic 
 ```json
 {
   "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..DGG5lQvJC8OpYrCt.Xm8YR...",
-  "magicLink": "/mtl/eyJ...token...?m=eyJ...memento..."
+  "magicLink": "/mtl/v2.k9Xq...token..."
 }
 ```
 
 | Field | Type | Nullable | Description |
 |-------|------|----------|-------------|
-| `memento` | string | No | Encrypted, URL-safe string containing report data. Use as `?m={memento}` query parameter. |
+| `memento` | string | No | Encrypted, URL-safe string containing report data. Deprecated: only for the old entry with a logged-in session (`?m={memento}`); open `magicLink` instead. |
 | `magicLink` | string | Yes | Relative URL for authenticated single-click access. Prepend your instance host: `https://elim.vertamob.de + magicLink` |
 
 ---

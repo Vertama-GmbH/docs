@@ -49,7 +49,7 @@ KIS / Portal Software
     ↓
 [1] POST /api/zeag/v1/memento  (API user credentials)
     ↓
-[2] Receives { "memento": "...", "magicLink": "/mtl/...?m=..." }
+[2] Receives { "memento": "...", "magicLink": "/mtl/v2.k9Xq...token..." }
     ↓
 [3] Constructs absolute URL: https://elim.vertamob.de + magicLink
     ↓
@@ -97,7 +97,7 @@ curl -u "api-username:api-password" -X POST -H "Content-Type: application/json" 
 
 Missing or invalid credentials return **401 Unauthorized** with a `WWW-Authenticate` header and an **empty body** — there is no problem-details payload on 401.
 
-See [Basic Auth Login (BAL)](../../Authentication/basic-auth-login.md) for details.
+See [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) for how the link logs the user in.
 
 ---
 
@@ -135,7 +135,7 @@ A **memento** is an encrypted, URL-safe string that contains form pre-fill data:
 
 - Generated from JSON report data
 - Tamper-proof and URL-safe
-- Used as query parameter: `?m={memento}`
+- Deprecated: only for the old entry, where a form URL with `?m={memento}` is opened in a logged-in session. Open the magic link instead.
 
 Creating a memento does **not** submit anything. It only produces a pre-fill token for the interactive HTML form; the report comes into existence when the end user dispatches that form.
 
@@ -147,12 +147,12 @@ The `magicLink` field in the API response is a server-issued, time-limited URL t
 - Redirects to the pre-filled ZEAG form (`/zeag/form?m={memento}`) on success
 - Is a **relative path** — prepend your instance host to make it absolute
 
-magicLink: "/mtl/eyJ...token.../zeag/form?m=eyJ...memento..."
+magicLink: "/mtl/v2.k9Xq...token..."
 
-Full URL: https://elim.vertamob.de/mtl/eyJ...token.../zeag/form?m=eyJ...memento...
+Full URL: https://elim.vertamob.de/mtl/v2.k9Xq...token...
 
 
-Treat the returned string as **opaque**: hand it out or prepend your host, but do not parse, rewrite, or reassemble it. See [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) for security details and token lifetime.
+Treat the returned string as **opaque**: hand it out or prepend your host, but do not parse, rewrite, or reassemble it. See [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) for how the link works and how long it is valid.
 
 ### Report ID
 
@@ -347,13 +347,13 @@ Returns a JSON object containing the encrypted memento and a ready-to-use magic 
 ```json
 {
   "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..DGG5lQvJC8OpYrCt.Xm8YR...",
-  "magicLink": "/mtl/eyJ...token.../zeag/form?m=eyJ...memento..."
+  "magicLink": "/mtl/v2.k9Xq...token..."
 }
 ```
 
 | Field | Type | Nullable | Description |
 |-------|------|----------|-------------|
-| `memento` | string | No | Encrypted, URL-safe string containing report data. Use as `?m={memento}` query parameter. |
+| `memento` | string | No | Encrypted, URL-safe string containing report data. Deprecated: only for the old entry with a logged-in session (`?m={memento}`); open `magicLink` instead. |
 | `magicLink` | string | Yes | Relative URL for authenticated single-click access. Prepend your instance host: `https://elim.vertamob.de + magicLink` |
 
 If you deliver the form to an already-authenticated user, you can use the bare `memento` on the form URL (`?m={memento}`) instead of the magic link.

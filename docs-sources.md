@@ -49,6 +49,12 @@ and falls back to the default language when a translation is missing.
 | DIGT API Tutorial | `Products/DIGT/api-tutorial.md` | this repo | canonical | n/a — not to be confused with the German draft `Vertama-GmbH/elim` → `docs/external/digt/api-guide.md`, a separate document never adopted here |
 | DIGG API Tutorial | `Products/DIGG/api-tutorial.md` | this repo | canonical | n/a — its error section follows the DIGT tutorial's since DIGG answers with problem details (2026-11-14) |
 | ZEAG API Tutorial | `Products/ZEAG/api-tutorial.md` | this repo | canonical | n/a |
+| DIVI API Tutorial | `Products/DIVI/api-tutorial.md` | this repo | canonical | n/a |
+| DUBA API Tutorial | `Products/DUBA/api-tutorial.md` | this repo | canonical | n/a |
+| ELIM API Tutorial | `Products/ELIM/api-tutorial.md` | this repo | canonical | n/a |
+| ELIM+ Integration Guide, Migration v0.2 → v0.3 | `Products/ELIMPLUS/integration-guide.md`, `Products/ELIMPLUS/migration-v0.2-to-v0.3.md` | this repo | canonical | n/a |
+| Magic Token Link (MTL) | `Authentication/magic-token-link.md` | this repo | canonical | n/a — describes V.ap's link for partners; the mechanism is V.ap's (`Vertama-GmbH/elim` → `web/magic/`, `docs/architecture/identity.md`). Rewritten 2026-11-14 to the link as it is; states the link's limits without numbers, by rule |
+| Basic Auth Login (BAL) | `Authentication/basic-auth-login.md` | this repo | canonical | n/a — a retirement note: V.ap removed the `/bal/` door in September 2026 |
 | OpenAPI specs | `Products/{BELIM,DIGG,DIGT,DIVI,DUBA,ELIM,ELIMPLUS,ZEAG,web}/api.yml` | `Vertama-GmbH/elim` → `src/main/resources/de/vertama/<product>/api.yml`; DUBA from `duba-v1.yml` (served by V.ap's Swagger UI, which the nav links per product) | yes | `make sync-specs` — `scripts/sync-specs.sh` takes each spec from a commit of the V.ap repo, by default the newest `prod-*` tag, so the site shows what production runs; `REF=<tag or commit>` overrides. Unchanged copies, except that DUBA's `$ref` to `web/api.yml` is re-based to `../web/api.yml` (in V.ap that spec sits one level above the others). Run after a promote. Last synced from `prod-20261114-174913` (`825c81502`) |
 | XÖV code lists | `Products/xoev/codelists/*.yml` | `Vertama-GmbH/elim` → `src/main/resources/de/vertama/xoev/codelists/` | yes | `make sync-specs` — only the lists the synced specs reference (`../xoev/codelists/…`) |
 | ELIM+ OpenAPI spec v0.2.0 (previous) | `Products/ELIMPLUS/api-v0.2.0.yml` | this repo | canonical | n/a — a frozen snapshot kept for the migration guide; deliberately not synced |

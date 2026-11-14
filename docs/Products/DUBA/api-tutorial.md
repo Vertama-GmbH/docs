@@ -59,7 +59,7 @@ https://your-instance/api/docs/swagger-ui/index.html?urls.primaryName=DUBA
 
 The API uses **HTTP Basic Authentication** with your API user credentials.
 
-> **Note on end-user authentication:** The `magicLink` field returned by the memento endpoint handles end-user authentication automatically via Magic Token Link (MTL). The Basic Auth Login (BAL) pattern (credentials embedded in URLs) is deprecated since v0.2.1 and should not be used for new integrations.
+> **Note on end-user authentication:** The `magicLink` field returned by the memento endpoint handles end-user authentication automatically via Magic Token Link (MTL). The Basic Auth Login (BAL) door (credentials embedded in URLs) no longer exists.
 
 ### How It Works
 
@@ -502,7 +502,7 @@ The memento endpoint solves a common integration pattern:
 ```
 Hospital KIS → Knows patient details for court guardianship request
            → Calls /memento with patient/case data as JSON
-           → Receives { "memento": "...", "magicLink": "/mtl/.../duba/form?m=..." }
+           → Receives { "memento": "...", "magicLink": "/mtl/v2.k9Xq...token..." }
            → Prepends host: https://elim.example.com + magicLink
            → Emails absolute URL to authorized user
 User       → Clicks link (no login required)
@@ -589,7 +589,7 @@ Returns a JSON object containing the encrypted memento string and a ready-to-use
 ```json
 {
   "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..DGG5lQvJC8OpYrCt.Xm8YR...",
-  "magicLink": "/mtl/eyJ...token.../duba/?m=eyJ...memento..."
+  "magicLink": "/mtl/v2.k9Xq...token..."
 }
 ```
 
@@ -598,7 +598,7 @@ Returns a JSON object containing the encrypted memento string and a ready-to-use
 | `memento` | string | No | Encrypted, URL-safe string containing your form data |
 | `magicLink` | string | Yes | Relative URL that authenticates and opens the pre-filled form in one click. Prepend your host: `https://your-instance + magicLink` |
 
-**Note:** Memento strings are typically 500-2000 characters depending on data size. They are encrypted with AES-256-GCM and safe to pass via URL parameters. The `magicLink` token expires after 1 hour by default.
+**Note:** Memento strings are typically 500-2000 characters depending on data size. They are encrypted with AES-256-GCM and safe to pass via URL parameters. The `magicLink` is valid only briefly and for few uses, depending on the configuration.
 
 ### Examples
 
@@ -616,7 +616,7 @@ Response:
 ```json
 {
   "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..abc123...",
-  "magicLink": "/mtl/eyJ...token.../duba/?m=eyJ...memento..."
+  "magicLink": "/mtl/v2.k9Xq...token..."
 }
 ```
 
@@ -702,12 +702,14 @@ When the end user opens this URL:
 2. The user is authenticated automatically (no login page)
 3. They land directly on the pre-filled form
 
-**Token expiry:** Magic links expire after 1 hour by default. Generate a fresh link close to the
-time you send it to the user.
+**Validity:** A magic link is valid only briefly and for few uses, depending on the configuration.
+Count on one use: generate the link right before the user opens it. A link sent ahead of time has
+most likely expired.
 
-### Alternative: Manual Form URL
+### Alternative (deprecated): Manual Form URL
 
-If the end user already has an active ELIM session (e.g., they are already logged in), you can
+Prefer the magic link: this path needs a session the user already has, and it carries the
+memento in the URL. If the end user already has an active ELIM session (e.g., they are already logged in), you can
 construct a bare form URL using the `memento` field:
 
 **URL Pattern:**
@@ -793,7 +795,7 @@ echo "Success! Send this URL to the authorized user:"
 echo "$FULL_URL"
 echo ""
 echo "The link authenticates automatically and opens the pre-filled form."
-echo "Note: This link expires in 1 hour."
+echo "Note: this link is valid only briefly; open it now."
 ```
 
 ### Integration Patterns
@@ -816,7 +818,7 @@ Please review and submit the guardianship form:
 $FULL_URL
 
 Click the link to open the pre-filled form directly. No login required.
-Note: This link expires in 1 hour.
+Note: this link is valid only briefly; open it now.
 EOF
 ```
 
@@ -864,7 +866,7 @@ while IFS=, read -r case_id patient_name dob; do
 done < cases.csv > form_links.csv
 
 echo "Generated form links saved to form_links.csv"
-# Note: links expire after 1 hour — generate close to the time of sending
+# Note: a link is valid only briefly — generate it right before it is opened
 ```
 
 ### Error Handling
@@ -1199,7 +1201,7 @@ Example: 2025-11-26T15:34:10Z
 ### Related Documentation
 
 - [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) — How `/mtl/` authentication tokens work
-- [Basic Auth Login (BAL)](../../Authentication/basic-auth-login.md) — **Deprecated** since v0.2.1. Replaced by Magic Token Link.
+- [Basic Auth Login (BAL)](../../Authentication/basic-auth-login.md) — retired; replaced by Magic Token Link.
 
 ### Support
 

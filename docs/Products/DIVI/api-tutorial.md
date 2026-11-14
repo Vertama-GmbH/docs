@@ -97,12 +97,12 @@ The `magicLink` field in the Memento API response is a server-issued, time-limit
 - Is a **relative path** — prepend your instance host to make it absolute
 
 ```
-magicLink: "/mtl/eyJ...token.../divi/?m=eyJ...memento..."
+magicLink: "/mtl/v2.k9Xq...token..."
 
-Full URL: https://elim.vertamob.de/mtl/eyJ...token.../divi/?m=eyJ...memento..."
+Full URL: https://elim.vertamob.de/mtl/v2.k9Xq...token...
 ```
 
-See [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) for security details and token lifetime.
+See [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) for how the link works and how long it is valid.
 
 ### Report ID
 
@@ -181,13 +181,13 @@ Returns a JSON object containing the encrypted memento and a ready-to-use magic 
 ```json
 {
   "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..DGG5lQvJC8OpYrCt.Xm8YR...",
-  "magicLink": "/mtl/eyJ...token.../divi/?m=eyJ...memento..."
+  "magicLink": "/mtl/v2.k9Xq...token..."
 }
 ```
 
 | Field | Type | Nullable | Description |
 |-------|------|----------|-------------|
-| `memento` | string | No | Encrypted, URL-safe string containing report data. Use as `?m={memento}` query parameter. |
+| `memento` | string | No | Encrypted, URL-safe string containing report data. Deprecated: only for the old entry with a logged-in session (`?m={memento}`); open `magicLink` instead. |
 | `magicLink` | string | Yes | Relative URL for authenticated single-click access. Prepend your instance host: `https://elim.vertamob.de + magicLink` |
 
 You can then pass the full URL (host + `magicLink`) to your users.

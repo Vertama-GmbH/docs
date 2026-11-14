@@ -159,7 +159,7 @@ nav:
     - "Endpunkte & Infrastruktur": "Reference/endpoints-and-infrastructure.md"
     - "Problem Types": "problems/index.md"
   - Authentication:
-    - "Basic Auth Login (BAL)": "Authentication/basic-auth-login.md"
+    - "Basic Auth Login (BAL, retired)": "Authentication/basic-auth-login.md"
     - "Magic Token Link (MTL)": "Authentication/magic-token-link.md"
   - Downloads: Downloads/index.md
   - About: about.md

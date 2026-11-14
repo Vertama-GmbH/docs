@@ -44,7 +44,7 @@ KIS / Hospital System
     ↓
 [1] POST /api/elim/v1/memento  (API user credentials)
     ↓
-[2] Receives { "memento": "...", "magicLink": "/mtl/.../elim/?m=..." }
+[2] Receives { "memento": "...", "magicLink": "/mtl/v2.k9Xq...token..." }
     ↓
 [3] Constructs absolute URL: https://your-instance + magicLink
     ↓
@@ -150,7 +150,7 @@ A **memento** is an encrypted, URL-safe string that contains form pre-fill data:
 - Encrypted with AES-256-GCM using your API user's KEK
 - Tamper-proof and URL-safe
 - Typical size: 500–2000 characters
-- Used as query parameter: `?m={memento}`
+- Deprecated: only for the old entry, where a form URL with `?m={memento}` is opened in a logged-in session. Open the magic link instead.
 
 ### Magic Token Link (MTL)
 
@@ -160,12 +160,12 @@ The `magicLink` field in the API response is a server-issued, time-limited URL t
 - Is a **relative path** — prepend your instance host to make it absolute
 
 ```
-magicLink: "/mtl/eyJ...token.../elim/forms/eyJ...memento..."
+magicLink: "/mtl/v2.k9Xq...token..."
 
-Full URL: https://elim.example.com/mtl/eyJ...token.../elim/forms/eyJ...memento..."
+Full URL: https://elim.example.com/mtl/v2.k9Xq...token...
 ```
 
-See [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) for security details and token lifetime.
+See [Magic Token Link (MTL)](../../Authentication/magic-token-link.md) for how the link works and how long it is valid.
 
 ### Report ID
 
@@ -261,7 +261,7 @@ Returns a JSON object containing the encrypted memento and a ready-to-use magic 
 ```json
 {
   "memento": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..DGG5lQvJC8OpYrCt.Xm8YR...",
-  "magicLink": "/mtl/eyJ...token.../elim/forms/eyJ...memento..."
+  "magicLink": "/mtl/v2.k9Xq...token..."
 }
 ```
 

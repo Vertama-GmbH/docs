@@ -58,7 +58,7 @@ v0.2 documentation framed `/elimplus/{Disease}/` as if it were part of the API s
 ```
 [1] POST /api/elimplus/v1/memento         (generic pre-fill)
        ↓
-[2] response.magicLink                     (/mtl/…/elimplus/?m=…)
+[2] response.magicLink                     (/mtl/…)
        ↓
 [3] user opens link → ELIM+ index page
        ↓
