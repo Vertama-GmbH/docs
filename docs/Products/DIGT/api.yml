@@ -76,14 +76,14 @@ paths:
         '400':
           description: |-
             Bad Request — request validation failed (RFC 9457 problem details,
-            type https://docs.vertama.com/problems/validation-error, one entry
+            type /api/docs/problems/validation-error, one entry
             per violated constraint with a JSON Pointer to the offending field).
           content:
             application/problem+json:
               schema:
                 $ref: '../web/api.yml#/components/schemas/ValidationProblem'
               example:
-                type: "https://docs.vertama.com/problems/validation-error"
+                type: "/api/docs/problems/validation-error"
                 title: "Request validation failed"
                 status: 400
                 detail: "1 violation"
@@ -203,7 +203,7 @@ paths:
         '404':
           description: |-
             Report not found (RFC 9457 problem details, type
-            https://docs.vertama.com/Products/DIGT/problems/report-not-found).
+            /api/docs/problems/digt/report-not-found).
             Covers: not yet submitted by the user, unknown id, id belonging to
             a different API user, or not a DIGT report.
           content:
@@ -211,7 +211,7 @@ paths:
               schema:
                 $ref: '../web/api.yml#/components/schemas/ProblemDetail'
               example:
-                type: "https://docs.vertama.com/Products/DIGT/problems/report-not-found"
+                type: "/api/docs/problems/digt/report-not-found"
                 title: "Not Found"
                 status: 404
                 detail: "No DIGT report 'DIGT-2024-00123' for this user — not yet submitted, unknown id, or not a DIGT report"
@@ -219,16 +219,16 @@ paths:
         '410':
           description: |-
             Gone (RFC 9457 problem details) — two distinct types:
-            https://docs.vertama.com/Products/DIGT/problems/report-already-retrieved
+            /api/docs/problems/digt/report-already-retrieved
             (previously retrieved without ?peek=true; not delivered again) and
-            https://docs.vertama.com/Products/DIGT/problems/report-expired
+            /api/docs/problems/digt/report-expired
             (payload removed by the retention cleanup).
           content:
             application/problem+json:
               schema:
                 $ref: '../web/api.yml#/components/schemas/ProblemDetail'
               example:
-                type: "https://docs.vertama.com/Products/DIGT/problems/report-already-retrieved"
+                type: "/api/docs/problems/digt/report-already-retrieved"
                 title: "Gone"
                 status: 410
                 detail: "Report 'DIGT-2024-00123' was already retrieved; use ?peek=true to read without consuming"

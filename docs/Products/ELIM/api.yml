@@ -46,13 +46,23 @@ paths:
                 memento: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                 magicLink: "/mtl/kfC...token.../elim/forms/eyJ...memento..."
         '400':
-          description: Bad Request - invalid form data (validation errors)
+          description: |-
+            Bad Request — request validation failed (RFC 9457 problem details,
+            type /api/docs/problems/validation-error, one entry
+            per violated constraint with a JSON Pointer to the offending field).
           content:
-            application/json:
+            application/problem+json:
               schema:
-                $ref: '#/components/schemas/ValidationErrorResponse'
+                $ref: '../web/api.yml#/components/schemas/ValidationProblem'
               example:
-                errors: ["MeldeDatum must be a valid date"]
+                type: "/api/docs/problems/validation-error"
+                title: "Request validation failed"
+                status: 400
+                detail: "1 violation"
+                instance: "/api/elim/v1/memento"
+                errors:
+                  - detail: "must be a valid date"
+                    pointer: "#/MeldeDatum"
         '401':
           description: |-
             Unauthorized - invalid or missing authentication.
@@ -150,12 +160,36 @@ paths:
             Response body is empty.
         '404':
           description: |-
-            Report not found. No report with this ID exists for the
-            authenticated API user.
+            Report not found (RFC 9457 problem details, type
+            /api/docs/problems/elim/report-not-found).
+            Covers: not yet submitted by the user, unknown id, id belonging to
+            a different API user, or expired (retention cleanup).
+          content:
+            application/problem+json:
+              schema:
+                $ref: '../web/api.yml#/components/schemas/ProblemDetail'
+              example:
+                type: "/api/docs/problems/elim/report-not-found"
+                title: "Not Found"
+                status: 404
+                detail: "No report 'ELIM-2024-00123' for this user — not yet submitted, unknown id, or expired"
+                instance: "/api/elim/v1/reports/ELIM-2024-00123"
         '410':
           description: |-
-            Gone. The report was previously retrieved (polled) and is no longer
+            Gone (RFC 9457 problem details, type
+            /api/docs/problems/elim/report-already-retrieved).
+            The report was previously retrieved (polled) and is no longer
             available. Use ?peek=true on future requests to avoid consuming reports.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '../web/api.yml#/components/schemas/ProblemDetail'
+              example:
+                type: "/api/docs/problems/elim/report-already-retrieved"
+                title: "Gone"
+                status: 410
+                detail: "Report 'ELIM-2024-00123' was already retrieved; use ?peek=true to read without consuming"
+                instance: "/api/elim/v1/reports/ELIM-2024-00123"
 components:
   schemas:
     MementoResponse:
@@ -180,20 +214,6 @@ components:
             open the pre-filled form selection page directly.
             Prepend your host to make it absolute: https://host + magicLink
           example: "/mtl/eyJ...token.../elim/?m=eyJ...memento..."
-    ValidationErrorResponse:
-      type: object
-      required:
-        - errors
-      description: |-
-        Validation error response returned by Spring's ControllerAdvice.
-        Contains a list of validation error messages.
-      properties:
-        errors:
-          type: array
-          description: List of validation error messages
-          items:
-            type: string
-          example: ["MeldeDatum must be a valid date"]
     Hospitalisierungsmeldung:
       type: object
       description: |-

@@ -49,7 +49,9 @@ and falls back to the default language when a translation is missing.
 | DIGT API Tutorial | `Products/DIGT/api-tutorial.md` | this repo | canonical | n/a — not to be confused with the German draft `Vertama-GmbH/elim` → `docs/external/digt/api-guide.md`, a separate document never adopted here |
 | DIGG API Tutorial | `Products/DIGG/api-tutorial.md` | this repo | canonical | n/a — its error section follows the DIGT tutorial's since DIGG answers with problem details (2026-11-14) |
 | ZEAG API Tutorial | `Products/ZEAG/api-tutorial.md` | this repo | canonical | n/a |
-| DIGT OpenAPI spec | `Products/DIGT/api.yml` | `Vertama-GmbH/elim` → `src/main/resources/de/vertama/digt/api.yml` (served by V.ap's Swagger UI, `urls.primaryName=DIGT`) | yes | manual copy, unchanged — the relative `$ref: '../web/api.yml#/…'` resolves both in elim and here (`Products/web/api.yml`). Change the spec in elim first, then copy; identical to elim @ `8cc10e90c` as of 2026-10-21 |
+| OpenAPI specs | `Products/{BELIM,DIGG,DIGT,DIVI,DUBA,ELIM,ELIMPLUS,ZEAG,web}/api.yml` | `Vertama-GmbH/elim` → `src/main/resources/de/vertama/<product>/api.yml`; DUBA from `duba-v1.yml` (served by V.ap's Swagger UI, which the nav links per product) | yes | `make sync-specs` — `scripts/sync-specs.sh` takes each spec from a commit of the V.ap repo, by default the newest `prod-*` tag, so the site shows what production runs; `REF=<tag or commit>` overrides. Unchanged copies, except that DUBA's `$ref` to `web/api.yml` is re-based to `../web/api.yml` (in V.ap that spec sits one level above the others). Run after a promote. Last synced from `prod-20261114-174913` (`825c81502`) |
+| XÖV code lists | `Products/xoev/codelists/*.yml` | `Vertama-GmbH/elim` → `src/main/resources/de/vertama/xoev/codelists/` | yes | `make sync-specs` — only the lists the synced specs reference (`../xoev/codelists/…`) |
+| ELIM+ OpenAPI spec v0.2.0 (previous) | `Products/ELIMPLUS/api-v0.2.0.yml` | this repo | canonical | n/a — a frozen snapshot kept for the migration guide; deliberately not synced |
 | Problem types (pointer page) | `problems/index.md` | this repo | canonical | n/a — a pointer only: the type pages are served by V.ap itself under `/api/docs/problems/…`, authored in `Vertama-GmbH/elim` → `src/main/resources/de/vertama/<product>/problems/` next to the code that names the types (elim ADR-010, amendment 2026-11-14). The per-product nav entries "Problem Types (V.ap)" are external links to V.ap's index, like the Swagger links |
 
 URL history: `Products/V.connect/*` moved to top-level `V.connect/*` in the
@@ -85,6 +87,9 @@ long-term target. The end state varies per document:
 - **The problem-type pages** made that move first (2026-11-14): V.ap serves
   them next to the code that names the types, and this site keeps one
   pointer page and links. Ownership = publication.
+- **The OpenAPI specs** moved from manual copy to scripted mirror
+  (2026-11-14, `make sync-specs`): from a production commit, never from a
+  working tree, so the site cannot get ahead of what runs.
 - **The Architecture doc** is a candidate for **automated mirror** (e.g.
   `mkdocs-multirepo-plugin` pulling at build time, or a CI sync). Both
   ends remain markdown; only the sync mechanism upgrades.

@@ -49,14 +49,14 @@ paths:
                 '400':
                     description: |-
                         Bad Request — request validation failed (RFC 9457 problem details,
-                        type https://docs.vertama.com/problems/validation-error, one entry
+                        type /api/docs/problems/validation-error, one entry
                         per violated constraint with a JSON Pointer to the offending field).
                     content:
                         application/problem+json:
                             schema:
                                 $ref: '../web/api.yml#/components/schemas/ValidationProblem'
                             example:
-                                type: "https://docs.vertama.com/problems/validation-error"
+                                type: "/api/docs/problems/validation-error"
                                 title: "Request validation failed"
                                 status: 400
                                 detail: "1 violation"
@@ -121,6 +121,12 @@ paths:
                 By default this is a destructive read for SUCCESS/FAILURE reports: once retrieved,
                 the report is marked as polled and will no longer appear. Use ?peek=true for
                 a non-destructive read. PENDING reports are never marked as polled.
+
+                **Testing:**
+                The following mock IDs are reserved for testing to simulate different delivery outcomes without triggering real backend lookups or network requests:
+                - `ZEAG-TEST-SUCCESS`: Always returns a SUCCESS response with a mock PDF receipt.
+                - `ZEAG-TEST-PENDING`: Always returns a PENDING response.
+                - `ZEAG-TEST-FAILURE`: Always returns a FAILURE response with a simulated failure reason.
             tags:
                 - ZEAG
             security:
@@ -167,7 +173,7 @@ paths:
                 '404':
                     description: |-
                         Report not found (RFC 9457 problem details, type
-                        https://docs.vertama.com/Products/ZEAG/problems/report-not-found).
+                        /api/docs/problems/zeag/report-not-found).
                         Covers: not yet submitted by the user, unknown id, id belonging to
                         a different API user, or not a ZEAG report.
                     content:
@@ -175,7 +181,7 @@ paths:
                             schema:
                                 $ref: '../web/api.yml#/components/schemas/ProblemDetail'
                             example:
-                                type: "https://docs.vertama.com/Products/ZEAG/problems/report-not-found"
+                                type: "/api/docs/problems/zeag/report-not-found"
                                 title: "Not Found"
                                 status: 404
                                 detail: "No ZEAG report 'ZEAG-2024-00123' for this user — not yet submitted, unknown id, or not a ZEAG report"
@@ -183,16 +189,16 @@ paths:
                 '410':
                     description: |-
                         Gone (RFC 9457 problem details) — two distinct types:
-                        https://docs.vertama.com/Products/ZEAG/problems/report-already-retrieved
+                        /api/docs/problems/zeag/report-already-retrieved
                         (previously retrieved without ?peek=true; not delivered again) and
-                        https://docs.vertama.com/Products/ZEAG/problems/report-expired
+                        /api/docs/problems/zeag/report-expired
                         (payload removed by the retention cleanup).
                     content:
                         application/problem+json:
                             schema:
                                 $ref: '../web/api.yml#/components/schemas/ProblemDetail'
                             example:
-                                type: "https://docs.vertama.com/Products/ZEAG/problems/report-already-retrieved"
+                                type: "/api/docs/problems/zeag/report-already-retrieved"
                                 title: "Gone"
                                 status: 410
                                 detail: "Report 'ZEAG-2024-00123' was already retrieved; use ?peek=true to read without consuming"
@@ -257,6 +263,14 @@ components:
                     nullable: true
                     description: The portal used for delivery (e.g. GOVCONNECT, AKDB)
                     example: "GOVCONNECT"
+                clientReference:
+                    type: string
+                    nullable: true
+                    description: |-
+                        The opaque client reference supplied on submission (see ZeagMementoRequest.clientReference),
+                        echoed back verbatim. Lets the client map this report to its corresponding case
+                        (e.g. "<PatientenID>|<Fallnummer>"). Null if none was supplied.
+                    example: "12345|67890"
                 receiptPdf:
                     type: string
                     nullable: true
@@ -357,6 +371,16 @@ components:
                     description: Zustimmung zur Datenübermittlung an Elterngeldstelle. Nur "true" zulässig. 0..1
                 zustaendigeElterngeldstelle:
                     $ref: '#/components/schemas/Behoerde'
+                clientReference:
+                    type: string
+                    nullable: true
+                    description: |-
+                        Arbitrary, opaque reference string of the calling client. It is stored verbatim
+                        and echoed back unchanged when the report is fetched (see ReportResult.clientReference).
+
+                        A common convention is to communicate the KIS PatientenID and Fallnummer as
+                        "<PatientenID>|<Fallnummer>", when HL7 is used for receiving reports.
+                    example: "12345|67890"
 
         # =========================================================================
         # GEBURTS-SCHEMAS
@@ -385,13 +409,11 @@ components:
             type: object
             nullable: true
             description: Angaben zum Neugeborenen
+            required:
+                - geschlecht
             properties:
                 geschlecht:
-                    type: string
-                    nullable: true
-                    enum: [ m, w, x, d ]
-                    description: Code aus XÖV-Codeliste urn:xoev-de:xinneres:codeliste:geschlecht
-                    example: "w"
+                    $ref: '../xoev/codelists/Geschlecht.yml'
                 name:
                     $ref: '#/components/schemas/PersonNameVeraenderung'
 
@@ -403,17 +425,15 @@ components:
             type: object
             nullable: true
             description: Angaben zur Mutter – Standard oder vertraulich
+            required:
+                - geschlecht
             properties:
                 namen:
                     $ref: '#/components/schemas/PersonName'
                 geburt:
                     $ref: '#/components/schemas/AngabenEreignis'
                 geschlecht:
-                    type: string
-                    nullable: true
-                    enum: [ m, w, x, d ]
-                    description: Code aus XÖV-Codeliste urn:xoev-de:xinneres:codeliste:geschlecht
-                    example: "w"
+                    $ref: '../xoev/codelists/Geschlecht.yml'
                 staatsangehoerigkeit:
                     $ref: '#/components/schemas/Staatsangehoerigkeit'
                 weitereStaatsangehoerigkeit:
@@ -437,17 +457,15 @@ components:
             type: object
             nullable: true
             description: Angaben zum zweiten Elternteil
+            required:
+                - geschlecht
             properties:
                 namen:
                     $ref: '#/components/schemas/PersonName'
                 geburt:
                     $ref: '#/components/schemas/AngabenEreignis'
                 geschlecht:
-                    type: string
-                    nullable: true
-                    enum: [ m, w, x, d ]
-                    description: Code aus XÖV-Codeliste urn:xoev-de:xinneres:codeliste:geschlecht
-                    example: "m"
+                    $ref: '../xoev/codelists/Geschlecht.yml'
                 staatsangehoerigkeit:
                     $ref: '#/components/schemas/Staatsangehoerigkeit'
                 weitereStaatsangehoerigkeit:
@@ -491,9 +509,7 @@ components:
             description: Behördenangabe (z.B. zuständige Elterngeldstelle)
             properties:
                 kennung:
-                    type: string
-                    nullable: true
-                    description: Kennung der Behörde im Verzeichnisdienst DVDV
+                    $ref: '../xoev/codelists/Elterngeldstellen.yml'
                 name:
                     type: string
                     nullable: true
@@ -513,9 +529,21 @@ components:
                 ODER Freitext, falls der Staat nicht gelistet ist.
             properties:
                 code:
+                    $ref: '../xoev/codelists/StaatsangehoerigkeitCode.yml'
+                nichtGelisteterWert:
                     type: string
                     nullable: true
-                    description: Code aus der Staatsangehörigkeits-Codeliste (z.B. "MA")
+                    description: Freitext, falls der Staat nicht in der Codeliste vorhanden ist
+
+        Staat:
+            type: object
+            nullable: true
+            description: |-
+                Staat als Choice: entweder Code aus der Codeliste
+                ODER Freitext, falls der Staat nicht gelistet ist.
+            properties:
+                code:
+                    $ref: '../xoev/codelists/StaatCode.yml'
                 nichtGelisteterWert:
                     type: string
                     nullable: true
@@ -615,6 +643,8 @@ components:
                 kreisbezeichnung:
                     type: string
                     nullable: true
+                staat:
+                    $ref: '#/components/schemas/Staat'
 
         # =========================================================================
         # PERSONEN-NAMEN
@@ -666,10 +696,23 @@ components:
                     nullable: true
                     enum: [ true ]
                     description: "[C2/2] Name nicht vorhanden (z.B. ausländischer Name). Nur true zulässig."
-                namensartCode:
+                namensart:
+                    $ref: '#/components/schemas/Namensart'
+
+        Namensart:
+            type: object
+            nullable: true
+            description: |-
+                Namensart als Choice: entweder Code aus der Codeliste ODER Freitext,
+                für ausländische Namensformen (Code.Namensart). 0..1
+            properties:
+                code:
+                    $ref: '../xoev/codelists/NamensartCode.yml'
+                nichtGelisteterWert:
                     type: string
                     nullable: true
-                    description: Code aus der Codeliste Namensart, für ausländische Namensformen (Code.Namensart.Code). 0..1
+                    description: Freitext, falls die Namensart nicht in der Codeliste vorhanden ist
+
         # =========================================================================
         # KONTAKT
         # =========================================================================
@@ -678,11 +721,12 @@ components:
             type: object
             nullable: true
             description: Kontaktdaten (XÖV KommunikationType)
+            required:
+                - kanal
+                - kennung
             properties:
                 kanal:
-                    type: string
-                    nullable: true
-                    description: Code aus Codeliste erreichbarkeit (z.B. E-Mail, Telefon)
+                    $ref: '../xoev/codelists/Erreichbarkeit.yml'
                 kennung:
                     type: string
                     nullable: true

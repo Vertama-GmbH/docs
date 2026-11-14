@@ -1,0 +1,49 @@
+# GENERATED FILE - do not edit by hand. Re-derive from the source JSON in
+# this same directory if the codelist version changes.
+type: string
+nullable: true
+enum:
+  - "e"
+  - "en"
+  - "ez"
+  - "nk"
+  - "nkz"
+  - "nkzp"
+  - "zf"
+  - "fz"
+  - "fzw"
+  - "zwf"
+  - "isn"
+  - "vm"
+  - "vpm"
+  - "vz"
+  - "vpz"
+  - "vv"
+  - "vpv"
+  - "zwv"
+  - "zwvp"
+description: |-
+  Namensart (Namensart).
+  Code aus XÖV-Codeliste urn:xpersonenstand:schluesseltabelle:namensart (Version 1).
+
+  Codes:
+  - e: Eigenname
+  - en: Eigennamen
+  - ez: Eigenname und Namenszusatz
+  - nk: Namenskette
+  - nkz: Namenskette und Namenszusatz
+  - nkzp: Namenskette und Namenszusätze
+  - zf: Namenszusatz und Familienname
+  - fz: Familiennamen und Namenszusatz
+  - fzw: Familienname und Zwischenname
+  - zwf: Zwischenname und Familienname
+  - isn: Isländischer Nachname
+  - vm: Vorname und Mittelname
+  - vpm: Vornamen und Mittelname
+  - vz: Vorname und Namenszusatz
+  - vpz: Vornamen und Namenszusatz
+  - vv: Vorname und Vatersname
+  - vpv: Vornamen und Vatersname
+  - zwv: Zwischenname und Vorname
+  - zwvp: Zwischenname und Vornamen
+example: "e"

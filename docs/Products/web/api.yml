@@ -22,12 +22,11 @@ info:
     A conformance test keeps the classes and these schemas from drifting,
     since no generator enforces the match.
 
-    Problem `type` URIs are namespaced https://docs.vertama.com/problems/<slug>;
-    each URI resolves to the published reference page for that error type.
-    The docs site is the normative type registry.
-
-    DRAFT — not yet referenced by any module spec. Wiring follows once
-    ADR-010 is accepted.
+    Problem `type` names are absolute-path references under
+    /api/docs/problems/: <slug> for a type of the web foundation,
+    <product>/<slug> for a product's type (ADR-010, amendment 2026-11-14).
+    A client resolves a name against the URL it called; the app that
+    answered serves the type's page there, public.
 
 paths: {}   # Schema-only spec — no operations.
 
@@ -48,12 +47,12 @@ components:
       properties:
         type:
           type: string
-          format: uri
+          format: uri-reference
           description: |-
-            URI identifying the problem type — the stable, machine-readable
-            error code. Resolves to the published reference page for this
-            error type.
-          example: "https://docs.vertama.com/problems/validation-error"
+            The problem type's name, an absolute-path reference — the
+            machine-readable error code. Resolved against the URL called, it
+            leads to the type's page in the same app.
+          example: "/api/docs/problems/validation-error"
         title:
           type: string
           description: Short, human-readable summary of the problem type (English).

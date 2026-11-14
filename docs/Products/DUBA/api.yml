@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Duba API
-  version: "0.2.1" # Updated 2026-02-19: Added magicLink field to MementoResponse
+  version: "0.3.0" # Updated 2026-09-06: errors are RFC 9457 problem details (ADR-010); statuses unchanged, 401 still body-less
 servers:
   - url: /api/duba/v1
     description: Duba API Version 1
@@ -61,6 +61,8 @@ paths:
                                 type: array
                                 items:
                                     $ref: '#/components/schemas/MessageInfo'
+                '401':
+                    description: Unauthorized - invalid or missing authentication
     /download/{id}:
         get:
             summary: Download a specific message document as a ZIP file
@@ -89,9 +91,57 @@ paths:
                 '401':
                     description: Unauthorized - invalid or missing authentication
                 '403':
-                    description: Forbidden - user not authorized to access this message
+                    description: |-
+                        Forbidden - the API user has no access to the postbox this message belongs to
+                        (RFC 9457 problem details, type
+                        /api/docs/problems/duba/postbox-access-denied).
+                    content:
+                        application/problem+json:
+                            schema:
+                                $ref: '../web/api.yml#/components/schemas/ProblemDetail'
+                            example:
+                                type: "/api/docs/problems/duba/postbox-access-denied"
+                                title: "Forbidden"
+                                status: 403
+                                detail: "User 42 has no access to EGVP account #7 (DE.Justiz.abc)"
+                                instance: "/api/duba/v1/download/1234"
                 '404':
-                    description: Not Found - message does not exist
+                    description: |-
+                        Not Found - no message with this id, or its files are gone since it was
+                        fetched; in the latter case the entry is purged and leaves the listing
+                        (RFC 9457 problem details, type
+                        /api/docs/problems/duba/message-not-found).
+                    content:
+                        application/problem+json:
+                            schema:
+                                $ref: '../web/api.yml#/components/schemas/ProblemDetail'
+                            example:
+                                type: "/api/docs/problems/duba/message-not-found"
+                                title: "Not Found"
+                                status: 404
+                                detail: "Message index entry not found: 1234"
+                                instance: "/api/duba/v1/download/1234"
+                '503':
+                    description: |-
+                        Service Unavailable - message temporarily unavailable; retry shortly. Two
+                        distinct problem types (RFC 9457): the transfer from the EGVP server is
+                        confirmed but the files are not yet visible to this instance (completes within
+                        minutes, counts as nothing) — type
+                        /api/docs/problems/duba/message-transfer-pending; or a
+                        transient failure (EGVP server unreachable, I/O) — type
+                        /api/docs/problems/duba/message-unavailable. Only the latter increments an internal
+                        failure counter; after a configurable threshold the message is quarantined and
+                        no longer appears in listings until an administrator intervenes.
+                    content:
+                        application/problem+json:
+                            schema:
+                                $ref: '../web/api.yml#/components/schemas/ProblemDetail'
+                            example:
+                                type: "/api/docs/problems/duba/message-unavailable"
+                                title: "Service Unavailable"
+                                status: 503
+                                detail: "Message 1234 temporarily unavailable: connection refused"
+                                instance: "/api/duba/v1/download/1234"
     /messages/ack:
         post:
             summary: Acknowledge receipt of multiple messages and trigger cleanup
@@ -113,10 +163,25 @@ paths:
                 - On-disk files (sensitive content) are deleted immediately
                 - Index metadata is soft-deleted but preserved for audit trail
 
-                This is one of three cleanup triggers in the system:
+                Acknowledge sources:
+                An acknowledge does not have to come from this endpoint. Your organisation may
+                configure a delivery channel (e.g. an HL7 push into your KIS) as an acknowledge
+                source — the system then acknowledges a message itself once that channel has
+                delivered every document of it. Consequences for REST clients:
+                - A message can disappear between a listing and your next call because another
+                  consumer or a configured channel acknowledged it first; a 404 on download or
+                  ALREADY_DELETED on ack is then normal, not an error.
+                - If your organisation restricted the acknowledge sources for a stream and the
+                  REST client is not among them, this endpoint answers FORBIDDEN for those
+                  messages (and the refusal is recorded in the audit trail). By default there is
+                  no restriction and REST acknowledges work as described.
+
+                Cleanup triggers, complete list:
                 1. ACK endpoint (this) - client-driven, explicit confirmation
-                2. Server-side deletion - automatic during sync when message gone from Vibilia
-                3. Retention policy - time-based backstop (configurable, e.g., 30 days)
+                2. Configured delivery channel - the system acknowledges when the channel
+                   delivered every document of the message
+                3. Server-side deletion - automatic during sync when message gone from Vibilia
+                4. Retention policy - time-based backstop (planned)
             tags:
                 - DUBA
             security:
@@ -139,7 +204,21 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/AckResponse'
                 '400':
-                    description: Bad Request - invalid request body (e.g., empty list, invalid format)
+                    description: |-
+                        Bad Request - request validation failed (RFC 9457 problem details, type
+                        /api/docs/problems/validation-error, one entry per violated
+                        constraint with a JSON Pointer to the offending field).
+                    content:
+                        application/problem+json:
+                            schema:
+                                $ref: '../web/api.yml#/components/schemas/ValidationProblem'
+                            example:
+                                type: "/api/docs/problems/validation-error"
+                                title: "Request validation failed"
+                                status: 400
+                                errors:
+                                    - detail: "must not be empty"
+                                      pointer: "/messageIds"
                 '401':
                     description: Unauthorized - invalid or missing authentication
     /memento:
@@ -180,13 +259,21 @@ paths:
                             example:
                                 memento: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                 '400':
-                    description: Bad Request - invalid form data (validation errors)
+                    description: |-
+                        Bad Request - form data validation failed (RFC 9457 problem details, type
+                        /api/docs/problems/validation-error, one entry per violated
+                        constraint with a JSON Pointer to the offending field).
                     content:
-                        application/json:
+                        application/problem+json:
                             schema:
-                                $ref: '#/components/schemas/ValidationErrorResponse'
+                                $ref: '../web/api.yml#/components/schemas/ValidationProblem'
                             example:
-                                errors: ["jobId must not be null"]
+                                type: "/api/docs/problems/validation-error"
+                                title: "Request validation failed"
+                                status: 400
+                                errors:
+                                    - detail: "must not be null"
+                                      pointer: "/jobId"
                 '401':
                     description: |-
                         Unauthorized - invalid or missing authentication.
@@ -364,7 +451,10 @@ components:
           type: string
           format: date-time
           nullable: true
-          description: Timestamp when the report was created
+          readOnly: true
+          description: >-
+            The moment the person entered the form. Set by V.ap on each entry into the
+            form; a value sent is ignored.
           example: "2024-12-08T14:30:00Z"
         absender:
           $ref: '#/components/schemas/Absender'
@@ -420,14 +510,19 @@ components:
         sachgebiet:
           type: string
           nullable: true
-          description: Department or subject area at the court
+          description: >-
+            Subject area at the court: the GDS.Sachgebiet code, e.g. "004", or its
+            name, e.g. "Betreuungssachen" — the code is preferred, the name is still
+            read (since 2026-10-12).
           default: Betreuungssachen
-          example: "Betreuungssachen"
+          example: "004"
         prioritaet:
           type: string
           nullable: true
-          description: Priority level for message delivery
-          example: "normal"
+          description: >-
+            Priority of the message: the GDS.Sendungsprioritaet code, e.g. "001"
+            (Eilt); absent means no priority. A name is not read.
+          example: "001"
         adresse:
           $ref: '#/components/schemas/Adresse'
     Betroffener:
@@ -515,20 +610,6 @@ components:
         - Sonstige
       default: Sonstige
       example: "Gericht"
-    ValidationErrorResponse:
-      type: object
-      required:
-        - errors
-      description: |-
-        Validation error response returned by Spring's ControllerAdvice.
-        Contains a list of validation error messages.
-      properties:
-        errors:
-          type: array
-          description: List of validation error messages
-          items:
-            type: string
-          example: ["jobId must not be null", "geburtsdatum must be a valid date"]
   securitySchemes:
     basicAuth:
       type: http

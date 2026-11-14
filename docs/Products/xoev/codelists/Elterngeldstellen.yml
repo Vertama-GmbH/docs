@@ -1,0 +1,233 @@
+# GENERATED FILE - do not edit by hand. Re-derive from the source JSON in
+# this same directory if the codelist version changes.
+type: string
+nullable: true
+enum:
+  - "032520030000"
+  - "034040000000"
+  - "034580000000"
+  - "034580000099"
+  - "040110000000"
+  - "040120000000"
+  - "082120000100"
+  - "094620000000"
+  - "147130000100"
+  - "034030000000"
+  - "033510060000"
+  - "034520000000"
+  - "034530000000"
+  - "034560000000"
+  - "032410070000"
+  - "031580000000"
+  - "050000000100"
+  - "033590100000"
+  - "034600000000"
+  - "033590380000"
+  - "033610000000"
+  - "033560000000"
+  - "033540000000"
+  - "034010000000"
+  - "032410210000"
+  - "160510000000"
+  - "160510000099"
+  - "150030000000"
+  - "033590000000"
+  - "150821800000"
+  - "150843550000"
+  - "034550260000"
+  - "034610000000"
+  - "032550000000"
+  - "150010000000"
+  - "150851350000"
+  - "150832700000"
+  - "150882200000"
+  - "032510000000"
+  - "150890300000"
+  - "033580000000"
+  - "031590000000"
+  - "034020000000"
+  - "031010000000"
+  - "033550000000"
+  - "033570000000"
+  - "32410050000"
+  - "031550000000"
+  - "034540000000"
+  - "034540410000"
+  - "031540000000"
+  - "033520000000"
+  - "034580050000"
+  - "034590000000"
+  - "032410030000"
+  - "034590240000"
+  - "032570000000"
+  - "071380450100"
+  - "034590140000"
+  - "031590160000"
+  - "032410060000"
+  - "032410130000"
+  - "071370030000"
+  - "031550130000"
+  - "032540210000"
+  - "034510000000"
+  - "150873700000"
+  - "032410110000"
+  - "071370000000"
+  - "073340000000"
+  - "071380450000"
+  - "071320000000"
+  - "071350000000"
+  - "071310000000"
+  - "072320000000"
+  - "071110000000"
+  - "071380000000"
+  - "073350000000"
+  - "073390000000"
+  - "072110000000"
+  - "072330000000"
+  - "071330060000"
+  - "073400000000"
+  - "072350000000"
+  - "073310000000"
+  - "073170000000"
+  - "071410000000"
+  - "071370680000"
+  - "073150000000"
+  - "073200000000"
+  - "071430000000"
+  - "073360550000"
+  - "073120000000"
+  - "071340450000"
+  - "073190000000"
+  - "072311340000"
+  - "031570000000"
+  - "032410120000"
+  - "032410160000"
+  - "032410140000"
+  - "032560000000"
+  - "032410180000"
+  - "031020000000"
+  - "032510370000"
+  - "032410200000"
+  - "034550000000"
+  - "032510470000"
+  - "032520000000"
+  - "032410080000"
+  - "032410020000"
+  - "034540320000"
+description: |-
+  Behördenkennungen der Elterngeldstellen (Behördenkennungen der Elterngeldstellen).
+  Code aus XÖV-Codeliste urn:xoev-de:kosit:xfamilie:codeliste:elterngeldstelle (Version 5).
+
+  Codes:
+  - 032520030000: Stadt Bad Pyrmont
+  - 034040000000: Stadt Osnabrück
+  - 034580000000: Landkreis Oldenburg
+  - 034580000099: Landkreis Oldenburg - Test
+  - 040110000000: Elterngeldstelle Bremen
+  - 040120000000: Elterngeldstelle Bremerhaven
+  - 082120000100: L-Bank
+  - 094620000000: Elterngeldstelle Bayern
+  - 147130000100: Kommunaler Sozialverband Sachsen
+  - 034030000000: Kreisfreie Stadt Oldenburg (Oldb)
+  - 033510060000: Stadt Celle
+  - 034520000000: Landkreis Aurich
+  - 034530000000: Landkreis Cloppenburg
+  - 034560000000: Landkreis Grafschaft Bentheim
+  - 032410070000: Stadt Hemmingen
+  - 031580000000: Landkreis Wolfenbüttel
+  - 050000000100: Elterngeldstelle NRW
+  - 033590100000: Hansestadt Buxtehude
+  - 034600000000: Landkreis Vechta
+  - 033590380000: Hansestadt Stade
+  - 033610000000: Landkreis Verden
+  - 033560000000: Landkreis Osterholz
+  - 033540000000: Landkreis Lüchow-Dannenberg
+  - 034010000000: Stadt Delmenhorst
+  - 032410210000: Stadt Wunstorf
+  - 160510000000: Stadtverwaltung Erfurt
+  - 160510000099: Stadtverwaltung Erfurt
+  - 150030000000: Landeshauptstadt Magdeburg
+  - 033590000000: Landkreis Stade
+  - 150821800000: Landkreis Anhalt-Bitterfed
+  - 150843550000: Burgenlandkreis
+  - 034550260000: Stadt Varel
+  - 034610000000: Landkreis Wesermarsch
+  - 032550000000: Landkreis Holzminden
+  - 150010000000: Stadt Dessau-Roßlau 
+  - 150851350000: Landkreis Harz 
+  - 150832700000: Landkreis Börde 
+  - 150882200000: Saalekreis
+  - 032510000000: Landkreis Diepholz
+  - 150890300000: Salzlandkreis
+  - 033580000000: Landkreis Heidekreis
+  - 031590000000: Landkreis Göttingen
+  - 034020000000: Kreisfreie Stadt Emden
+  - 031010000000: Kreisfreie Stadt Braunschweig
+  - 033550000000: Landkreis Lüneburg
+  - 033570000000: Landkreis Rotenburg (Wümme)
+  - 32410050000: Stadt Garbsen
+  - 031550000000: Landkreis Northeim
+  - 034540000000: Landkreis Emsland
+  - 034540410000: Stadt Papenburg
+  - 031540000000: Landkreis Helmstedt
+  - 033520000000: Landkreis Cuxhaven
+  - 034580050000: Gemeinde Ganderkesee
+  - 034590000000: Landkreis Osnabrück
+  - 032410030000: Stadt Burgdorf
+  - 034590240000: Stadt Melle
+  - 032570000000: Landkreis Schaumburg
+  - 071380450100: STV Neuwied
+  - 034590140000: Stadt Bramsche
+  - 031590160000: Stadt Göttingen
+  - 032410060000: Stadt Gehrden
+  - 032410130000: Stadt Pattensen
+  - 071370030000: STV Andernach
+  - 031550130000: Stadt Einbeck
+  - 032540210000: Stadt Hildesheim
+  - 034510000000: Landkreis Ammerland
+  - 150873700000: Landkreis Mansfeld Südharz
+  - 032410110000: Stadt Lehrte
+  - 071370000000: KV Mayen-Koblenz / Elterngeldstelle
+  - 073340000000: KV Germersheim
+  - 071380450000: KV Neuwied
+  - 071320000000: LK Altenkirchen(Westerwald) Elterngeldstelle
+  - 071350000000: KV Cochem-Zell - Elterngeldstelle
+  - 071310000000: KV Ahrweiler - Elterngeldstelle
+  - 072320000000: LK Eifelkreis Bitburg-Prüm - Elterngeldstelle
+  - 071110000000: SV Koblenz - Elterngeldstelle
+  - 071380000000: SV Speyer - Elterngeldstelle
+  - 073350000000: LK Kaiserslautern -Elterngeldstelle
+  - 073390000000: LK Mainz-Bingen / Elterngeldstelle
+  - 072110000000: SV Trier-Elterngeldstelle
+  - 072330000000: KV Vulkaneifel - Elterngeldstelle
+  - 071330060000: STV Bad Kreuznach-Elterngeldstelle
+  - 073400000000: LK Südwestpfalz - Elterngeldstelle
+  - 072350000000: KV Trier-Saarburg-Elterngeldstelle
+  - 073310000000: KV Alzey-Worms - Elterngeldstelle
+  - 073170000000: StV Pirmasens - Elterngeldstelle
+  - 071410000000: KV Rhein-Lahn-Kreis- Elterngeldstelle
+  - 071370680000: Stadt Mayen / Elterngeldstelle
+  - 073150000000: StV Mainz - Elterngeldstelle
+  - 073200000000: STV Zweibrücken- Elterngeldstelle
+  - 071430000000: KV Westerwaldkreis - Elterngeldstelle
+  - 073360550000: KV Kusel - Elterngeldstelle
+  - 073120000000: StV Kaiserslautern - Elterngeldstelle
+  - 071340450000: Stadt Idar-Oberstein - Elterngeldstelle
+  - 073190000000: STV Worms - Elterngeldstelle
+  - 072311340000: KV Bernkastel-Wittlich - Elterngeldstelle
+  - 031570000000: Landkreis Peine
+  - 032410120000: Stadt Neustadt am Rübenberge
+  - 032410160000: Stadt Sehnde
+  - 032410140000: Stadt Ronnenberg
+  - 032560000000: Landkreis Nienburg
+  - 032410180000: Gemeinde Uetze
+  - 031020000000: Stadt Salzgitter
+  - 032510370000: Gemeinde Stuhr
+  - 032410200000: Gemeinde Wennigsen (Deister)
+  - 034550000000: Landkreis Friesland
+  - 032510470000: Gemeinde Weyhe
+  - 032520000000: Landkreis Hameln-Pyrmont
+  - 032410080000: Gemeinde Isernhagen
+  - 032410020000: Stadt Barsinghausen
+  - 034540320000: Stadt Lingen (Ems)
+example: "032520030000"

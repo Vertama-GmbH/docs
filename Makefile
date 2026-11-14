@@ -1,5 +1,5 @@
 
-.PHONY: setup build publish clean downloads sync-fremdaufruf-deck sync-all
+.PHONY: setup build publish clean downloads sync-fremdaufruf-deck sync-specs sync-all
 
 VENV_DIR := .venv
 
@@ -63,5 +63,10 @@ sync-fremdaufruf-deck: uv-sync
 		$(V_C)/fremdaufruf/presentation \
 		docs/V.connect/Fremdaufruf/presentation
 
+# Pull V.ap's OpenAPI specs from the commit production runs: the newest
+# prod-* tag in $(ELIM). REF=<tag or commit> overrides the default.
+sync-specs:
+	@scripts/sync-specs.sh $(ELIM) $(REF)
+
 # Aggregator — extend as more sync targets land.
-sync-all: sync-fremdaufruf-deck
+sync-all: sync-fremdaufruf-deck sync-specs

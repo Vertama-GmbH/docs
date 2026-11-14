@@ -1,0 +1,19 @@
+# GENERATED FILE - do not edit by hand. Re-derive from the source JSON in
+# this same directory if the codelist version changes.
+type: string
+nullable: true
+enum:
+  - "m"
+  - "w"
+  - "x"
+  - "d"
+description: |-
+  XInneres Geschlecht (Geschlechtsangaben in XInneres).
+  Code aus XÖV-Codeliste urn:xoev-de:xinneres:codeliste:geschlecht (Version 1).
+
+  Codes:
+  - m: männlich
+  - w: weiblich
+  - x: keine Angabe
+  - d: divers
+example: "m"
